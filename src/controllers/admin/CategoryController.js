@@ -8,7 +8,7 @@ controller.index = (req, res) => {
     delete req.session.Success;
 
     const page = req.query.page ?? 1;
-    const pageSize = req.query.pageSize ?? 2;
+    const pageSize = req.query.pageSize ?? 5;
     req.getConnection((err, conn) => {
         const sql = 'SELECT * FROM postCategories ORDER BY id DESC limit ? offset ?  ; SELECT COUNT(*) as Total FROM postCategories';
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
@@ -20,6 +20,7 @@ controller.index = (req, res) => {
                     {
                         layout: './layout/_layoutAdmin',
                         extractScripts: true,
+                        extractStyles: true,
                         errorValidate: errorValidate,
                         successAlert: successAlert,
                         categories: data[0],
@@ -33,7 +34,7 @@ controller.index = (req, res) => {
                             },
                             {
                                 title: 'Danh mục phòng',
-                                link: '/admin/room/category'
+                                link: '/admin/category'
                             }
                         ]
                     }

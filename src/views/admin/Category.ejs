@@ -1,3 +1,7 @@
+<style>
+</style>
+
+
 <div class="col">
   <div class="card">
     <!-- Card header -->
@@ -5,6 +9,14 @@
       <h3 class="mb-0">DANH MỤC PHÒNG</h3>
     </div>
     <!-- Light table -->
+    <div class="box-loading load-data" style="display: none;">
+      <div class="loadingio-spinner-rolling-lwtpylw27h">
+        <div class="ldio-5lswg297lfp">
+          <div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="table-responsive">
       <table class="table align-items-center table-flush">
         <thead class="thead-light">
@@ -50,8 +62,12 @@
                       <i class="fas fa-ellipsis-v"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                      <a class="dropdown-item" href="#">Sửa</a>
-                      <a class="dropdown-item" href="#">Xóa</a>
+                      <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModalEdit-<%= item.id %>">
+                        Sửa
+                      </button>
+                      <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModalDelete-<%= item.id %>">
+                        Xóa
+                      </button>
                     </div>
                   </div>
                 </td>
@@ -89,6 +105,14 @@
 <!-- THÊM -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
+  <div class="box-loading load-modal" style="display: none;">
+    <div class="loadingio-spinner-rolling-lwtpylw27h">
+      <div class="ldio-5lswg297lfp">
+        <div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -107,45 +131,204 @@
             <label for="exampleFormControlSelect1">Trạng thái</label>
             <select class="form-control" id="exampleFormControlSelect1" name="status">
               <option value="1">hoạt động</option>
-              <option value="1">không hoạt động</option>
+              <option value="2">không hoạt động</option>
             </select>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-          <button type="submit" class="btn btn-primary">Lưu</button>
+          <button onclick="onLoadingModal(event)" type="submit" class="btn btn-primary">Lưu</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<!-- Sửa -->
+<% if (categories) { %>
+  <% categories.forEach((item,index)=> { %>
+<div class="modal fade" id="exampleModalEdit-<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="box-loading load-modal" style="display: none;">
+    <div class="loadingio-spinner-rolling-lwtpylw27h">
+      <div class="ldio-5lswg297lfp">
+        <div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">CẬP NHẬT DANH MỤC</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" action="/admin/category/update">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Tên</label>
+            <input type="text" class="form-control" name="name" value="<%= item.name %>">
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Trạng thái</label>
+            <select class="form-control" id="exampleFormControlSelect1" name="status">
+              <% if (item.status === 1 ) { %> 
+                <option value="1" selected>hoạt động</option>
+              <% } 
+                else { %>
+                  <option value="1" >hoạt động</option>
+               <% } %>
+               <% if (item.status !== 1) { %> 
+                <option value="2" selected>không hoạt động</option>
 
-<!-- CODE JS  -->
+              <% } 
+                else { %>
+                  <option value="2">không hoạt động</option>
+               <% } %>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button onclick="onLoadingModal(event)" type="submit" class="btn btn-primary">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<% }) %>
+<% } %>
+<!-- XÓA  -->
+<!-- Sửa -->
+<% if (categories) { %>
+  <% categories.forEach((item,index)=> { %>
+<div class="modal fade" id="exampleModalDelete-<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="box-loading load-modal" style="display: none;">
+    <div class="loadingio-spinner-rolling-lwtpylw27h">
+      <div class="ldio-5lswg297lfp">
+        <div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">XÓA DANH MỤC</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn có muốn xóa danh mục này ?
+      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button onclick="onLoadingModal(event)" type="submit" class="btn btn-primary">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<% }) %>
+<% } %>
 
-<script>
-  toastr.options = {
-    "closeButton": false,
-    "debug": false,
-    "newestOnTop": true,
-    "progressBar": false,
-    "positionClass": "toast-top-right",
-    "preventDuplicates": false,
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "5000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-  }
-    <% if (errorValidate) { %>
-      const err =  '<%= errorValidate %>';
-      toastr["error"]("<%= errorValidate %>")
+<!-- IMPORT EXCEL  -->
+  <button style="opacity: 0;" type="button" class="btn btn-block btn-warning mb-3" data-toggle="modal"
+    data-target="#modal-notification">Notification</button>
+  <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification"
+    aria-hidden="true">
+    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+      <div class="modal-content bg-gradient-danger">
 
-      <%}%>
+        <div class="modal-header">
+          <h6 class="modal-title" id="modal-title-notification">Import excel danh sách danh mục</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="py-3 text-center">
+            <i class="ni ni-bell-55 ni-3x"></i>
+            <h4 class="heading mt-4">Tải lên file Excel</h4>
+            <p>Tải xuống file mẫu <a href="#">click vào đây</a></p>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white">Lưu</button>
+          <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Đóng</button>
+        </div>
+
+      </div>
+    </div>
+
+  <!-- CODE JS  -->
+
+  <script>
+
+    // loading
+    const loadingData = document.querySelector('.box-loading.load-data');
+    const loadingModal = document.querySelector('.box-loading.load-modal');
+    const formPost = document.querySelector('form[method=POST]');
+
+    window.addEventListener('load', onLoading);
+    function onLoading(event) {
+      loadingData.style.display = 'flex';
+      console.log("loading ...");
+      setTimeout(() => {
+        loadingData.style.display = 'none';
+      }, 500);
+    }
+
+
+    function onLoadingModal(event) {
+      event.preventDefault();
+      console.log("updateeeeeeeee");
+      loadingModal.style.display = 'flex';
+      console.log(loadingModal.style.display);
+      setTimeout(() => {
+        loadingModal.style.display = 'none';
+        formPost.submit();
+      }, 1000);
+    }
+
+
+    function reload() {
+      console.log("ok");
+      window.location.href = "/admin/category"
+    }
+
+
+    // notifycation
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": true,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    }
+      <% if (errorValidate) { %>
+      const err = '<%= errorValidate %>';
+        toastr["error"]("<%= errorValidate %>")
+
+          <%}%>
           <% if (successAlert) { %>
-    toastr["success"]("<%= successAlert %>")
-    <%}%>
-</script>
+      toastr["success"]("<%= successAlert %>")
+      <%}%>
+  </script>
