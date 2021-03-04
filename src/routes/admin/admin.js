@@ -19,6 +19,7 @@ router.get('/customer', CustomerController.index);
 
 const CategoryController = require('../../controllers/admin/CategoryController');
 router.get('/category', CategoryController.index); // nhìn là hiểu rồi truy cập vô route admin/cateogry gọi hàm index của categoryController
+router.post('/category/create', CategoryController.create); 
 
 
 const ContactController = require('../../controllers/admin/ContactController');

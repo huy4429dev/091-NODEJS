@@ -2,7 +2,7 @@ const controller = {};
 const md5 = require('md5');
 
 controller.getLogin = (req, res) => {
-    res.render('admin/Login');
+    res.render('admin/Login',{ layout: false });
 };
 
 controller.postLogin = (req, res) => {
