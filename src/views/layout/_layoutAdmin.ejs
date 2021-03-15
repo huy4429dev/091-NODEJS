@@ -48,9 +48,16 @@
         <script src="/admin//vendor/js-cookie/js.cookie.js"></script>
         <script src="/admin//vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
         <script src="/admin//vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+        <script src="/admin//vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
         <!-- Argon JS -->
         <script src="/admin//js/argon.js?v=1.2.0"></script>
         <script src="/libs/toastr/toastr.min.js"></script>
+        <script>
+            const formSearch = document.querySelector('#form-search');
+            function submitFormSearch() {
+                formSearch.submit();
+            }
+        </script>
         <%- script %>
 </body>
 

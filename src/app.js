@@ -16,6 +16,9 @@ const adminRoutes = require('./routes/admin/admin');
 // buld host
 app.set('port', process.env.PORT || 3000);
 
+global.__basedir = __dirname;
+
+
 // Set Templating Engine
 app.use(expressLayouts)
 app.set('layout', './layout/_layoutAdmin', './layout/_layoutPage');
@@ -75,6 +78,7 @@ app.use('/admin/', adminRoutes);
 
 // static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'resources')));
 
 // starting the server
 app.listen(app.get('port'), () => {

@@ -30,7 +30,7 @@
         <tbody class="list">
           <% if (categories) { %>
             <% categories.forEach((item,index)=> { %>
-              <tr>
+              <tr id="item-<%= item.id %>">
                 <th scope="row">
                   <div class="media align-items-center">
                     <div class="media-body">
@@ -62,10 +62,12 @@
                       <i class="fas fa-ellipsis-v"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                      <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModalEdit-<%= item.id %>">
+                      <button type="button" class="dropdown-item btn-edit" data-toggle="modal"
+                        onclick="editItem(<%= JSON.stringify(item) %>)" data-target="#exampleModalEdit">
                         Sửa
                       </button>
-                      <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModalDelete-<%= item.id %>">
+                      <button type="button" class="dropdown-item" data-toggle="modal"
+                        data-target="#exampleModalDelete-<%= item.id %>">
                         Xóa
                       </button>
                     </div>
@@ -76,6 +78,11 @@
                 <% } %>
         </tbody>
       </table>
+      <% if (categories?.length==0) { %>
+        <div class="alert alert-warning text-center">
+          Không tìm thấy kết quả nào
+        </div>
+        <% } %>
     </div>
     <!-- Card footer -->
     <div class="card-footer py-4">
@@ -102,6 +109,37 @@
   </div>
 </div>
 
+
+<!-- LỌC -->
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Lọc danh mục</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/admin/category/search" method="GET">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">Trạng thai</label>
+            <select name="filterStatus" id="" class="form=control">
+              <option value="1">Hoạt động</option>
+              <option value="2">Không hoạt động</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="submit" class="btn btn-primary">Lọc</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- THÊM -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
@@ -121,11 +159,19 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="/admin/category/create">
+      <form method="POST" class="create-item" action="/admin/category/create">
         <div class="modal-body">
           <div class="form-group">
             <label for="exampleFormControlInput1">Tên</label>
             <input type="text" class="form-control" name="name">
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+              </div>
+              <input class="form-control datepicker" placeholder="Select date" type="text" value="06/20/2020">
+            </div>
           </div>
           <div class="form-group">
             <label for="exampleFormControlSelect1">Trạng thái</label>
@@ -144,9 +190,7 @@
   </div>
 </div>
 <!-- Sửa -->
-<% if (categories) { %>
-  <% categories.forEach((item,index)=> { %>
-<div class="modal fade" id="exampleModalEdit-<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="box-loading load-modal" style="display: none;">
     <div class="loadingio-spinner-rolling-lwtpylw27h">
@@ -164,171 +208,294 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="/admin/category/update">
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Tên</label>
-            <input type="text" class="form-control" name="name" value="<%= item.name %>">
-          </div>
-          <div class="form-group">
-            <label for="exampleFormControlSelect1">Trạng thái</label>
-            <select class="form-control" id="exampleFormControlSelect1" name="status">
-              <% if (item.status === 1 ) { %> 
-                <option value="1" selected>hoạt động</option>
-              <% } 
-                else { %>
-                  <option value="1" >hoạt động</option>
-               <% } %>
-               <% if (item.status !== 1) { %> 
-                <option value="2" selected>không hoạt động</option>
-
-              <% } 
-                else { %>
-                  <option value="2">không hoạt động</option>
-               <% } %>
-            </select>
-          </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Tên</label>
+          <input type="text" class="form-control" name="name">
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-          <button onclick="onLoadingModal(event)" type="submit" class="btn btn-primary">Lưu</button>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Trạng thái</label>
+          <select class="form-control" id="exampleFormControlSelect1" name="status">
+            <option value="1">hoạt động</option>
+            <option value="2">không hoạt động</option>
+          </select>
         </div>
-      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button onclick="updateItem(event)" type="submit" class="btn btn-primary">Lưu</button>
+      </div>
     </div>
   </div>
 </div>
-<% }) %>
-<% } %>
+
 <!-- XÓA  -->
-<!-- Sửa -->
 <% if (categories) { %>
   <% categories.forEach((item,index)=> { %>
-<div class="modal fade" id="exampleModalDelete-<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="box-loading load-modal" style="display: none;">
-    <div class="loadingio-spinner-rolling-lwtpylw27h">
-      <div class="ldio-5lswg297lfp">
-        <div>
+    <div class="modal fade" id="exampleModalDelete-<%= item.id %>" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="box-loading load-modal" style="display: none;">
+        <div class="loadingio-spinner-rolling-lwtpylw27h">
+          <div class="ldio-5lswg297lfp">
+            <div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">XÓA DANH MỤC</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Bạn có muốn xóa danh mục này ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            <a href="/admin/category/delete/<%= item.id %>" class="btn btn-primary">Lưu</a>
+          </div>
+          </form>
         </div>
       </div>
     </div>
-  </div>
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">XÓA DANH MỤC</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Bạn có muốn xóa danh mục này ?
-      </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-          <button onclick="onLoadingModal(event)" type="submit" class="btn btn-primary">Lưu</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<% }) %>
-<% } %>
+    <% }) %>
+      <% } %>
 
-<!-- IMPORT EXCEL  -->
-  <button style="opacity: 0;" type="button" class="btn btn-block btn-warning mb-3" data-toggle="modal"
-    data-target="#modal-notification">Notification</button>
-  <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification"
-    aria-hidden="true">
-    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-      <div class="modal-content bg-gradient-danger">
+        <!-- IMPORT EXCEL  -->
+        <button style="opacity: 0;" type="button" class="btn btn-block btn-warning mb-3" data-toggle="modal"
+          data-target="#modal-notification">Notification</button>
+        <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification"
+          aria-hidden="true">
+          <div class="modal-dialog  modal-dialog-centered modal-" role="document">
+            <div class="modal-content ">
 
-        <div class="modal-header">
-          <h6 class="modal-title" id="modal-title-notification">Import excel danh sách danh mục</h6>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
+              <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-notification">Import excel danh sách danh mục</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
 
-        <div class="modal-body">
+              <div class="modal-body">
 
-          <div class="py-3 text-center">
-            <i class="ni ni-bell-55 ni-3x"></i>
-            <h4 class="heading mt-4">Tải lên file Excel</h4>
-            <p>Tải xuống file mẫu <a href="#">click vào đây</a></p>
+                <div class="py-3 text-center">
+                  <form class="form-upload" action="/admin/upload?path=admin" method="POST"
+                    enctype="multipart/form-data">
+                    <div>
+                      <input type="file" name="file">
+                    </div>
+                  </form>
+                  <i class="fas fa-file-upload ni-3x"></i>
+                  <h4 class="heading mt-4">Tải lên file Excel</h4>
+                  <p>Tải xuống file mẫu <a class="text-success" href="/static/assets/uploads/admin/danh-muc.xlsx">click
+                      vào đây</a></p>
+                </div>
+
+              </div>
+
+              <div class="modal-footer">
+                <form action="/admin/category/excel/import" method="POST">
+                  <input type="hidden" name="path-excel-import">
+                  <button type="submit" class="btn btn-white">Lưu</button>
+                </form>
+                <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Đóng</button>
+              </div>
+
+            </div>
           </div>
 
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-white">Lưu</button>
-          <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Đóng</button>
-        </div>
+          <!-- FILTER  -->
 
-      </div>
-    </div>
-
-  <!-- CODE JS  -->
-
-  <script>
-
-    // loading
-    const loadingData = document.querySelector('.box-loading.load-data');
-    const loadingModal = document.querySelector('.box-loading.load-modal');
-    const formPost = document.querySelector('form[method=POST]');
-
-    window.addEventListener('load', onLoading);
-    function onLoading(event) {
-      loadingData.style.display = 'flex';
-      console.log("loading ...");
-      setTimeout(() => {
-        loadingData.style.display = 'none';
-      }, 500);
-    }
+          <!-- CODE JS  -->
 
 
-    function onLoadingModal(event) {
-      event.preventDefault();
-      console.log("updateeeeeeeee");
-      loadingModal.style.display = 'flex';
-      console.log(loadingModal.style.display);
-      setTimeout(() => {
-        loadingModal.style.display = 'none';
-        formPost.submit();
-      }, 1000);
-    }
+          <script>
+            // upload file 
 
+            // let thumbnail = document.querySelector('#post-thumbnail');
+            // let inputThumbnail = document.querySelector("input[name='Thumbnail']");
+            function uploadFile(file) {
 
-    function reload() {
-      console.log("ok");
-      window.location.href = "/admin/category"
-    }
+              const inputSelectFile = document.querySelector('.form-upload input[type="file"]');
+              const inputPath = document.querySelector('input[name="path-excel-import"]');
 
+              inputSelectFile.addEventListener('change', function () {
+                var url = "/admin/upload?path=admin";
+                var formData = new FormData();
+                formData.append("file", inputSelectFile.files[0]);
+                fetch(url, {
+                  method: 'POST',
+                  body: formData
+                })
+                  .then(response => response.json())
+                  .then(data => {
+                    inputPath.value = data.path;
+                    // thumbnail.setAttribute("src", data.dbPath);
+                    // inputThumbnail.value = data.dbPath;
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  })
+              })
+            }
 
-    // notifycation
-    toastr.options = {
-      "closeButton": false,
-      "debug": false,
-      "newestOnTop": true,
-      "progressBar": false,
-      "positionClass": "toast-top-right",
-      "preventDuplicates": false,
-      "onclick": null,
-      "showDuration": "300",
-      "hideDuration": "1000",
-      "timeOut": "5000",
-      "extendedTimeOut": "1000",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut"
-    }
-      <% if (errorValidate) { %>
-      const err = '<%= errorValidate %>';
-        toastr["error"]("<%= errorValidate %>")
+            uploadFile();
 
-          <%}%>
-          <% if (successAlert) { %>
-      toastr["success"]("<%= successAlert %>")
-      <%}%>
-  </script>
+            // notifycation
+            toastr.options = {
+              "closeButton": false,
+              "debug": false,
+              "newestOnTop": true,
+              "progressBar": false,
+              "positionClass": "toast-top-right",
+              "preventDuplicates": false,
+              "onclick": null,
+              "showDuration": "300",
+              "hideDuration": "1000",
+              "timeOut": "5000",
+              "extendedTimeOut": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+            }
+
+            // loading
+            const loadingData = document.querySelector('.box-loading.load-data');
+            const loadingModal = document.querySelector('.box-loading.load-modal');
+            const formPost = document.querySelector('form[method=POST].create-item');
+            
+              <% if (!errorValidate && !successAlert) { %>
+              window.addEventListener('load', onLoading);
+            <%}%>
+
+              function onLoading(event) {
+                loadingData.style.display = 'flex';
+                setTimeout(() => {
+                  loadingData.style.display = 'none';
+                }, 500);
+              }
+
+            function onLoadingModal(event) {
+              event.preventDefault();
+              loadingModal.style.display = 'flex';
+              setTimeout(() => {
+                loadingModal.style.display = 'none';
+                formPost.submit();
+              }, 500);
+            }
+
+            function reload() {
+              window.location.href = "/admin/category"
+            }
+
+            // EDIT
+            let editId = 0;
+            let prevDataEdit = null;
+            const loadingModalEdit = document.querySelector('#exampleModalEdit .box-loading.load-modal');
+            const formEdit = document.querySelector('#exampleModalEdit');
+            const inputNameEdit = document.querySelector('#exampleModalEdit input[name=name]');
+            const inputStatusEdit = document.querySelector('#exampleModalEdit select[name=status]');
+            const optionEdits = document.querySelectorAll('#exampleModalEdit select[name=status] option');
+            const optionEditValues = [];
+
+            optionEdits.forEach(item => optionEditValues.push(item.value));
+
+            function editItem(item) {
+              if (prevDataEdit?.name != item.name) {
+                inputNameEdit.value = item.name;
+              }
+
+              indexOptionSelected = optionEditValues.findIndex(o => o == item.status);
+              optionEdits[indexOptionSelected].setAttribute('selected', 'selected');
+
+              prevDataEdit = item;
+              editId = item.id;
+
+            }
+
+            function updateItem(event) {
+              event.preventDefault();
+              // get data
+              var dataEdit = {
+                name: inputNameEdit.value,
+                status: inputStatusEdit.value
+              };
+
+              // start loading
+              loadingModalEdit.style.display = 'flex';
+              // call api
+              fetch(`/admin/category/update/${editId}`, {
+                method: 'PUT', // or 'PUT'
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataEdit),
+              })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    setTimeout(() => {
+                      // end loading
+
+                      loadingModalEdit.style.display = 'none';
+
+                      // notify
+
+                      toastr["success"](data.message);
+
+                      // close modal
+
+                      $('#exampleModalEdit').modal('hide');
+
+                      //  edit content html
+
+                      var eleName = document.querySelector(`#item-${editId} td.budget`);
+                      var eleStatus = document.querySelector(`#item-${editId} span.status .badge`);
+                      eleName.textContent = data.name;
+
+                      if (data.status == 1) {
+                        eleStatus.className = 'badge badge-success';
+                        eleStatus.textContent = 'HOẠT ĐỘNG';
+                      }
+                      else {
+                        eleStatus.className = 'badge badge-danger';
+                        eleStatus.textContent = 'KHÔNG HOẠT ĐỘNG';
+                      }
+
+                    }, 500);
+
+                  }
+                  else {
+                    console.log('error:', data)
+                  }
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                })
+                .finally(() => {
+                })
+                ;
+              // notify
+
+              // end loading
+
+            }
+
+            
+
+              
+           
+              <% if (errorValidate) { %>
+              const err = '<%= errorValidate %>';
+              toastr["error"]("<%= errorValidate %>")
+
+                <%}%>
+                  <% if (successAlert) { %>
+              toastr["success"]("<%= successAlert %>")
+              <%}%>
+          </script>
