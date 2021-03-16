@@ -91,15 +91,31 @@
           <% for (i=1; i <=total; i ++) { %>
             <% if(curentPage==i) { %>
               <li class="page-item active">
-                <a class="page-link" href="/admin/category/?page=<%= i %>">
-                  <%= i %>
-                </a>
+                <% if (q !='' || filter !='' ) { %>
+                  <a class="page-link"
+                    href="/admin/category/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                    <%= i %>
+                  </a>
+                  <% } else { %>
+                    <a class="page-link" href="/admin/category/?page=<%= i %>">
+                      <%= i %>
+                    </a>
+                    <% } %>
+
               </li>
               <%} else { %>
                 <li class="page-item">
-                  <a class="page-link" href="/admin/category/?page=<%= i %>">
-                    <%= i %>
-                  </a>
+
+                  <% if (q !='' || filter !='' ) { %>
+                    <a class="page-link"
+                      href="/admin/category/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                      <%= i %>
+                    </a>
+                    <% } else { %>
+                      <a class="page-link" href="/admin/category/?page=<%= i %>">
+                        <%= i %>
+                      </a>
+                      <% } %>
                 </li>
                 <%} %>
                   <% } %>
@@ -123,13 +139,47 @@
       </div>
       <form action="/admin/category/search" method="GET">
         <div class="modal-body">
-          <div class="form-group">
-            <label for="">Trạng thai</label>
-            <select name="filterStatus" id="" class="form=control">
-              <option value="1">Hoạt động</option>
-              <option value="2">Không hoạt động</option>
-            </select>
+          <div>
+            <label for="exampleFormControlInput1">Trạng thái</label>
           </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="customRadioInline1" name="filterStatus" class="custom-control-input" value="1"
+              checked>
+            <label class="custom-control-label" for="customRadioInline1">Hoạt động</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="customRadioInline2" name="filterStatus" class="custom-control-input" value="2">
+            <label class="custom-control-label" for="customRadioInline2">Không hoạt động</label>
+          </div>
+          <div class="form-group mt-3">
+            <div>
+              <label for="exampleFormControlInput1">Thời gian</label>
+            </div>
+            <div class="input-daterange datepicker row align-items-center">
+              <div class="col">
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                    </div>
+                    <input name="startDate" class="form-control" placeholder="Start date" type="text"
+                      value="06/18/2020">
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                    </div>
+                    <input name="endDate" class="form-control" placeholder="End date" type="text" value="06/22/2020">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="q" value="<%= q.replace(/%/g,'') %>">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -164,14 +214,6 @@
           <div class="form-group">
             <label for="exampleFormControlInput1">Tên</label>
             <input type="text" class="form-control" name="name">
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
-              </div>
-              <input class="form-control datepicker" placeholder="Select date" type="text" value="06/20/2020">
-            </div>
           </div>
           <div class="form-group">
             <label for="exampleFormControlSelect1">Trạng thái</label>
@@ -282,13 +324,36 @@
               <div class="modal-body">
 
                 <div class="py-3 text-center">
-                  <form class="form-upload" action="/admin/upload?path=admin" method="POST"
-                    enctype="multipart/form-data">
-                    <div>
-                      <input type="file" name="file">
+                  <div class="position-relative">
+                    <div class="position-absolute" style="
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%,-50%);
+                        width: 100px;
+                        /* opacity: 0; */
+                        cursor: pointer;
+                        height: 100%;
+                    ">
+                      <form class="form-upload h-100 d-block" action="/admin/upload?path=admin" method="POST"
+                        enctype="multipart/form-data">
+                        <div class="h-100">
+                          <input type="file" name="file" style="
+                              display: block;
+                              height: 100%;
+                              width: 100%;
+                              cursor: pointer;
+                              opacity: 0;
+                          ">
+                        </div>
+                      </form>
                     </div>
-                  </form>
-                  <i class="fas fa-file-upload ni-3x"></i>
+                    <div>
+                      <i class="fas fa-file-upload ni-3x"></i>
+                      <div>
+                        <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
+                      </div>
+                    </div>
+                  </div>
                   <h4 class="heading mt-4">Tải lên file Excel</h4>
                   <p>Tải xuống file mẫu <a class="text-success" href="/static/assets/uploads/admin/danh-muc.xlsx">click
                       vào đây</a></p>
@@ -314,6 +379,17 @@
 
 
           <script>
+
+            // DATE PICKER 
+
+            const startDate = document.querySelector('input[name="startDate"]');
+            const endDate = document.querySelector('input[name="endDate"]');
+            const now = moment().format("DD/MM/yyyy");
+            const fromDate = moment().subtract(7, 'days').format("DD/MM/yyyy");
+            startDate.value = fromDate;
+            endDate.value = now;
+
+
             // upload file 
 
             // let thumbnail = document.querySelector('#post-thumbnail');
@@ -322,6 +398,7 @@
 
               const inputSelectFile = document.querySelector('.form-upload input[type="file"]');
               const inputPath = document.querySelector('input[name="path-excel-import"]');
+              const excelName = document.querySelector('#excel-name');
 
               inputSelectFile.addEventListener('change', function () {
                 var url = "/admin/upload?path=admin";
@@ -334,6 +411,7 @@
                   .then(response => response.json())
                   .then(data => {
                     inputPath.value = data.path;
+                    excelName.innerHTML = data.path.substring(data.path.lastIndexOf("/") + 1);
                     // thumbnail.setAttribute("src", data.dbPath);
                     // inputThumbnail.value = data.dbPath;
                   })

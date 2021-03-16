@@ -1,4 +1,5 @@
 const excel = require('exceljs');
+const moment = require('moment');
 const readXlsxFile = require('read-excel-file/node');
 const controller = {};
 
@@ -40,7 +41,8 @@ controller.index = (req, res) => {
                             }
                         ],
                         actionSearch: '/admin/category/search',
-                        q: ''
+                        q: '',
+                        filter: ''
                     }
                 );
             }
@@ -119,25 +121,35 @@ controller.search = (req, res) => {
     const q = req.query.q != undefined ? `%${req.query.q}%` : '';
     const filterStatus = req.query.filterStatus;
 
+    let startDate = moment(req.query.startDate, 'DD-MM-YYYY');
+    startDate = startDate.format('yyyy/MM/DD')
+    let endDate = moment(req.query.endDate, 'DD-MM-YYYY');
+    endDate = endDate.format('yyyy/MM/DD')
+
     req.getConnection((err, conn) => {
-        let sql = '';
+
+        let sql = 'SELECT * FROM postCategories WHERE true ';
+        let sqlCount = ' SELECT COUNT(*) as Total FROM postCategories WHERE true ';
         let param = '';
         if (q != '') {
-            sql = `SELECT * FROM postCategories WHERE LOWER(name)  LIKE ? ORDER BY id DESC limit ? offset ? ;
-                        SELECT COUNT(*) as Total FROM postCategories WHERE LOWER(name)  LIKE ?
-                        `;
+            sql += `AND LOWER(name) LIKE  '${q}'`;
+            sqlCount += `AND LOWER(name) LIKE  '${q}'`;
             param = q;
         }
 
-        else if(filterStatus !=  undefined){
-            sql = `SELECT * FROM postCategories WHERE status = ? ORDER BY id DESC limit ? offset ? ;
-            SELECT COUNT(*) as Total FROM postCategories WHERE status = ?
-            `;
-            param =  parseInt(filterStatus);
+        if (filterStatus != undefined && filterStatus != '') {
+            sql += `AND status = ${filterStatus}`;
+            sqlCount += `AND status = ${filterStatus}`;
         }
-        console.log(param);
 
-        conn.query(sql, [param, parseInt(pageSize), (page - 1) * pageSize, param], (err, data) => {
+        sql += ` AND createTime >= '${startDate}'`;
+        sqlCount += ` AND createTime >= '${startDate}'`;
+        sql += ` AND createTime <= '${endDate}' `;
+        sqlCount += ` AND createTime <= '${endDate}'`;
+        
+
+        sql = sql + ' ORDER BY id DESC limit ? offset ? ; ' + sqlCount;
+        conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
 
             if (err) {
                 res.json(err);
@@ -165,7 +177,8 @@ controller.search = (req, res) => {
                             }
                         ],
                         actionSearch: '/admin/category/search',
-                        q: q
+                        q: q,
+                        filter: filterStatus
                     }
                 );
             }
