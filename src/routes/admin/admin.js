@@ -53,7 +53,7 @@ router.post('/room/excel/import', RoomController.importExcel);
 const ContactController = require('../../controllers/admin/ContactController');
 router.get('/contact', ContactController.index);
 router.post('/contact/create', ContactController.create);
-// router.put('/contact/update/:id', ContactController.update);
+router.put('/contact/update/:id', ContactController.update);
 router.get('/contact/delete/:id', ContactController.delete);
 router.get('/contact/search', ContactController.search);
 router.get('/contact/excel/export', ContactController.exportExcel);

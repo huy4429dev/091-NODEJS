@@ -1,5 +1,6 @@
 const excel = require('exceljs');
 const moment = require('moment');
+const { isEmail } = require('read-excel-file/commonjs/types/Email');
 const readXlsxFile = require('read-excel-file/node');
 const controller = {};
 
@@ -21,6 +22,7 @@ controller.index = (req, res) => {
                      from contacts `;
                      
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
+            
             if (err) {
                 res.json(err);
             }
@@ -56,7 +58,7 @@ controller.index = (req, res) => {
 
 controller.create = (req, res) => {
     const fullname = req.body.fullname;
-    const contactStatus = parseInt(req.body.status);
+    // const contactStatus = parseInt(req.body.status);
     const subject = req.body.subject;
     const content = req.body.content;
     const email = req.body.email;
@@ -72,12 +74,13 @@ controller.create = (req, res) => {
     }
     else {
         req.getConnection((err, connection) => {
+            console.log(err);
             connection.query(`INSERT INTO contacts set 
-                             fullname = ?, contactStatus = ?, subject = ?, content = ?, email = ?, phone = ?,note  = ?
+                             fullname = ?, subject = ?, content = ?, email = ?, phone = ?,note  = ?
                              `,
                 [
                     fullname,
-                    contactStatus,
+                    
                     subject,
                     content,
                     email,
@@ -85,7 +88,7 @@ controller.create = (req, res) => {
                     note
                 ],
                 (err, data) => {
-                    
+                    console.log(err);
                     req.session.Success = "Thêm mới liên hệ thành công";
                     res.redirect("/admin/contact");
                 })
@@ -93,36 +96,46 @@ controller.create = (req, res) => {
     }
 }
 
-// controller.update = (req, res) => {
+controller.update = (req, res) => {
 
-//     const { id } = req.params;
-//     const subject = req.body.name;
-//     const status = parseInt(req.body.status);
-//     const errors = [];
-//     if (errors.length > 0) {
-//         res.redirect("/admin/contact");
-//     }
-//     else {
-//         req.getConnection((err, connection) => {
-//             connection.query('UPDATE roomCategories SET ? WHERE ID = ?', [{ name: name, status: status }, id], (err, data) => {
-//                 res.json(
-//                     {
-//                         name: name,
-//                         status: status,
-//                         message: 'cập nhật liên hệ thành công',
-//                         success: true
-//                     });
-//             })
-//         });
-//     }
-// }
+    const { id } = req.params;
+    const fullname = req.body.fullname;
+    // const contactStatus = parseInt(req.body.status);
+    const subject = req.body.subject;
+    const content = req.body.content;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const note = req.body.note;
+    
+    
+    if (errors.length > 0) {
+        res.redirect("/admin/contact");
+    }
+    else {
+        req.getConnection((err, connection) => {
+            connection.query('UPDATE contacts SET ? WHERE ID = ?', [{ fullname: fullname, subject: subject, content: content, email:email, phone:phone, note:note }, id], (err, data) => {
+                res.json(
+                    {
+                        fullname: fullname,
+                        subject: subject,
+                        content: content,
+                        email: email,
+                        phone: phone,
+                        note: note,
+                        message: 'cập nhật liên hệ thành công',
+                        success: true
+                    });
+            })
+        });
+    }
+}
 
 controller.delete = (req, res) => {
     const { id } = req.params;
     req.getConnection((err, connection) => {
         connection.query('DELETE FROM contacts WHERE id = ?', [id], (err, rows) => {
             req.session.Success = "Xóa liên hệ thành công";
-            res.redirect('admin/contact');
+            res.redirect('/admin/contact');
         });
     });
 }
@@ -136,7 +149,7 @@ controller.search = (req, res) => {
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
     const q = req.query.q != undefined ? `%${req.query.q}%` : '';
-    const filterStatus = req.query.filterStatus;
+    
 
     let startDate = moment(req.query.startDate, 'DD-MM-YYYY');
     startDate = startDate.format('yyyy/MM/DD')
@@ -149,14 +162,9 @@ controller.search = (req, res) => {
         let sqlCount = ' SELECT COUNT(*) as Total FROM contacts WHERE true ';
         let param = '';
         if (q != '') {
-            sql += `AND LOWER(name) LIKE  '${q}'`;
-            sqlCount += `AND LOWER(name) LIKE  '${q}'`;
+            sql += `AND LOWER(fullname) LIKE  '${q}'`;
+            sqlCount += `AND LOWER(fullname) LIKE  '${q}'`;
             param = q;
-        }
-
-        if (filterStatus != undefined && filterStatus != '') {
-            sql += `AND status = ${filterStatus}`;
-            sqlCount += `AND status = ${filterStatus}`;
         }
 
         sql += ` AND createTime >= '${startDate}'`;
@@ -206,11 +214,15 @@ controller.exportExcel = (req, res) => {
     const now = Date.now();
 
     let workbook = new excel.Workbook();
-    let worksheet = workbook.addWorksheet("khach-hang");
+    let worksheet = workbook.addWorksheet("lien-lac");
     worksheet.columns = [
         { header: "#", key: "id", width: 5 },
-        { header: "Tên khách hàng", key: "name", width: 25 },
-        { header: "Trạng thái", key: "status", width: 25 },
+        { header: "Tên", key: "fullname", width: 25 },
+        { header: "Điện thoại", key: "phone", width: 25 },
+        { header: "Email", key: "email", width: 25 },
+        { header: "Chủ đề", key: "subject", width: 25 },
+        { header: "Nội dung", key: "content", width: 25 },
+        { header: "Ghi chú", key: "note", width: 25 },
     ];
     worksheet.getRow(1).font = { bold: true };
 
@@ -220,8 +232,13 @@ controller.exportExcel = (req, res) => {
             const contacts = data.map((item, index) => {
                 return {
                     id: index,
-                    name: item.name,
-                    status: item.status == 1 ? 'Hoạt động' : 'Không hoạt động'
+                    fullname: item.fullname,
+                    phone: item.phone,
+                    email: item.email,
+                    subject: item.subject,
+                    content: item.content,
+                    note: item.note
+                    // status: item.status == 1 ? 'Hoạt động' : 'Không hoạt động'
                 }
             });
 
@@ -237,7 +254,7 @@ controller.exportExcel = (req, res) => {
                 );
                 res.setHeader(
                     "Content-Disposition",
-                    "attachment; filename=" + "khach-hang-" + now + ".xlsx"
+                    "attachment; filename=" + "lien-he-" + now + ".xlsx"
                 );
 
                 return workbook.xlsx.write(res).then(function () {

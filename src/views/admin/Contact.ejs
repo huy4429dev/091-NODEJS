@@ -29,7 +29,7 @@
             <th scope="col" class="sort" data-sort="budget">Chủ đề</th>
             <th scope="col" class="sort" data-sort="budget">Nội dung</th>
             <th scope="col" class="sort" data-sort="budget">Ghi chú</th>
-            <th scope="col" class="sort" data-sort="status">Trạng thái</th>
+            <!-- <th scope="col" class="sort" data-sort="status">Trạng thái</th> -->
             <th scope="col"></th>
           </tr>
         </thead>
@@ -68,7 +68,7 @@
                   <%= item.note %>
                 </td>
                 
-                <td>
+                <!-- <td>
                   <span class="badge badge-dot mr-4">
                     <span class="status">
                       <% if (item.status===1 ) { %>
@@ -79,7 +79,7 @@
 
                     </span>
                   </span>
-                </td>
+                </td> -->
                 <td class="text-right">
                   <div class="dropdown">
                     <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown"
@@ -118,7 +118,7 @@
               <li class="page-item active">
                 <% if (q !='' || filter !='' ) { %>
                   <a class="page-link"
-                    href="/admin/contact/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                    href="/admin/contact/search?q=<%= q.replace(/%/g,'') %>&page=<%= i %>">
                     <%= i %>
                   </a>
                   <% } else { %>
@@ -133,7 +133,7 @@
 
                   <% if (q !='' || filter !='' ) { %>
                     <a class="page-link"
-                      href="/admin/contact/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                      href="/admin/contact/search?q=<%= q.replace(/%/g,'') %>&page=<%= i %>">
                       <%= i %>
                     </a>
                     <% } else { %>
@@ -164,7 +164,7 @@
       </div>
       <form action="/admin/contact/search" method="GET">
         <div class="modal-body">
-          <div>
+          <!-- <div>
             <label for="exampleFormControlInput1">Trạng thái</label>
           </div>
           <div class="custom-control custom-radio custom-control-inline">
@@ -175,7 +175,7 @@
           <div class="custom-control custom-radio custom-control-inline">
             <input type="radio" id="customRadioInline2" name="filterStatus" class="custom-control-input" value="2">
             <label class="custom-control-label" for="customRadioInline2">Không hoạt động</label>
-          </div>
+          </div> -->
           <div class="form-group mt-3">
             <div>
               <label for="exampleFormControlInput1">Thời gian</label>
@@ -251,13 +251,13 @@
                 <label for="exampleFormControlInput1">Điện thoại</label>
                 <input type="text" class="form-control" name="phone">
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label>Trạng thái</label>
                 <select class="form-control" name="contactStatus">
                   <option value="1">hoạt động</option>
                   <option value="2">không hoạt động</option>
                 </select>
-              </div>
+              </div> -->
             </div>
             <div class="col">
             
@@ -267,7 +267,7 @@
               </div>
               <div class="form-group">
                 <label>Nội dung</label>
-                <textarea name="content" id="editor"></textarea>
+                <textarea name="content" class="form-control"></textarea>
               </div>
               <div class="form-group">
                 <label>Ghi chú</label>
@@ -286,7 +286,7 @@
 </div>
 <!-- Sửa -->
 
-<!-- <div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="box-loading load-modal" style="display: none;">
     <div class="loadingio-spinner-rolling-lwtpylw27h">
@@ -307,28 +307,6 @@
       <div class="modal-body">
         <div class="row">
           <div class="col">
-            <h3 class="mb-4">Thông tin chính</h3>
-            <div class="form-group ">
-              <label>Loại tài khoản</label>
-              <div class="d-flex">
-                <div class="mb-3  mr-3">
-                  <input type="radio" checked value="2" name="roleId">
-                  <label>Chủ phòng</label>
-                </div>
-                <div class="">
-                  <input type="radio" name="roleId" value="3">
-                  <label>Người thuê</label>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Tài khoản</label>
-              <input type="text" class="form-control" name="username">
-            </div>
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Mật khẩu</label>
-              <input type="password" class="form-control" name="password" placeholder="******">
-            </div>
             <div class="form-group">
               <label for="exampleFormControlInput1">Họ tên</label>
               <input type="text" class="form-control" name="fullname">
@@ -341,50 +319,23 @@
               <label for="exampleFormControlInput1">Điện thoại</label>
               <input type="text" class="form-control" name="phone">
             </div>
+            
           </div>
           <div class="col">
-            <h3 class="mb-4">Thông tin bổ sung</h3>
             <div class="form-group">
-              <label for="exampleFormControlInput1">Địa chỉ</label>
-              <input type="text" class="form-control" name="address">
+              <label for="exampleFormControlInput1">Chủ đề</label>
+              <input type="text" class="form-control" name="subject">
             </div>
             <div class="form-group">
-              <label for="exampleFormControlSelect1">Giới tính</label>
-              <select class="form-control" id="exampleFormControlSelect1" name="gender">
-                <option value="1">Nam</option>
-                <option value="2">Nữ</option>
-              </select>
+              <label>Nội dung</label>
+              <textarea name="content" class="form-control"></textarea>
             </div>
             <div class="form-group">
-              <div>
-                <label for="exampleFormControlInput1">Ngày sinh</label>
-              </div>
-              <div class="input-daterange datepicker row align-items-center">
-                <div class="col">
-                  <div class="form-group">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
-                      </div>
-                      <input name="birthDate" class="form-control" placeholder="Start date" type="text"
-                        value="06/18/2020">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Ghi chú</label>
-                <textarea name="note" id="editorEdit"></textarea>
-              </div>
-              <div class="form-group">
-                <label>Trạng thái</label>
-                <select class="form-control" name="userStatus">
-                  <option value="1">hoạt động</option>
-                  <option value="2">không hoạt động</option>
-                </select>
-              </div>
+              <label>Ghi chú</label>
+              <textarea name="note" class="form-control"></textarea>
             </div>
           </div>
+              
         </div>
       </div>
       <div class="modal-footer">
@@ -393,7 +344,7 @@
       </div>
     </div>
   </div>
-</div> -->
+</div>
 
 <!-- XÓA  -->
 <% if (contacts) { %>
@@ -411,13 +362,13 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">XÓA KHÁCH HÀNG</h5>
+            <h5 class="modal-title" id="exampleModalLabel">XÓA LIÊN HỆ</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            Bạn có muốn xóa khách hàng này ?
+            Bạn có muốn xóa liên hệ này ?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -439,7 +390,7 @@
             <div class="modal-content ">
 
               <div class="modal-header">
-                <h6 class="modal-title" id="modal-title-notification">Import excel danh sách khách hàng</h6>
+                <h6 class="modal-title" id="modal-title-notification">Import excel danh sách liên hệ</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
@@ -500,46 +451,9 @@
           <!-- FILTER  -->
 
           <!-- CODE JS  -->
-
-
           <script>
 
-            // ckeditor
-            ClassicEditor
-              .create(document.querySelector('#editor'), {
-                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-                heading: {
-                  options: [
-                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
-                  ]
-                }
-              })
-              .catch(error => {
-                console.log(error);
-              });
-
-
-            // Update note
-            ClassicEditor
-              .create(document.querySelector('#editorEdit'), {
-                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-                heading: {
-                  options: [
-                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
-                  ]
-                }
-              })
-              .then(editor => {
-                window.editor = editor;
-              })
-              .catch(error => {
-                console.log(error);
-              });
-            
+        
             // upload file
 
             // let thumbnail = document.querySelector('#post-thumbnail');
@@ -598,8 +512,9 @@
             const formPost = document.querySelector('form[method=POST].create-item');
             
               <% if (!errorValidate && !successAlert) { %>
-              window.addEventListener('load', onLoading);
-            <%}%>
+                window.addEventListener('load', onLoading);
+              <%}
+              %>
 
               function onLoading(event) {
                 loadingData.style.display = 'flex';
@@ -620,124 +535,108 @@
             function reload() {
               window.location.href = "/admin/contact"
             }
-
-            // EDIT
-            // let editId = 0;
-            // let prevDataEdit = null;
-            // const loadingModalEdit = document.querySelector('#exampleModalEdit .box-loading.load-modal');
-            // const formEdit = document.querySelector('#exampleModalEdit');
-            // const inputNameEdit = document.querySelector('#exampleModalEdit input[name=fullname]');
-            // const inputRoleEdit = document.querySelector('#exampleModalEdit input[name=roleId]');
-            // const inputUsernameEdit = document.querySelector('#exampleModalEdit input[name=username]');
-            // const inputEmailEdit = document.querySelector('#exampleModalEdit input[name=email]');
-            // const inputPhoneEdit = document.querySelector('#exampleModalEdit input[name=phone]');
-            // const inputStatusEdit = document.querySelector('#exampleModalEdit select[name=userStatus]');
-            // const inputAddressEdit = document.querySelector('#exampleModalEdit input[name=address]');
-            // const inputNoteEdit = document.querySelector('#exampleModalEdit textarea[name=note]');
-            // const optionEdits = document.querySelectorAll('#exampleModalEdit select[name=userStatus] option');
-            // const optionEditValues = [];
-            // const roleEdits = document.querySelectorAll('#exampleModalEdit input[name=roleId]');
-            // const roleEditValues = [];
-            // optionEdits.forEach(item => optionEditValues.push(item.value));
-            // roleEdits.forEach(item => roleEditValues.push(item.value));
-
-            // function editItem(item) {
-            //   if (prevDataEdit?.fullname != item.fullname) {
-            //     inputNameEdit.value = item.fullname;
-            //     inputUsernameEdit.value = item.username;
-            //     inputEmailEdit.value = item.email;
-            //     inputPhoneEdit.value = item.phone;
-            //     inputAddressEdit.value = item.address;
-            //     window.editor.setData(item.note);
-
-            //   }
-
-            //   indexOptionSelected = optionEditValues.findIndex(o => o == item.userStatus);
-            //   optionEdits[indexOptionSelected].setAttribute('selected', 'selected');
-
-            //   roleEdits.forEach(item => {
-            //     item.removeAttribute('checked');
-            //   })
-            //   console.log(roleEdits);
-            //   indexRoleChecked = roleEditValues.findIndex(o => o == item.roleId);
-            //   roleEdits[indexRoleChecked].setAttribute('checked', 'checked');
-
-            //   prevDataEdit = item;
-            //   editId = item.id;
-
-            // }
-
-            // function updateItem(event) {
-            //   event.preventDefault();
-            //   // get data
-            //   var dataEdit = {
-            //     name: inputNameEdit.value,
-            //     status: inputStatusEdit.value
-            //   };
-
-            //   // start loading
-            //   loadingModalEdit.style.display = 'flex';
-            //   // call api
-            //   fetch(`/admin/contact/update/${editId}`, {
-            //     method: 'PUT', // or 'PUT'
-            //     headers: {
-            //       'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(dataEdit),
-            //   })
-            //     .then(response => response.json())
-            //     .then(data => {
-            //       if (data.success) {
-            //         setTimeout(() => {
-            //           // end loading
-
-            //           loadingModalEdit.style.display = 'none';
-
-            //           // notify
-
-            //           toastr["success"](data.message);
-
-            //           // close modal
-
-            //           $('#exampleModalEdit').modal('hide');
-
-            //           //  edit content html
-
-            //           var eleName = document.querySelector(`#item-${editId} td.budget`);
-            //           var eleStatus = document.querySelector(`#item-${editId} span.status .badge`);
-            //           eleName.textContent = data.name;
-
-            //           if (data.status == 1) {
-            //             eleStatus.className = 'badge badge-success';
-            //             eleStatus.textContent = 'HOẠT ĐỘNG';
-            //           }
-            //           else {
-            //             eleStatus.className = 'badge badge-danger';
-            //             eleStatus.textContent = 'KHÔNG HOẠT ĐỘNG';
-            //           }
-
-            //         }, 500);
-
-            //       }
-            //       else {
-            //         console.log('error:', data)
-            //       }
-            //     })
-            //     .catch((error) => {
-            //       console.error('Error:', error);
-            //     })
-            //     .finally(() => {
-            //     })
-            //     ;
-            //   // notify
-
-            //   // end loading
-
-            // }
-
+            
+            EDIT
+            let editId = 0;
+            let prevDataEdit = null;
+            const loadingModalEdit = document.querySelector('#exampleModalEdit .box-loading.load-modal');
+            const formEdit = document.querySelector('#exampleModalEdit');
+            const inputNameEdit = document.querySelector('#exampleModalEdit input[name=fullname]');
+            const inputSubjectEdit = document.querySelector('#exampleModalEdit input[name=subject]');
+            const inputContentEdit = document.querySelector('#exampleModalEdit input[name=content]');
+            const inputEmailEdit = document.querySelector('#exampleModalEdit input[name=email]');
+            const inputPhoneEdit = document.querySelector('#exampleModalEdit input[name=phone]');
+            const inputNoteEdit = document.querySelector('#exampleModalEdit textarea[name=note]');
             
 
-              
+            function editItem(item) {
+              if (prevDataEdit?.fullname != item.fullname) {
+                inputNameEdit.value = item.fullname;
+                inputSubjectEdit.value = item.subject;
+                inputEmailEdit.value = item.email;
+                inputPhoneEdit.value = item.phone;
+                inputContentEdit.value = item.content;
+                inputNoteEdit.value = item.note
+                
+              }
+
+
+              prevDataEdit = item;
+              editId = item.id;
+
+            }
+
+            function updateItem(event) {
+              event.preventDefault();
+              // get data
+              var dataEdit = {
+                fullname: inputNameEdit.value,
+                subject: inputSubjectEdit.value,
+                content: inputContentEdit.value,
+                email: inputEmailEdit.value,
+                phone: inputPhoneEdit.value,
+                note: inputNoteEdit.value,
+              };
+
+              // start loading
+              loadingModalEdit.style.display = 'flex';
+              // call api
+              fetch(`/admin/contact/update/${editId}`, {
+                method: 'PUT', // or 'PUT'
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataEdit),
+              })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    setTimeout(() => {
+                      // end loading
+
+                      loadingModalEdit.style.display = 'none';
+
+                      // notify
+
+                      toastr["success"](data.message);
+
+                      // close modal
+
+                      $('#exampleModalEdit').modal('hide');
+
+                      //  edit content html
+
+                      var eleName = document.querySelector(`#item-${editId} td.budget`);
+                      var eleStatus = document.querySelector(`#item-${editId} span.status .badge`);
+                      eleName.textContent = data.name;
+
+                      if (data.status == 1) {
+                        eleStatus.className = 'badge badge-success';
+                        eleStatus.textContent = 'HOẠT ĐỘNG';
+                      }
+                      else {
+                        eleStatus.className = 'badge badge-danger';
+                        eleStatus.textContent = 'KHÔNG HOẠT ĐỘNG';
+                      }
+
+                    }, 500);
+
+                  }
+                  else {
+                    console.log('error:', data)
+                  }
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                })
+                .finally(() => {
+                })
+                ;
+              // notify
+
+              // end loading
+
+            }
            
               <% if (errorValidate) { %>
               const err = '<%= errorValidate %>';
