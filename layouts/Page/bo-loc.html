@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bộ lọc</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+        />
+        <link 
+            rel="stylesheet" 
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" 
+        />
+        <link rel="stylesheet" href="./stylesheets/_global.css" />
+        <link rel="stylesheet" href="./stylesheets/style.css" />
+    </head>
+    <body>
+        <header class="header">
+            <div class="container">
+                <nav class="nav-bar">
+                    <div class="hamburger-menu">
+                        <i class="fas fa-bars"></i>
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <!-- Hotline, Đăng nhập, Đăng kí -->
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="" class="nav-link">Căn hộ HomeX</a>
+                            <a href="bo-loc.html" class="nav-link">Phòng mới nhất</a>
+                            <a href="" class="nav-link">Phòng đã xác thực</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="dang-nhap.html" class="nav-link">Đăng nhập</a>
+                            <a href="dang-ki.html" class="nav-link">Đăng kí</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="container">
+                <nav class="nav-bar" id="tool-bar">
+                    <!-- Logo -->
+                    <div class="logo">
+                        <a href="index.html"><img src="./img/logoWhite.png" alt=""></a>
+                    </div>
+
+                    <!-- Search tool -->
+                    <div class="search-tool">
+                        <div class="dropdown">
+                            <div class="default-option">
+                                <i class="fas fa-map-marker-alt"></i>
+                                HN 
+                            </div>
+                            <div class="dropdown-list">
+                                <ul>
+                                    <li>HCM</li>
+                                    <li>NA</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="search-input">
+                            <input type="text" 
+                                class="search-input" 
+                                placeholder="Tìm kiếm theo địa điểm, quận, tên đường,..."
+                                onfocus="this.placeholder = ''">
+                        </div>
+
+                        <button class="btn-search" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+
+                    <!-- upload room -->
+                    <div class="upload-room">
+                        <button class="btn-upload">
+                            <i class="fas fa-plus-circle"></i> Đăng phòng ngay
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <div class="container filter">
+            <div class="two-side">
+                <!-- Aside left -->
+                <div class="filter-tool">
+                    <div class="title-col">
+                        <h3>Bộ lọc</h3>
+                        <button>Áp dụng</button>
+                    </div>
+                    <div class="line"></div>
+                    <!-- Giá -->
+                    <div class="price-filter">
+                        <h3>Giá</h3>
+                        <div class="price">
+                            <div class="block">
+                                <input type="checkbox" id="all" name="all" value="all">
+                                <label for="all"> Tất cả</label>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> 1tr - 2tr</label>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> 2tr - 3tr</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> 3tr - 4tr</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> 4tr - 6tr</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> 6tr - 8tr</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> 8tr - 10tr</label><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                    <!-- Loại phòng -->
+                    <div class="room-filter">
+                        <h3>Loại phòng</h3>
+                        <div class="room">
+                            <div class="block">
+                                <input type="checkbox" id="all" name="all" value="all">
+                                <label for="all"> Tất cả</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> Phòng cho thuê</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> Phòng ở ghép</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> Kí túc xá</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> Nhà nguyên căn</label><br>
+                            </div>
+                            <div class="block">
+                                <input type="checkbox" id="" name="" value="">
+                                <label for=""> Căn hộ</label><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                    <!-- Tiện ích -->
+                    <div class="utility-filter">
+                        <h3>Tiện ích</h3>
+                    </div>
+                    <div class="line"></div>
+                    <!-- Giới tính -->
+                    <div class="sex-filter">
+                        <h3>Giới tính</h3>
+                    </div>
+                    <div class="line"></div>
+                    <!-- Nút -->
+                    <div class="apply">
+                        <button class="btn-apply">Áp dụng</button>
+                    </div>
+                </div>
+
+                <!-- Aside right -->
+                <div class="new-room">
+                    <!-- Tiêu đề -->
+                    <div class="section-heading">
+                        <div id="title-right">
+                            <i class="fas fa-home"></i>
+                            Phòng mới nhất
+                        </div>
+                    </div>
+                    <div class="card-items">
+                        <!-- Phòng mới 1 -->
+                        <div class="card-item">
+                            <div class="room-img">
+                                <img src="./img/room.png" alt="">
+                            </div>
+    
+                            <div class="room-desc">
+                                <div class="room-desc-title">
+                                    <h3>Phòng ở ghép khu tập thể Thanh Xuân Bắc, Quận Thanh Xuân</h3>
+                                </div>
+                                <div class="description">
+                                    <p><i class="fas fa-home"></i> Phòng ở ghép</p>
+                                    <p><i class="fas fa-user-friends"></i> Nam</p>
+                                    <p><i class="fas fa-pencil-alt"></i> 20m2</p>   
+                                    <p><i class="fas fa-map-marked-alt"></i>
+                                        110A11 Khu tập thể Thanh Xuân Bắc, Phường  Thanh...</p>       
+                                </div>
+                            </div>
+
+                            <div class="room-price">
+                                <div id="num">
+                                    1
+                                </div>
+                                <div id="sub">
+                                    tr/người
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+
+                        <!-- Phòng mới 2 -->
+                        <div class="card-item">
+                            <div class="room-img">
+                                <img src="./img/room.png" alt="">
+                            </div>
+    
+                            <div class="room-desc">
+                                <div class="room-desc-title">
+                                    <h3>Phòng ở ghép khu tập thể Thanh Xuân Bắc, Quận Thanh Xuân</h3>
+                                </div>
+                                <div class="description">
+                                    <p><i class="fas fa-home"></i> Phòng cho thuê</p>
+                                    <p><i class="fas fa-user-friends"></i> Nam & Nữ</p>
+                                    <p><i class="fas fa-pencil-alt"></i> 25m2</p>   
+                                    <p><i class="fas fa-map-marked-alt"></i> 45 Nhuệ giang Phúc Diễn, Xã Tây Mỗ, Quận Nam Từ,...</p>       
+                                </div>
+                            </div>
+
+                            <div class="room-price">
+                                <div id="num">
+                                    1,8
+                                </div>
+                                <div id="sub">
+                                    tr/người
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+
+                        <!-- Phòng mới 3 -->
+                        <div class="card-item">
+                            <div class="room-img">
+                                <img src="./img/room.png" alt="">
+                            </div>
+    
+                            <div class="room-desc">
+                                <div class="room-desc-title">
+                                    <h3>Phòng ở ghép khu tập thể Thanh Xuân Bắc, Quận Thanh Xuân</h3>
+                                </div>
+                                <div class="description">
+                                    <p><i class="fas fa-home"></i> Phòng cho thuê</p>
+                                    <p><i class="fas fa-user-friends"></i> Nam & Nữ</p>
+                                    <p><i class="fas fa-pencil-alt"></i> 25m2</p>   
+                                    <p><i class="fas fa-map-marked-alt"></i> 45 Nhuệ giang Phúc Diễn, Xã Tây Mỗ, Quận Nam Từ,...</p>       
+                                </div>
+                            </div>
+
+                            <div class="room-price">
+                                <div id="num">
+                                    1,8
+                                </div>
+                                <div id="sub">
+                                    tr/người
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+
+                        <!-- Phòng mới 4 -->
+                        <div class="card-item">
+                            <div class="room-img">
+                                <img src="./img/room.png" alt="">
+                            </div>
+    
+                            <div class="room-desc">
+                                <div class="room-desc-title">
+                                    <h3>Phòng ở ghép khu tập thể Thanh Xuân Bắc, Quận Thanh Xuân</h3>
+                                </div>
+                                <div class="description">
+                                    <p><i class="fas fa-home"></i> Phòng cho thuê</p>
+                                    <p><i class="fas fa-user-friends"></i> Nam & Nữ</p>
+                                    <p><i class="fas fa-pencil-alt"></i> 25m2</p>   
+                                    <p><i class="fas fa-map-marked-alt"></i> 45 Nhuệ giang Phúc Diễn, Xã Tây Mỗ, Quận Nam Từ,...</p>       
+                                </div>
+                            </div>
+
+                            <div class="room-price">
+                                <div id="num">
+                                    1,8
+                                </div>
+                                <div id="sub">
+                                    tr/người
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+
+                        <!-- Phòng mới 5 -->
+                        <div class="card-item">
+                            <div class="room-img">
+                                <img src="./img/room.png" alt="">
+                            </div>
+    
+                            <div class="room-desc">
+                                <div class="room-desc-title">
+                                    <h3>Phòng ở ghép khu tập thể Thanh Xuân Bắc, Quận Thanh Xuân</h3>
+                                </div>
+                                <div class="description">
+                                    <p><i class="fas fa-home"></i> Phòng cho thuê</p>
+                                    <p><i class="fas fa-user-friends"></i> Nam & Nữ</p>
+                                    <p><i class="fas fa-pencil-alt"></i> 25m2</p>   
+                                    <p><i class="fas fa-map-marked-alt"></i> 45 Nhuệ giang Phúc Diễn, Xã Tây Mỗ, Quận Nam Từ,...</p>       
+                                </div>
+                            </div>
+
+                            <div class="room-price">
+                                <div id="num">
+                                    1,8
+                                </div>
+                                <div id="sub">
+                                    tr/người
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Start: Footer -->
+        <footer class="footer">
+            <div class="container row">
+                <!-- [v]Logo -->
+                <div class="footer-left">
+                    <img src="./img/logo.png"  alt="">
+                </div>
+
+                <div class="footer-right">
+                    <!-- []Hotline, email, dia chi -->
+                    <div class="row">
+                        <ul class="contacts">
+                            <li> 
+                                <i class="fas fa-mobile-alt"></i>
+                                Hotline : 0869.672.231
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                Email : homeX@gmail.com  
+                            </li>
+                            <li>
+                                <i class="fas fa-globe"></i>
+                                Địa chỉ : VP Hà Nội : 22 Thành Công, HN
+                            </li>
+                        </ul>
+                        <ul class="social">
+                            <li><i class="fab fa-facebook-square fa-3x"></i></li>
+                            <li><i class="fab fa-twitter-square fa-3x"></i></li>
+                            <li><i class="fab fa-instagram fa-3x"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- []ban quyen -->
+                <div class="footer-bottom">
+                    <p>2019 Home X. Bản quyền thuộc về công ty TNHH Home X Việt Nam. Mọi hành vi sao chép đều là phạm pháp nếu không có sự cho phép bằng văn bản của chúng tôi</p>
+                </div>
+            </div>
+        </footer>
+        <!-- End: Footer -->
+    </body>
+    <script>
+        let header = document.querySelector('.header')
+        let hamburgerMenu = document.querySelector('.hamburger-menu')
+        let dropdown = document.querySelector('.dropdown')
+        let drList = document.querySelector('.dropdown-list ul')
+        hamburgerMenu.addEventListener('click',function name() {
+            header.classList.toggle('menu-open')
+        })
+        dropdown.addEventListener('click', function name() {
+            drList.classList.toggle('active')
+        })
+    </script>
+</html>

@@ -9,11 +9,8 @@ const router = require('express').Router();
 const bodyParser = require('body-parser');
 const app = express();
 
-// importing routes
-const customerRoutes = require('./routes/customer');
-const adminRoutes = require('./routes/admin/admin');
 
-// buld host
+// build host
 app.set('port', process.env.PORT || 3000);
 
 global.__basedir = __dirname;
@@ -21,7 +18,7 @@ global.__basedir = __dirname;
 
 // Set Templating Engine
 app.use(expressLayouts)
-app.set('layout', './layout/_layoutAdmin', './layout/_layoutPage');
+app.set('layout', './layout/_layoutAdmin', './layout/_layoutAdminDashboard', './layout/_layoutPage');
 app.set('view engine', 'ejs'); // set view  engine --> c# --> cshtml react --> jsx ===> code js inline html
 app.set('views', path.join(__dirname, 'views')); // define path views default
 
@@ -34,32 +31,14 @@ app.use(session({
     cookie: { maxAge: 60000 }
 }));
 
+app.use(function (req, res, next) {
+    res.locals.user = req.session.User;
+    next();
+});
 
-//set session
-app.get('/set_session', (req, res) => {
-    //set a object to session
-    req.session.User = "Lỗi GÌ ĐÓ !"
-
-    return res.status(200).json({ status: 'success' })
-})
-
-//set session
-app.get('/get_session', (req, res) => {
-    //check session
-    if (req.session.User) {
-        return res.status(200).json({ status: 'success', session: req.session.User })
-    }
-    return res.status(200).json({ status: 'error', session: 'No session' })
-})
-
-
-//destroy session
-app.get('/destroy_session', (req, res) => {
-    //destroy session
-    req.session.destroy(function (err) {
-        return res.status(200).json({ status: 'success', session: 'cannot access session here' })
-    })
-})
+// importing routes
+const customerRoutes = require('./routes/customer');
+const adminRoutes = require('./routes/admin/admin');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -84,3 +63,4 @@ app.use(express.static(path.join(__dirname, 'resources')));
 app.listen(app.get('port'), () => {
     console.log(`server on port ${app.get('port')}`);
 });
+

@@ -1,106 +1,110 @@
- <!-- Sidenav -->
- <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
-    <div class="scrollbar-inner">
-      <!-- Brand -->
-      <div class="sidenav-header  align-items-center">
-        <a class="navbar-brand" href="javascript:void(0)">
-          <img src="/admin//img/brand/blue.png" class="navbar-brand-img" alt="...">
-        </a>
-      </div>
-      <div class="navbar-inner">
-        <!-- Collapse -->
-        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
-          <!-- Nav items -->
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="dashboard.html">
-                <i class="ni ni-tv-2 text-primary"></i>
-                <span class="nav-link-text">Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="icons.html">
-                <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Icons</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="map.html">
-                <i class="ni ni-pin-3 text-primary"></i>
-                <span class="nav-link-text">Google</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="profile.html">
-                <i class="ni ni-single-02 text-yellow"></i>
-                <span class="nav-link-text">Profile</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="tables.html">
-                <i class="ni ni-bullet-list-67 text-default"></i>
-                <span class="nav-link-text">Tables</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="login.html">
-                <i class="ni ni-key-25 text-info"></i>
-                <span class="nav-link-text">Login</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="register.html">
-                <i class="ni ni-circle-08 text-pink"></i>
-                <span class="nav-link-text">Register</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="upgrade.html">
-                <i class="ni ni-send text-dark"></i>
-                <span class="nav-link-text">Upgrade</span>
-              </a>
-            </li>
-          </ul>
-          <!-- Divider -->
-          <hr class="my-3">
-          <!-- Heading -->
-          <h6 class="navbar-heading p-0 text-muted">
-            <span class="docs-normal">Documentation</span>
-          </h6>
-          <!-- Navigation -->
-          <ul class="navbar-nav mb-md-3">
-            <li class="nav-item">
-              <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/getting-started/overview.html" target="_blank">
-                <i class="ni ni-spaceship"></i>
-                <span class="nav-link-text">Getting started</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/foundation/colors.html" target="_blank">
-                <i class="ni ni-palette"></i>
-                <span class="nav-link-text">Foundation</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/components/alerts.html" target="_blank">
-                <i class="ni ni-ui-04"></i>
-                <span class="nav-link-text">Components</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/plugins/charts.html" target="_blank">
-                <i class="ni ni-chart-pie-35"></i>
-                <span class="nav-link-text">Plugins</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active active-pro" href="upgrade.html">
-                <i class="ni ni-send text-dark"></i>
-                <span class="nav-link-text">Upgrade to PRO</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+  <div class="scrollbar-inner">
+    <div class="sidenav-header  align-items-center position-relative">
+      <a class="navbar-brand" href="/admin/dashboard" style="position: absolute;
+        top: 50%; 
+        right: 50%;
+        transform: translate(50%,-50%);
+        text-transform: uppercase;
+        font-family: verdana;
+        font-size: 24px;
+        font-weight: 700;
+        color: #5e72e4;
+        text-shadow: 1px 1px 1px #919191,
+            1px 2px 1px #919191
+            ">
+        HOME X
+      </a>
+    </div>
+    <div class="navbar-inner">
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/dashboard">
+              <i class="ni ni-tv-2 text-primary"></i>
+              <span class="nav-link-text">Tổng quan</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <div id="accordion">
+              <div data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <a class="nav-link" href="#">
+                  <i class="fas fa-hotel"></i>
+                  <span class="nav-link-text">Phòng</span>
+                  <div class="text-right w-100"><i class="ni ni-bold-right"></i></div>
+                </a>
+              </div>
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <a class="nav-link" style="padding-left: 27px;" href="/admin/room">
+                  <i class="fab fa-buromobelexperte"></i>
+                  <span class="nav-link-text">Đặt phòng</span>
+                </a>
+                <a class="nav-link" style="padding-left: 27px;" href="/admin/room/category">
+                  <i class="ni ni-app"></i>
+                  <span class="nav-link-text">Loại phòng</span>
+                </a>
+                <hr />
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/customer">
+              <i class="far fa-id-badge" style="font-size: 16px;"></i>
+              <span class="nav-link-text">Khách hàng</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/order">
+              <i class="fas fa-money-check-alt"></i>
+              <span class="nav-link-text">Hóa đơn</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <div id="accordion">
+              <div data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link d-flex justify-content-between" href="#">
+                  <div>
+                    <i class="far fa-chart-bar" style="font-size: 19px; margin-right: 9px;"></i>
+                    <span class="nav-link-text">Báo cáo</span>
+                  </div>
+                  <div><i class="ni ni-bold-right"></i></div>
+                </a>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <a class="nav-link" style="padding-left: 27px;" href="/admin/report/revenue">
+                  <i class="fas fa-hand-holding-usd"></i>
+                  <span class="nav-link-text">Doanh thu</span>
+                </a>
+                <a class="nav-link" style="padding-left: 27px;" href="/admin/report/customer">
+                  <i class="far fa-address-card"></i>
+                  <span class="nav-link-text">Khách hàng</span>
+                </a>
+                <hr />
+              </div>
+            </div>
+          </li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/post">
+              <i class="fas fa-newspaper"></i>
+              <span class="nav-link-text">Tin tức</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/contact">
+              <i class="far fa-address-card"></i>
+              <span class="nav-link-text">Liên hệ</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/setting">
+              <i class="fas fa-cogs"></i>
+              <span class="nav-link-text">Cài đặt</span>
+            </a>
+          </li>
+        </ul>
+        <hr class="my-3">
       </div>
     </div>
-  </nav>
+  </div>
+</nav>

@@ -8,21 +8,20 @@ controller.init = (req, res) => {
                 console.log("ADMIN INITIALIZED !");
             }
             else {
-
                 // init roles 
-                const roles = [[1,'admin'], [2,'employee']];
+                const roles = [[1,'admin'], [2,'employee'], [3,'customer']];
                 conn.query('INSERT INTO roles (id,name) values ?', [roles], (err, r) => {
                 });
-
                 // init users
                 const users = [
-                    [1,'admin', md5('123456'), 'admin@gmail.com', 'Admin', 1],
-                    [2,'employee', md5('123456'), 'employee@gmail.com', 'Employee', 1],
+                    [1,'admin', md5('123456'), 'admin@gmail.com', 'Admin', 1,'/static/assets/uploads/admin/profile.png'],
+                    [2,'employee', md5('123456'), 'employee@gmail.com', 'Employee', 1,'/static/assets/uploads/admin/profile.png'],
+                    [3,'customer', md5('123456'), 'customer@gmail.com', 'Customer', 1,'/static/assets/uploads/admin/profile.png'],
                 ];
 
-                conn.query('INSERT INTO users (id,username,password,email,fullname,userStatus) values ?', [users], (err, u) => {
-                    let userRoles = [[1,1],[2,2]];
-                    conn.query('INSERT INTO useroles (userId,roleId) values ?', [userRoles], (err, u) => {
+                conn.query('INSERT INTO users (id,username,password,email,fullname,userStatus,avatar) values ?', [users], (err, u) => {
+                    let userRoles = [[1,1],[2,2],[3,3]];
+                    conn.query('INSERT INTO userRoles (userId,roleId) values ?', [userRoles], (err, u) => {
                     })
                 })
             }

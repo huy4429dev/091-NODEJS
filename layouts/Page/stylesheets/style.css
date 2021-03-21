@@ -1,0 +1,1016 @@
+/* ============= Start Header ============= */
+.header{
+    width: 100%;
+    background-color:#FFFFFF;
+    display: inline-block;
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.nav-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-bar .logo img{
+    width: 10vw;
+    height: 100%;
+}
+
+.hamburger-menu{
+    font-size: 2.6rem;
+    cursor: pointer;
+    position: relative;
+    z-index: 1500;
+    margin-left: auto;
+}
+
+.hamburger-menu .fa-times{
+    display: none;
+}
+
+.menu-open .hamburger-menu .fa-times{
+    display: block;
+}
+
+.menu-open .hamburger-menu .fa-bars{
+    display: none;
+}
+
+.nav-list{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1400;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity ease .5s;
+}
+
+.menu-open .nav-list{
+    opacity: 1;
+    transform: scale(1);
+}
+
+.nav-item:not(:last-child){
+    margin-bottom: .5rem;
+}
+
+.nav-link{
+    display: block;
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 21px;
+    letter-spacing: 2px;
+    padding: 1rem;
+}
+ 
+#hotline{
+    width: 15px;
+    height: 28px;
+    margin-right: 10px;
+}
+/* ============= End Header ============= */
+
+/* ============= Start Banner ============= */
+.banner{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4.6rem;
+}
+
+.banner .container{
+    position: relative;
+}
+
+.banner .container img{
+    width: 100%;
+    height: 54vh;
+    object-fit: contain;
+    opacity: 0.8;
+}
+
+.title{
+    position: absolute;
+    max-width: 45vw;
+    max-height: 14vh;
+    top: 11rem;
+    left: 8rem;
+    color: #ffffff;
+    opacity: 0.8;
+    font-size: 3.6rem;
+    font-weight: 700;
+    line-height: 4.2rem;
+    z-index: 100;
+}
+
+.search-tool{
+    display: inline-block;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+}
+
+/* ============= End Banner ============= */
+
+/* ============= Start Content ============= */
+.content{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 3rem;
+    margin-top: 2rem;
+    height: auto;
+}
+
+.aside-left{
+    display: flex;
+    flex-direction: column;
+    max-width: 58vw;
+    width: 100%;  
+    background: #e7e6e1;
+    margin-right: 5rem;
+    color: black;
+}
+
+.section-heading{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+#title-right{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 2.8rem;
+    align-items: center;
+}
+#title-left{
+    margin-left: auto;
+    font-style: normal;
+    font-weight: bold;
+}
+
+#title-left button{
+    padding: 1rem;
+    margin-right: 1rem;
+    font-size: 2rem;
+    border-radius: 10px;
+    background: black;
+    cursor: pointer;
+    border: none;
+    color: white;
+    transition: transform .5s ease;
+}
+
+#title-left:hover{
+    transform: scale(1.1);
+}
+
+.card-items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card-item{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.room-img img{
+    border-radius: 20px;
+    object-fit: contain;
+}
+
+.room-desc {
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.room-desc-title{
+    font-weight: 500;
+    font-size: 2rem;
+    line-height: 28px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.room-desc .description{
+    display: flex;
+    flex-direction: column;
+}
+
+.room-desc .description p{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.6rem;
+    color: gray;
+}
+
+.room-price{
+    text-align: center;
+    margin: auto;
+    margin-right: 2rem;
+}
+
+.room-price #num{ 
+    font-size: 6rem;
+    font-weight: bold;
+}
+
+.room-price #sub{
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.aside-right{
+    max-width: 25vw;
+    width: 100%;   
+    background: #e7e6e1;
+}
+
+.card-item-right{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 2rem;
+    
+}
+
+.card-item-right .card-item-right-desc{
+    
+    font-weight: bold;
+    margin-left: 1rem;
+}
+
+.card-item-right-desc h3{
+    margin-top: 1rem;
+    line-height: 2rem;
+    font-size: 1.8rem;
+}
+
+.card-item-right-desc h4{
+    color: gray;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.card-item-right-price {
+    margin-left: auto;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* ============= End Content ============= */
+
+
+/* ============= Start Giao diện user ============= */
+.city, .home{
+    display: block;
+    padding-bottom: 2rem;
+    background: #e7e6e1;
+    max-width: 78vw;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.city-title, .home-title{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+    font-size: 2.4rem;
+    font-weight: bold;
+    display: flex;
+}
+
+.cities, .homes{
+    display: flex;
+    flex-direction: row;
+}
+
+.cities a, .homes a{
+    display: block;
+    transition: transform .5s ease;
+    padding-bottom: 1rem;
+}
+
+.cities a:hover{
+    transform: scale(1.1);
+}
+
+.homes a img{
+    width: 260px;
+    height: 188px;
+    border-radius: 10px;
+}
+
+.city-desc, .home-desc{
+    text-align: center;
+    margin-top: 1rem;
+    height: 76px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: gray;
+}
+
+.home-desc h3, h4{
+    width: 260px;
+    margin: .5rem;
+}
+
+.home-price h4{
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-left: auto;
+    color: black;
+}
+
+/* ============= End Giao diện user ============= */
+
+/* ============= Start setting user ============= */
+.list-items{
+    display: flex;
+    flex-direction: row;    
+    margin-left: auto;
+}
+
+.list-items li{
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+.tool-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-right:auto;
+    margin-top: 9rem;
+    margin-bottom: 2rem;
+    position: relative;
+    height: 5vh;
+    width: 38vw;
+    left: 10rem;
+}
+
+.book, .message, .setting{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 2rem;
+    line-height: 2rem;
+}
+
+.setting{
+    color: orangered;
+}
+
+.form{
+    width: 100%;
+}
+
+.form .users{
+    display: flex;
+    
+    margin-top: 2rem;
+    font-size: 2rem;
+    font-style: normal;
+    margin-bottom: 3rem;
+}
+
+#username{
+    color: orangered;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.users .info span{
+    color: black;
+    margin-left: .5rem;
+}
+
+.users .info h2{
+    margin-top: 1rem;
+}
+
+.main-form{
+    display: flex;
+    flex-direction: row;
+}
+
+.left-form, .right-form{
+    display: inline-block;
+}
+
+.left-form ul{
+    width: 29vw;
+    height: 41vh;
+    margin-right: auto;
+    font-size: 2rem;
+}
+
+.left-form ul li{
+    margin: 1rem;
+}
+
+.left-form ul > .line{
+    width: 100%;
+}
+
+.left-form ul a:hover{
+    font-weight: bold;
+}
+
+.right-form .change-avatar{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.right-form .change-avatar .btn-change, .btn-update{
+    border-radius: 10px;
+    border: none;
+    width: 243px;
+    height: 41px;
+    background: var(--orange1);
+    color: white;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.right-form .change-avatar .btn-change:hover, .btn-update:hover{
+    cursor: pointer;
+    background: var(--green);
+}
+
+.right-form .detail-update{
+    font-size: 1.6rem;
+}
+
+.radio{
+    display: flex;
+    flex-direction: row;
+    margin:-2px 10px 0 0;
+}
+
+.radio label{
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+
+input[type="radio"]{ 
+    background-color: #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-block;
+    height: 15px;
+    margin-right: 15px;
+    position: relative;
+    width: 15px;
+}
+
+textarea{
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box; 
+    background: var(--gray);
+    border: none;
+    border: 10px;
+    font-size: 1.6rem;
+}
+
+.btn-update{
+    width: 133px;
+    height: 42px;
+}
+
+/* ============= End setting user ============= */
+
+/* ============= Start Chi tiết ============= */
+#tool-bar{
+    background: var(--orange1);
+    position: relative;
+    height: 14vh;
+}
+
+#tool-bar .logo{
+    margin: 2rem;
+    margin-left: 4rem;
+}
+
+.nav-bar .search-tool{
+    display: flex;
+    width: 60%;
+    padding: .5rem;
+    border-radius: 30px;
+    box-shadow: 0px 2px 4px 0px  rgba(12,18,18,0.4);
+    background-color: #ffffff;
+}
+
+.dropdown{
+    margin: auto;
+    cursor: pointer;
+    position: relative;
+    width: 20%;
+    padding-left: 1rem;
+    font-size: 1.8rem;
+    border-right: 4px solid rgba(0, 0, 0, 0.5);;
+}
+
+.default-option{
+    padding: 8px 30px;
+}
+.dropdown-list ul{
+    background: var(--orange1);
+    color: black;
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    display: none;
+}
+
+.dropdown-list ul.active{
+    display: block;
+}
+
+.dropdown-list ul li{
+    padding: 1rem 1rem 1rem 2rem;
+}
+
+.dropdown::before{
+    content: '';
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: #1d1d1d transparent;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+}
+
+.dropdown-list ul li:hover {
+    font-weight: bold;
+}
+
+.search-input{
+    flex: 1;
+    font-size: 2rem;
+    margin: auto;
+}   
+
+.search-input input{
+    width: 100%;
+    border: 0;
+    text-align: center;
+}
+
+.search-input input[type="text"], button:focus {
+    outline : none;
+}
+
+.btn-search{
+    border: none;
+    cursor: pointer;
+    margin-right:auto;
+    background-color: transparent;
+    font-size: 1.8rem;
+}
+
+.btn-search i.fa{
+    display: inline-block;
+    border-radius: 30px;
+    box-shadow: 0px 0px 4px #888;
+    padding: 1rem ;
+    background-color: var(--gray);
+}
+
+.btn-search .fa:hover{
+    background-color: orangered;
+    transform: scale(1.1);
+}
+
+.upload-room {
+    margin-right: 4rem;
+    margin-left: 4rem;
+}
+
+.upload-room .btn-upload{
+    cursor: pointer;
+    font-size: 1.8rem;
+    border-radius: 20px;
+    padding: 1rem;
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%), #000000;
+}
+
+.btn-upload:hover{
+    background-color: var(--orange1);
+}
+
+
+/* Breadcrumb */
+.link{
+    padding-top: 10rem;
+    margin-top: 10rem;
+    margin-left: 10rem;
+}
+ul.breadcrumb {
+    width: 100%;
+}
+  
+ul.breadcrumb li {
+    display: inline;
+    font-size: 2rem;
+}
+  
+  /* Add a slash symbol (/) before/behind each list item */
+ul.breadcrumb li+li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+}
+  
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+    color: #0275d8;
+}
+  
+  /* Add a color on mouse-over */
+ul.breadcrumb li a:hover {
+    color: #01447e;
+    text-decoration: underline;
+}
+
+.img-room{
+    margin: auto;
+    align-items: center;
+}
+
+.img-room .row .card-item{
+    margin: 1rem;
+}
+
+.img-room .row .card-item img{
+    width: 500px;
+    height: 320px;
+    border-radius: 30px;
+    transition: transform .5s ease;
+}
+
+.img-room .row .card-item img:hover{
+    transform: scale(1.1);
+}
+
+
+.content-details{
+    margin-left: 9rem;
+}
+
+.content-details h2{
+    font-size: 2.8rem;
+    line-height: 42px;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.content-details .row{
+    justify-content: unset;
+    align-items: unset;
+    width: 90%;
+    margin: auto;
+    position: relative;
+}
+
+
+.room-detail, .utility, .host-detail, .more-desc{
+    background-color: rgba(229, 229, 229, 0.2);
+    border-radius: 30px;
+    margin-bottom: 3rem;
+}
+
+.detail_Title{
+    display:inline-block;
+    padding-right: 2rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: white;
+    background: var(--orange1);
+    border-radius: 99px;
+}
+
+.detail_Title i{
+    width: 40px;
+    height: 40px;
+}
+
+.detail_Title i.fas{
+    display: inline-block;
+    border-radius: 30px;
+    border: none;
+    color: orangered;
+    background: #ddd;
+    padding: 1rem;
+    text-align: center;
+    font-size: 3rem;
+}
+
+.detail_description{
+    width: 100%;
+    font-size: 1.8rem;
+    text-align: left;
+    padding-bottom: 2rem;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}
+
+.detail_description table{
+    width: 100%;
+    vertical-align: middle;
+}
+
+tr, td, th, p {
+    padding: 1rem;
+    line-height: 3rem;
+}
+
+#status{
+    color: green;
+}
+
+#address-title{
+    text-align: left;
+}
+
+.host-detail .detail_description{
+    margin-top: 2rem;   
+}
+
+.host-info{
+    border-right: 5px solid black;
+    padding-right: 4rem; 
+}
+
+.upload-date{
+    margin-left: 4rem;
+}
+
+#phone-number{
+    margin-top: 2rem;
+}
+
+
+
+/* ============= End Chi tiết ============= */
+
+
+/* ============= Start Bộ lọc ============= */
+.filter{
+    padding-top: 10rem;
+    margin-top: 10rem;
+}
+
+.two-side{
+    display: grid;
+    grid-template-columns: repeat(9,1fr);
+    column-gap: 2rem;
+    row-gap: 1.5rem;
+}
+
+.filter-tool, .new-room{
+    margin-bottom: auto;
+    background: #F5F5F5;
+    border-radius: 30px;
+}
+
+.filter-tool{
+    grid-column: 1 / 3;
+}
+
+.new-room{
+    grid-column: 3 / 10;
+}
+
+.filter-tool .line{
+    background: linear-gradient(180deg, #FF8C00 0%, rgba(255, 255, 255, 0) 15.38%), #FF4500;
+    border-radius: 99px;
+    border-bottom: none;
+}
+
+.filter-tool h3{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 2.4rem;
+    line-height: 28px;
+    margin-bottom: 1rem;
+}
+
+.title-col{
+    display: flex;
+    margin: 2rem;
+}
+
+.title-col h3{
+    font-weight: bold;
+}
+
+.title-col button{
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-left: auto;
+    border-radius: 10px;
+    background: black;
+    cursor: pointer;
+    border: none;
+    color: white;
+    transition: transform .5s ease;
+}
+
+.title-col button:hover{
+    transform: scale(1.1);
+    color: orangered;
+}
+
+.price-filter, .room-filter, .utility-filter, .sex-filter, .apply{
+    padding: 2rem;
+}
+
+.apply{
+    text-align: center;
+}
+
+.btn-apply{
+    background: linear-gradient(180deg, #FF4500 0%, rgba(255, 255, 255, 0) 100%), #FF8C00;
+    border-radius: 99px;
+    border: none;
+    color: #ffffff;
+    font-size: 2rem;
+    padding: 1rem;
+}
+
+.btn-apply:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.block{
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.block label{
+    display: inline-block;
+    width: 140px;
+}
+
+.new-room .section-heading{
+    margin: 2rem;
+}
+
+.new-room .new-room-content{
+    display: ;
+    grid-template-rows: auto;
+}
+
+
+/* ============= End Bộ lọc ============= */
+
+
+
+
+/* ============= Start Footer ============= */
+.footer{
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    flex-flow: row wrap;
+    background: #ffffff;
+    padding: 5rem;
+    padding-bottom: 1rem;
+    clear: both;
+    margin-top: -40px;
+}
+
+.footer > *{
+    flex: 1 100%;
+}
+
+.footer-left{
+    position: relative;
+    top:0;
+    max-width: 200px;
+    margin-left: 4rem;
+    margin-right: 1rem;
+    margin-bottom: 2rem;
+}
+
+.footer-left img{
+    width: 180px;
+    object-fit: contain;
+}
+
+.footer-right{
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.footer-right > *{
+    flex: 1 50%;
+    margin-right: 1.25em;
+}
+
+.footer-right .contacts{
+    font-size: 1.8rem;
+    line-height: 1.8;
+    font-weight: bold;
+}
+
+.footer-right .contacts i {
+    margin-right: .2rem;
+}
+
+.footer-right .social{
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    float:right;
+    font-size: 2rem;
+}
+
+.fa-facebook-square, .fa-twitter-square, .fa-instagram{
+    color: #ff4500;
+    margin-left: 4.7rem;
+}
+
+.footer-bottom{
+    padding-top: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+
+/* ============= End Footer ============= */
+
+/* Media query */
+@media screen and (min-width:800px)
+{
+    
+    .footer-right > *{
+        flex: 1;
+    }
+
+    .footer-left{
+        flex: 1 0px;
+    }
+
+    .footer-right{
+        flex: 2 0px;
+    }
+}
+
+@media screen and (max-width:786px)
+{
+    
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cài đặt tài khoản</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+        />
+        <link 
+            rel="stylesheet" 
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" 
+        />
+        <link rel="stylesheet" href="./stylesheets/_global.css" />
+        <link rel="stylesheet" href="./stylesheets/style.css" />
+    </head>
+    <body>
+        <!-- Start: Header -->
+        <header class="header">
+            <div class="container">
+                <nav class="nav-bar">
+                    <!-- Logo -->
+                    <div class="logo">
+                        <a href="index.html"><img src="./img/logo.png" alt=""></a>
+                    </div>
+                    <!-- Nav -->
+                    <ul class="list-items">
+                        <li>
+                            Hôm nay
+                            <p id="date"></p>
+                        </li>
+                        <li>
+                            Tài khoản của tôi
+                            <p id="user-name">Nguyễn Thành</p>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <!-- End: Header -->
+        
+        <div class="container">
+            <!-- Start: Thanh chức năng -->
+            <div class="tool-bar">
+                <a class="book" href="setting.html">
+                    Đặt phòng
+                </a>
+                <a class="message" href="setting.html">
+                    Tin nhắn
+                </a>
+                <a class="setting" href="setting.html">
+                    Cài đặt tài khoản 
+                </a>
+            </div>
+            <!-- End: Thanh chức năng -->
+
+            <div class="form">
+                <!-- Start: Form content-->
+                <a class="users" href="">
+                    <img src="./img/image-1.png" alt="Avatar" class="avatar">
+                    <div class="info">
+                        <h1 id="username">Nguyễn Thành <span>Thông tin tài khoản</span> </h1> 
+                        <h2>Cá nhân hóa tài khoản bằng việc cập nhật thông tin của bạn</h2>
+                    </div>
+                </a>   
+
+                <div class="main-form row">
+                    <!-- Aside Left -->
+                    <div class="left-form">
+                        <ul>
+                            <li><a href="">Thông tin tài khoản</a></li>
+                            <div class="line"></div>
+                            <li><a href="">Thay đổi mật khẩu</a></li>
+                            <div class="line"></div>
+                            <li><a href="">Thanh toán</a></li>
+                            <div class="line"></div>
+                            <li><a href="">Mời bạn bè</a></li>
+                            <div class="line"></div>
+                            <li><a href="">Liên kết tài khoản</a></li>
+                        </ul>
+                    </div>
+                    <!-- Aside Right -->
+                    <div class="right-form">
+                        <div class="change-avatar">
+                            <img src="./img/image-1.png" alt="Avatar" class="avatar">
+                            <button class="btn-change">Đổi ảnh đại diện</button>
+                        </div>
+                        <!-- Detail update -->
+                        <form action="" class="detail-update">
+                            <div class="form-group">
+                                <label for="name">Tên</label>
+                                <input type="text" id="name" name="name" placeholder="Nhập tên ..">
+                            </div>
+                            <div class="form-group">
+                                <label for="fname">Họ và tên đệm</label>
+                                <input type="text" id="fname" name="fname" placeholder="Nhập họ và tên đệm ..">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="Nhập email ...">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Số điện thoại</label>
+                                <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại ..">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Địa chỉ</label>
+                                <input type="text" id="address" name="address" placeholder="Nhập địa chỉ ..">
+                            </div>
+                            <div class="form-group">
+                                <label for="birthday">Ngày sinh</label>
+                                <input type="date" id="birthday" name="birthday" placeholder="Nhập địa chỉ ..">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Giới tính</label>
+                                <div class="radio">
+                                    
+                                    <label for="male"><input type="radio" id="male" name="gender" value="male"/>Nam</label>
+                                    
+                                    <label for="female"><input type="radio" id="female" name="gender" value="female"/>Nữ</label>
+                                    
+                                    <label for="other"><input type="radio" id="other" name="gender" value="other"/>Khác</label>
+                                </div>
+                            </div>
+                            <!-- Giới thi -->
+                            <div class="form-group">
+                                <label for="c-password">Giới thiệu bản thân</label>
+                                <textarea rows="6" cols="50" name="comment" form="usrform"></textarea>
+                            </div>
+                        </form> 
+                        <!-- Update button -->
+                        <button type="submit" class="btn-update">Cập nhập</button>
+                    </div>
+                </div>
+                <!-- End: Form content-->
+            </div>
+        </div>
+
+        <!-- Start: Footer -->
+        <footer class="footer">
+            <div class="container row">
+                <!-- [v]Logo -->
+                <div class="footer-left">
+                    <img src="./img/logo.png"  alt="">
+                </div>
+
+                <div class="footer-right">
+                    <!-- []Hotline, email, dia chi -->
+                    <div class="row">
+                        <ul class="contacts">
+                            <li> 
+                                <i class="fas fa-mobile-alt"></i>
+                                Hotline : 0869.672.231
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                Email : homeX@gmail.com  
+                            </li>
+                            <li>
+                                <i class="fas fa-globe"></i>
+                                Địa chỉ : VP Hà Nội : 22 Thành Công, HN
+                            </li>
+                        </ul>
+                        <ul class="social">
+                            <li><i class="fab fa-facebook-square fa-3x"></i></li>
+                            <li><i class="fab fa-twitter-square fa-3x"></i></li>
+                            <li><i class="fab fa-instagram fa-3x"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- []ban quyen -->
+                <div class="footer-bottom">
+                    <p>2019 Home X. Bản quyền thuộc về công ty TNHH Home X Việt Nam. Mọi hành vi sao chép đều là phạm pháp nếu không có sự cho phép bằng văn bản của chúng tôi</p>
+                </div>
+            </div>
+        </footer>
+        <!-- End: Footer -->
+    </body>
+    <script src="./javascripts/app.js"></script>
+</html>

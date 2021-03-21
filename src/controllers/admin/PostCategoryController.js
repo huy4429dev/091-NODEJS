@@ -29,18 +29,18 @@ controller.index = (req, res) => {
                         categories: data[0],
                         curentPage: page,
                         total: data[1][0].Total % pageSize === 0 ? data[1][0].Total / pageSize : Math.floor(data[1][0].Total / pageSize) + 1,
-                        title: 'Thiết lập phòng',
+                        title: 'Thiết lập Tin tức',
                         breadcrumbs: [
                             {
-                                title: 'Phòng',
-                                link: '/admin/room'
+                                title: 'Tin tức',
+                                link: '/admin/post'
                             },
                             {
-                                title: 'Danh mục phòng',
-                                link: '/admin/category'
+                                title: 'Danh mục Tin tức',
+                                link: '/admin/post/category'
                             }
                         ],
-                        actionSearch: '/admin/category/search',
+                        actionSearch: '/admin/post/category/search',
                         q: '',
                         filter: ''
                     }
@@ -61,13 +61,13 @@ controller.create = (req, res) => {
     }
     if (errors.length > 0) {
         req.session.Error = errors[0];
-        res.redirect("/admin/category");
+        res.redirect("/admin/post/category");
     }
     else {
         req.getConnection((err, connection) => {
             connection.query('INSERT INTO postCategories set name = ?, status = ?', [name, status], (err, data) => {
                 req.session.Success = "Thêm mới danh mục thành công";
-                res.redirect("/admin/category");
+                res.redirect("/admin/post/category");
             })
         });
     }
@@ -83,7 +83,7 @@ controller.update = (req, res) => {
         errors.push("Tên danh mục phải lớn hơn 3 kí tự !")
     }
     if (errors.length > 0) {
-        res.redirect("/admin/category");
+        res.redirect("/admin/post/category");
     }
     else {
         req.getConnection((err, connection) => {
@@ -105,7 +105,7 @@ controller.delete = (req, res) => {
     req.getConnection((err, connection) => {
         connection.query('DELETE FROM postCategories WHERE id = ?', [id], (err, rows) => {
             req.session.Success = "Xóa danh mục thành công";
-            res.redirect('/admin/category');
+            res.redirect('/admin/post/category');
         });
     });
 }
@@ -165,18 +165,18 @@ controller.search = (req, res) => {
                         categories: data[0],
                         curentPage: page,
                         total: data[1][0].Total % pageSize === 0 ? data[1][0].Total / pageSize : Math.floor(data[1][0].Total / pageSize) + 1,
-                        title: 'Thiết lập phòng',
+                        title: 'Thiết lập Tin tức',
                         breadcrumbs: [
                             {
-                                title: 'Phòng',
-                                link: '/admin/room'
+                                title: 'Tin tức',
+                                link: '/admin/post'
                             },
                             {
-                                title: 'Danh mục phòng',
-                                link: '/admin/category'
+                                title: 'Danh mục Tin tức',
+                                link: '/admin/post/category'
                             }
                         ],
-                        actionSearch: '/admin/category/search',
+                        actionSearch: '/admin/post/category/search',
                         q: q,
                         filter: filterStatus
                     }
@@ -258,7 +258,7 @@ controller.importExcel = async (req, res) => {
             const sql = "INSERT INTO postCategories (name,status) VALUES ?";
             connection.query(sql, [rows], (err, data) => {
                 req.session.Success = "Import dữ liệu thành công";
-                res.redirect("/admin/category");
+                res.redirect("/admin/post/category");
             })
         });
     });

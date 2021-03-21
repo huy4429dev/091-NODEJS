@@ -12,19 +12,22 @@
               <li class="breadcrumb-item"><a href="<%= breadcrumbs[0].link %>">
                   <%= breadcrumbs[0].title %>
                 </a></li>
-              <li class="breadcrumb-item active" aria-current="<%= breadcrumbs[1].link %>">
-                <%= breadcrumbs[1].title %>
-              </li>
+              <% if (breadcrumbs[1] !=null) { %>
+                <li class="breadcrumb-item active" aria-current="<%= breadcrumbs[1].link %>">
+                  <%= breadcrumbs[1].title %>
+                </li>
+                <% } %>
             </ol>
           </nav>
         </div>
         <div class="col-lg-6 col-5 text-right d-flex align-items-center justify-content-end">
-          <form id="form-search" class="navbar-search navbar-search-light form-inline mr-2" id="navbar-search-main" method="GET"
-            action="<%= actionSearch %> ">
+          <form id="form-search" class="navbar-search navbar-search-light form-inline mr-2" id="navbar-search-main"
+            method="GET" action="<%= actionSearch %> ">
             <div class="form-group mb-0" style="    height: 27px;width: 200px;">
               <div class="input-group input-group-alternative input-group-merge" style="height: 27px">
                 <div class="input-group-prepend">
-                  <span onclick="submitFormSearch()" class="input-group-text" style="height: 32px; cursor: pointer;"><i class="fas fa-search"></i></span>
+                  <span onclick="submitFormSearch()" class="input-group-text" style="height: 32px; cursor: pointer;"><i
+                      class="fas fa-search"></i></span>
                 </div>
                 <% if (q !='' ) { %>
                   <input name="q" value="<%= q.replace(/%/g,'') %> " class="form-control" placeholder="Tìm kiếm"

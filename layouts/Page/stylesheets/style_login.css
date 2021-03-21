@@ -1,0 +1,375 @@
+/* ============= Start Header ============= */
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 8vh;
+    background-color: #ffffff;
+}
+
+nav .logo{
+    margin-left: 7rem;
+}
+
+.nav-links{
+    display: flex;
+    justify-content: space-around;
+    width: 40%;
+    margin-left: auto;
+}
+
+.nav-links a{
+    color: black;
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+.burger{
+    display: none;
+    cursor: pointer;
+}
+
+/* tạo 3 sọc */
+.burger div{
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-active{
+    transform: translateX(0%);
+}
+
+@keyframes navLinkFade{
+    from{
+       opacity: 0;
+       transform: translateX(50px); 
+    }
+    to{
+        opacity: 1;
+        transform: translateX(0px); 
+    }
+}
+
+.toggle .line1{
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.toggle .line2{
+    opacity: 0;
+}
+
+.toggle .line3{
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+/* ============= End Header ============= */
+
+/* ============= Start Login ============= */
+.content-login{
+    background-image: url(../img/background-login.png) ;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 130vh;
+    margin-top:7rem;
+}
+
+.loginForm{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    width: 26vw;
+    height: auto;
+    margin-left: auto;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 30px;
+    z-index:999;
+}
+
+.loginForm h1, .registerForm h1{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 2.4rem;
+    line-height: 2.8rem;
+    margin-top: 4rem;
+    margin-left: 3rem;
+    margin-bottom: 2rem;
+}
+
+.loginForm form, .registerForm form{
+    margin-top: 1.5rem;
+    margin-left: 2rem;
+    margin-right: 3rem; 
+}
+
+.loginForm .outsideForm{
+    display: inline-block;
+    margin-top: 8rem;
+}
+
+.btn-login, .btn-register{
+    background: linear-gradient(180deg, #FF4500 0%, rgba(255, 255, 255, 0) 100%), #FF8C00;
+    border-radius: 90px;
+    border: none;
+    color: #ffffff;
+    width: 100%;
+    height: 50px;
+    font-size: 2rem;
+    margin-top: 1.5rem;
+}
+
+.input-icons { 
+    display: flex;
+    width: 100%; 
+    margin-bottom: 10px;
+} 
+
+.input-icons i { 
+    padding: 10px; 
+    float: right; 
+} 
+
+.outside-form{
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.outside-form h3{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.outside-form h3 span{
+    color: red;
+}
+
+.outside-form h2{
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.loginSocial{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    width: 70%;
+    height: 40px;
+    padding: 20px;
+    background: rgba(196, 196, 196, 0.15);
+    border-radius: 50px;
+    margin: auto;
+    margin-bottom: 1.5rem;
+}
+
+.loginSocial button{
+    background: transparent;
+    border: none;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.loginSocial i {
+    font-size: 4rem;
+    margin-left: auto;
+}
+/* ============= End Login ============= */
+
+/* ============= Start Register ============= */
+.content-register{
+    background-image: url(../img/bgregister.png) ;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 130vh;
+    margin-top:7rem;
+}
+
+#bar-offer{
+    position: absolute;
+    width: 100%;
+    height: 146px;
+    left: 0px;
+    top: 62px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    color: #ffffff;
+    background: linear-gradient(180deg, #FF4500 0%, rgba(255, 255, 255, 0) 100%), #FF8C00;
+}
+
+#bar-offer .container{
+    position: absolute;
+    margin-top: 4rem;
+    margin-left: 6rem;
+}
+
+#bar-offer h1{
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+}
+
+#bar-offer p{
+    font-size: 1.8rem;
+}
+
+.big-white-logo{
+    position: absolute;
+    width: 433px;
+    height: 202.89px;
+    left: 327px;
+    top: 169px;
+    background: url(../img/logoLogin.png) no-repeat center;
+}
+
+.registerForm{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    width: 26vw;
+    height: auto;
+    margin-left: auto;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 30px;
+    z-index:999;
+}
+
+/* ============= End Register ============= */
+
+/* ============= Start Footer ============= */
+.footer{
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    flex-flow: row wrap;
+    background: #ffffff;
+    padding: 5rem;
+    padding-bottom: 1rem;
+}
+
+.footer > *{
+    flex: 1 100%;
+}
+
+.footer-left{
+    position: relative;
+    top:0;
+    max-width: 300px;
+    margin-left: 2rem;
+    margin-right: 1rem;
+    margin-bottom: 2rem;
+}
+
+.footer-left img{
+    width: 180px;
+    object-fit: contain;
+}
+
+.footer-right{
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.footer-right > *{
+    flex: 1 50%;
+    margin-right: 1.25em;
+}
+
+.footer-right .contacts{
+    font-size: 1.6rem;
+    line-height: 1.8;
+    font-weight: bold;
+}
+
+.footer-right .contacts i {
+    margin-right: .2rem;
+}
+
+.socials{
+    overflow: auto;
+}
+
+.footer-right .socials .box{
+    max-width: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    top:0;
+    float:right;
+}
+
+.fa-facebook-square, .fa-twitter-square, .fa-instagram{
+    color: #ff4500;
+    margin-left: 4.7rem;
+}
+
+.footer-bottom{
+    padding-top: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* ============= End Footer ============= */
+
+/* ============= Media ============= */
+@media screen and (max-width:1024px){
+    .nav-links{
+        width: 60%;
+    }
+    .footer-right > *{
+        flex: 1;
+    }
+
+    .footer-left{
+        flex: 1 0px;
+    }
+
+    .footer-right{
+        flex: 2 0px;
+    }
+}
+
+@media screen and (max-width:768px){
+    body{
+        overflow-x: hidden;
+    }
+    .nav-links{
+        position: absolute;
+        right: 0;
+        height: 92vh;
+        top: 8vh;
+        background-color: #5d4954;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        transform: translate(100%);
+        transition: transform 0.5s ease-in;
+    }
+    .nav-links li{
+        opacity: 0;
+    }
+    .burger{
+        display: block;
+    }
+    .footer-right{
+        padding-bottom: 50px;
+    }
+}
