@@ -1,0 +1,378 @@
+<div class="col">
+    <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+            <h3 class="mb-0">BÁO CÁO DOANH THU </h3>
+        </div>
+
+        <!-- CHART  -->
+        <div class="col-12">
+            <h5 class="text-center mb-5" style="font-weight:400;font-size:20px; color: #414141">
+                Biểu đồ thống kê số doanh thu <br />
+                <small id="time" style="font-size: 13px; color: lightseagreen;"></small>
+            </h5>
+            <figure class="highcharts-figure">
+                <div id="container"></div>
+            </figure>
+        </div>
+
+        <!-- Light table -->
+        <div class="box-loading load-data" style="display: none;">
+            <div class="loadingio-spinner-rolling-lwtpylw27h">
+                <div class="ldio-5lswg297lfp">
+                    <div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card">
+        <div class="table-responsive mt-5">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="sort" data-sort="name">Thời gian</th>
+                        <th scope="col" class="sort" data-sort="budget">Tổng hóa đơn</th>
+                        <th scope="col" class="sort" data-sort="status">Đã thanh toán</th>
+                        <th scope="col" class="sort" data-sort="status">Chưa thanh toán</th>
+                        <th scope="col" class="sort" data-sort="status">Chưa xử lý</th>
+                        <th scope="col" class="sort" data-sort="status">Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <tr>
+                        <td scope="col" class="sort" data-sort="name">12/12/2021</td>
+                        <td scope="col" class="sort" data-sort="budget">10</td>
+                        <td scope="col" class="sort" data-sort="status">5</td>
+                        <td scope="col" class="sort" data-sort="status">4</td>
+                        <td scope="col" class="sort" data-sort="status">1</td>
+                        <td scope="col" class="sort" data-sort="status">2.000.000 vnđ</td>
+                    </tr>
+                </tbody>
+            </table>
+            <% if (categories?.length==0) { %>
+                <div class="alert alert-warning text-center">
+                    Không tìm thấy kết quả nào
+                </div>
+                <% } %>
+        </div>
+    </div>
+</div>
+
+
+<!-- LỌC -->
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lọc BÁO CÁO DOANH THU </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/admin/room/category/search" method="GET">
+                <div class="modal-body">
+                    <div>
+                        <label for="exampleFormControlInput1">Trạng thái</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="customRadioInline1" name="filterStatus" class="custom-control-input"
+                            value="1" checked>
+                        <label class="custom-control-label" for="customRadioInline1">Hoạt động</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="customRadioInline2" name="filterStatus" class="custom-control-input"
+                            value="2">
+                        <label class="custom-control-label" for="customRadioInline2">Không hoạt động</label>
+                    </div>
+                    <div class="form-group mt-3">
+                        <div>
+                            <label for="exampleFormControlInput1">Thời gian</label>
+                        </div>
+                        <div class="input-daterange datepicker row align-items-center">
+                            <div class="col">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input name="startDate" class="form-control" placeholder="Start date"
+                                            type="text" value="06/18/2020">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input name="endDate" class="form-control" placeholder="End date" type="text"
+                                            value="06/22/2020">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="q" value="<%= q.replace(/%/g,'') %>">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- IMPORT EXCEL  -->
+<button style="opacity: 0;" type="button" class="btn btn-block btn-warning mb-3" data-toggle="modal"
+    data-target="#modal-notification">Notification</button>
+<div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification"
+    aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered modal-" role="document">
+        <div class="modal-content ">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-notification">Import excel danh sách BÁO CÁO DOANH THU </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="py-3 text-center">
+                    <div class="position-relative">
+                        <div class="position-absolute" style="
+                          top: 50%;
+                          left: 50%;
+                          transform: translate(-50%,-50%);
+                          width: 100px;
+                          /* opacity: 0; */
+                          cursor: pointer;
+                          height: 100%;
+                      ">
+                            <form class="form-upload h-100 d-block" action="/admin/upload?path=admin" method="POST"
+                                enctype="multipart/form-data">
+                                <div class="h-100">
+                                    <input type="file" name="file" style="
+                                display: block;
+                                height: 100%;
+                                width: 100%;
+                                cursor: pointer;
+                                opacity: 0;
+                            ">
+                                </div>
+                            </form>
+                        </div>
+                        <div>
+                            <i class="fas fa-file-upload ni-3x"></i>
+                            <div>
+                                <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="heading mt-4">Tải lên file Excel</h4>
+                    <p>Tải xuống file mẫu <a class="text-success"
+                            href="/static/assets/uploads/admin/danh-muc.xlsx">click
+                            vào đây</a></p>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <form action="/admin/room/category/excel/import" method="POST">
+                    <input type="hidden" name="path-excel-import">
+                    <button type="submit" class="btn btn-white">Lưu</button>
+                </form>
+                <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- FILTER  -->
+
+    <!-- CODE JS  -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script>
+
+        const enumerateDaysBetweenDates = function (startDate, endDate) {
+            var dates = [];
+            var currDate = moment(startDate).startOf('day');
+            var lastDate = moment(endDate).startOf('day');
+
+            while (currDate.add(1, 'days').diff(lastDate) < 0) {
+                dates.push(currDate.clone().toDate());
+            }
+            return dates;
+        };
+
+        const startOfMonth = moment().clone().startOf('month').format('YYYY-MM-DD hh:mm');
+        const endOfMonth = moment().clone().endOf('month').format('YYYY-MM-DD hh:mm');
+        const curentDate = moment().add('1', 'd');
+        const lastMonth = moment(curentDate).add(-1, 'M').add(-1, 'day');
+        const listDates = enumerateDaysBetweenDates(lastMonth, curentDate).map(item => moment(item).format("DD/MM/YYYY"));
+
+        const time = document.querySelector('#time');
+        time.innerHTML =  moment(lastMonth).format("DD/MM/YYYY") + ' - ' + moment(curentDate).format('DD/MM/YYYY') ;
+
+        const renderCharts = (listDates, dataFill) => {
+
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: listDates,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'lượt'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Doanh thu',
+                    data: Array(30).fill(1).map(item => Math.floor(Math.random() * 100))
+                }
+                ]
+            });
+        }
+        // render first
+        renderCharts(listDates, []);
+    </script>
+    <script>
+
+        // DATE PICKER 
+
+        const startDate = document.querySelector('input[name="startDate"]');
+        const endDate = document.querySelector('input[name="endDate"]');
+        const now = moment().format("DD/MM/yyyy");
+        const fromDate = moment().subtract(7, 'days').format("DD/MM/yyyy");
+        startDate.value = fromDate;
+        endDate.value = now;
+
+
+        // upload file 
+
+        // let thumbnail = document.querySelector('#post-thumbnail');
+        // let inputThumbnail = document.querySelector("input[name='Thumbnail']");
+        function uploadFile(file) {
+
+            const inputSelectFile = document.querySelector('.form-upload input[type="file"]');
+            const inputPath = document.querySelector('input[name="path-excel-import"]');
+            const excelName = document.querySelector('#excel-name');
+
+            inputSelectFile.addEventListener('change', function () {
+                var url = "/admin/upload?path=admin";
+                var formData = new FormData();
+                formData.append("file", inputSelectFile.files[0]);
+                fetch(url, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        inputPath.value = data.path;
+                        excelName.innerHTML = data.path.substring(data.path.lastIndexOf("/") + 1);
+                        // thumbnail.setAttribute("src", data.dbPath);
+                        // inputThumbnail.value = data.dbPath;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+            })
+        }
+
+        uploadFile();
+
+        // notifycation
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
+        // loading
+        const loadingData = document.querySelector('.box-loading.load-data');
+        const loadingModal = document.querySelector('.box-loading.load-modal');
+        const formPost = document.querySelector('form[method=POST].create-item');
+              
+                <% if (!errorValidate && !successAlert) { %>
+            window.addEventListener('load', onLoading);
+              <%}%>
+
+            function onLoading(event) {
+                loadingData.style.display = 'flex';
+                setTimeout(() => {
+                    loadingData.style.display = 'none';
+                }, 500);
+            }
+
+        function onLoadingModal(event) {
+            event.preventDefault();
+            loadingModal.style.display = 'flex';
+            setTimeout(() => {
+                loadingModal.style.display = 'none';
+                formPost.submit();
+            }, 500);
+        }
+
+        function reload() {
+            window.location.href = "/admin/room/category"
+        }
+
+
+                
+             
+                <% if (errorValidate) { %>
+                const err = '<%= errorValidate %>';
+            toastr["error"]("<%= errorValidate %>")
+
+                <%}%>
+                    <% if (successAlert) { %>
+            toastr["success"]("<%= successAlert %>")
+            <%}%>
+    </script>

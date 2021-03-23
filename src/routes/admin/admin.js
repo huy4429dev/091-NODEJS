@@ -50,6 +50,25 @@ router.post('/room/excel/import', RoomController.importExcel);
 
 
 
+// Order 
+
+const OrderController = require('../../controllers/admin/OrderController');
+router.get('/order', OrderController.index);
+router.post('/order/create', OrderController.create);
+router.put('/order/update/:id', OrderController.update);
+router.get('/order/delete/:id', OrderController.delete);
+router.get('/order/search', OrderController.search);
+router.get('/order/excel/export', OrderController.exportExcel);
+router.post('/order/excel/import', OrderController.importExcel);
+
+
+// Report
+const ReportRevenueController = require('../../controllers/admin/ReportRevenueController');
+router.get('/report/revenue', ReportRevenueController.index);
+router.get('/report/revenue/search', ReportRevenueController.search);
+router.get('/report/revenue/excel/export', ReportRevenueController.exportExcel);
+
+
 const ContactController = require('../../controllers/admin/ContactController');
 router.get('/contact', ContactController.index);
 
