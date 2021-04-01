@@ -114,6 +114,13 @@
     display: none;
   }
 </style>
+<style>
+  .form-upload input[type="file"] {
+    width: 120px;
+    z-index: 999;
+    opacity: 0;
+  }
+</style>
 <div class="col">
   <div class="card">
     <!-- Card header -->
@@ -121,65 +128,65 @@
       <h3 class="mb-0">PHÒNG</h3>
     </div>
     <div class="row">
-      <div class="col-4">
-        <div class="card-body">
-          <div>
-            <div class="card" data-toggle="modal" data-target="#roomModal"
-              style="cursor: pointer; box-shadow: 1px 0px 3px 1px #8080805c">
-              <!-- Card body -->
-              <div class="card-body">
-                <div class="row">
-                  <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0">VIP</h5>
-                    <span class="h2 font-weight-bold mb-0">PC-001</span>
+
+      <% categories.forEach(item=> { %>
+        <div class="col-4">
+          <div class="card-body">
+            <div>
+              <div class="card" data-toggle="modal" data-target="#roomModal-<%= item.id %> "
+                style="cursor: pointer; box-shadow: 1px 0px 3px 1px #8080805c">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">
+                        <%= item.categoryName %>
+                      </h5>
+                      <span class="h2 font-weight-bold mb-0">
+                        <%= item.code %>
+                      </span>
+                    </div>
+                    <% if (item.orderStatus==3) { %>
+                      <div class="col-auto">
+                        <button type="button" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top"
+                          title="Trễ thanh toán tiền trọ <%= moment().diff(item.timeCheckout,'days') %> ngày">
+                          Trễ thanh toán
+                        </button>
+                      </div>
+                      <% } %>
                   </div>
-                  <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top"
-                      title="Trễ thanh toán tiền trọ 1 tháng">
-                      Trễ thanh toán
-                    </button>
-                  </div>
+                  <p class="mt-3 mb-0 text-sm d-flex justify-content-between">
+                    <% if (item.status==1) { %>
+                      <span class="badge badge-pill badge-default" style="border-radius: 0; padding-top: 7px;">
+                        đang thuê
+                      </span>
+                      <% } %>
+                        <% if (item.status==2) { %>
+                          <span class="badge badge-pill btn-success" style="border-radius: 0; padding-top: 7px;">
+                            phòng trống
+                          </span>
+                          <% } %>
+                            <% if (item.status==3) { %>
+                              <span class="badge badge-pill btn-secondary" style="border-radius: 0; padding-top: 7px;">
+                                bảo trì
+                              </span>
+                              <% } %>
+
+
+                                <span class="text-nowrap text-prikmary" style="font-size: 14px;"><i
+                                    class="fas fa-clock"></i>
+                                  <%= moment(item.timeOrderActive).locale('vi').fromNow() %>
+                                </span>
+                  </p>
                 </div>
-                <p class="mt-3 mb-0 text-sm d-flex justify-content-between">
-                  <span class="badge badge-pill badge-default" style="border-radius: 0; padding-top: 7px;">đang
-                    thuê</span>
-                  <span class="text-nowrap text-success" style="font-size: 14px;">1 tháng trước</span>
-                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-4">
-        <div class="card-body">
-          <div>
-            <div class="card" data-toggle="modal" data-target="#roomModal"
-              style="cursor: pointer; box-shadow: 1px 0px 3px 1px #8080805c">
-              <!-- Card body -->
-              <div class="card-body">
-                <div class="row">
-                  <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0">VIP</h5>
-                    <span class="h2 font-weight-bold mb-0">PC-001</span>
-                  </div>
-                  <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top"
-                      title="Trễ thanh toán tiền trọ 1 tháng">
-                      Đã thanh toán
-                    </button>
-                  </div>
-                </div>
-                <p class="mt-3 mb-0 text-sm d-flex justify-content-between">
-                  <span class="badge badge-pill badge-default" style="border-radius: 0; padding-top: 7px;">
-                    phòng trống
-                  </span>
-                  <span class="text-nowrap text-success" style="font-size: 14px;">1 tháng trước</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+        <% }) %>
+
+
     </div>
     <!-- Card footer -->
     <div class="card-footer py-4">
@@ -190,11 +197,11 @@
               <li class="page-item active">
                 <% if (q !='' || filter !='' ) { %>
                   <a class="page-link"
-                    href="/admin/room/category/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                    href="/admin/room/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
                     <%= i %>
                   </a>
                   <% } else { %>
-                    <a class="page-link" href="/admin/room/category/?page=<%= i %>">
+                    <a class="page-link" href="/admin/room/?page=<%= i %>">
                       <%= i %>
                     </a>
                     <% } %>
@@ -205,11 +212,11 @@
 
                   <% if (q !='' || filter !='' ) { %>
                     <a class="page-link"
-                      href="/admin/room/category/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                      href="/admin/room/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
                       <%= i %>
                     </a>
                     <% } else { %>
-                      <a class="page-link" href="/admin/room/category/?page=<%= i %>">
+                      <a class="page-link" href="/admin/room/?page=<%= i %>">
                         <%= i %>
                       </a>
                       <% } %>
@@ -222,545 +229,801 @@
   </div>
 </div>
 
-<!-- ROOM MODAL -->
-<div class="modal fade" id="roomModal" tabindex="-1" role="dialog" aria-labelledby="roomModalLabel" aria-hidden="true">
-  <div class="modal-dialog mw-100 modal-dialog-centered" role="document" style="width: 55%;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="roomModalLabel">PC - 001</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col">
-            <h3 class="mb-4">Thông tin phòng</h3>
-            <form action="" method="POST">
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Tiêu đề</label>
-                <input name="title" class="form-control" type="text" value="Ở ghép giường tầng Q4 đối diện Bến Nhà Rồng"
-                  id="example-text-input">
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Loại phòng</label>
-                <select name="categoryId" class="form-control">
-                  <option>Phòng trọ</option>
-                  <option>Phòng đơn</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Giá phòng</label>
-                <input name="price" class="form-control" type="text" value="800000" id="example-text-input">
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Diện tích</label>
-                <input name="acr" class="form-control" type="text" value="800000" id="example-text-input">
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Tiền cọc</label>
-                <input name="desposit" class="form-control" type="text" value="800000" id="example-text-input">
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Sức chứa</label>
-                <input name="capacity" class="form-control" type="text" value="3" id="example-text-input">
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Địa chỉ</label>
-                <input name="address" class="form-control" type="text"
-                  value="Đường Nguyễn Tất Thành, Phường 12, Quận 4, Tp Hồ Chí Minh" id="example-text-input">
-              </div>
-              <div name="utilities" class="form-group">
-                <label for="example-text-input" class="form-control-label">Tiện ích</label>
-                <span class="autocomplete-select"></span>
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Thông tin thêm</label>
-                <textarea id="editor" name="description"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="example-text-input" class="form-control-label">Hình ảnh</label>
-                <div class="py-3 text-center">
-                  <div class="position-relative">
-                    <div class="position-absolute" style="
-                                top: 50%;
-                                left: 50%;
-                                transform: translate(-50%,-50%);
-                                width: 100px;
-                                /* opacity: 0; */
-                                cursor: pointer;
-                                height: 100%;
-                            ">
-                      <form class="form-upload h-100 d-block" action="/admin/upload?path=admin" method="POST"
-                        enctype="multipart/form-data">
-                        <div class="h-100">
-                          <input type="file" name="file" style="
-                                      display: block;
-                                      height: 100%;
-                                      width: 100%;
-                                      cursor: pointer;
-                                      opacity: 0;
-                                  ">
-                        </div>
-                      </form>
-                    </div>
-                    <div>
-                      <i class="fas fa-file-upload ni-3x"></i>
-                      <div>
-                        <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
-                      </div>
-                    </div>
-                  </div>
-                  <h4 class="heading mt-4">Tải lên hình ảnh</h4>
-                  <div style="background-color: red;">
-                    xx
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="col">
-            <h3 class="mb-4">Lịch sử đặt phòng</h3>
-            <div id="accordion">
-              <div>
-                <div class="alert alert-success py-2 mb-0" style="border-radius: 0;" role="alert">
-                  <div style="cursor: pointer;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                    aria-controls="collapseOne">
-                    DH #001 - 12/12/2021
-                  </div>
-                </div>
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                  <div class="py-1 px-1">
-                    <span class="badge badge-pill badge-success mb-1" style="border-radius: 0; padding-top: 7px;">Đã
-                      thanh toán</span>
-                    <div class="d-flex align-items-center">
-                      <i class="fas fa-user" style="width: 25px"></i>
-                      <p class="mb-0" style="font-size:14px; color: #8898aa"> Nguyễn Văn Bo</p>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <i class="fas fa-map-marker-alt" style="width: 25px"></i>
-                      <p class="mb-0" style="font-size:14px; color: #8898aa"> Quận Tân Phú , TPHCM</p>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <i class="fas fa-dollar-sign" style="width: 25px"></i>
-                      <P class="mb-0" style="font-size:14px; color: #8898aa"> 160.000 đ</P>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <i class="fas fa-phone-square-alt" style="width: 25px"></i>
-                      <p class="mb-0" style="font-size:14px; color: #8898aa"> 098754321</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-            </div>
-            <h3 class="mt-4 mb-4">Thông tin chủ phòng</h3>
-            <p class="mb-1"> <i class="fas fa-user"></i> Nguyễn Văn Bo</p>
-            <h3 class="mt-4 mb-4">Khách hàng đang thuê</h3>
-            <p class="mb-1"> <i class="fas fa-user"></i> Nguyễn Văn Bo</p>
-          </div>
+<!-- THÊM -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="box-loading load-modal" style="display: none;">
+    <div class="loadingio-spinner-rolling-lwtpylw27h">
+      <div class="ldio-5lswg297lfp">
+        <div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary">Lưu</button>
       </div>
     </div>
   </div>
-</div>
-
-<!-- LỌC -->
-<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered mw-100" style="width: 55%" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Lọc loại phòng</h5>
+        <h5 class="modal-title" id="exampleModalLabel">THÊM PHÒNG</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/admin/room/category/search" method="GET">
+      <form method="POST" class="create-item" action="/admin/room/create">
         <div class="modal-body">
-          <div>
-            <label for="exampleFormControlInput1">Trạng thái</label>
-          </div>
-          <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="customRadioInline1" name="filterStatus" class="custom-control-input" value="1"
-              checked>
-            <label class="custom-control-label" for="customRadioInline1">Hoạt động</label>
-          </div>
-          <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="customRadioInline2" name="filterStatus" class="custom-control-input" value="2">
-            <label class="custom-control-label" for="customRadioInline2">Không hoạt động</label>
-          </div>
-          <div class="form-group mt-3">
-            <div>
-              <label for="exampleFormControlInput1">Thời gian</label>
-            </div>
-            <div class="input-daterange datepicker row align-items-center">
-              <div class="col">
+          <div class="row">
+            <div class="col">
+              <h3 class="mb-4">Thông tin phòng</h3>
+              <form action="" method="POST">
                 <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
-                    </div>
-                    <input name="startDate" class="form-control" placeholder="Start date" type="text"
-                      value="06/18/2020">
+                  <label for="example-text-input" class="form-control-label">Tiêu đề</label>
+                  <input name="title" class="form-control" type="text" id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Loại phòng</label>
+                  <select name="categoryId" class="form-control">
+                    <% roomCategories.forEach(element=> { %>
+
+                      <option value="<%= element.id %> ">
+                        <%= element.name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Giá phòng</label>
+                  <input name="price" class="form-control" type="text" id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Diện tích (m2)</label>
+                  <input name="acr" class="form-control" type="text" id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Tiền cọc (vnđ)</label>
+                  <input name="desposit" class="form-control" type="text" id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Sức chứa</label>
+                  <input name="capacity" class="form-control" type="text" id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Địa chỉ</label>
+                  <input name="address" class="form-control" type="text" id="example-text-input">
+                </div>
+                <div name="utilities" class="form-group">
+                  <label for="example-text-input" class="form-control-label">Tiện ích</label>
+                  <span class="autocomplete-select" id="autocomplete-select-add"></span>
+                  <input type="hidden" name="utilities" id="utilities">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Thông tin thêm</label>
+                  <textarea class="editor" name="description">
+               </textarea>
+                </div>
+                <div class="form-group">
+                  <div class="form-upload d-flex flex-start position-relative">
+                    <input type="hidden" name="thumbnail">
+                    <input type="file" class="position-absolute">
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm"
+                      style="width:120px; cursor: pointer; ">Ảnh đại diện</button><br>
+                  </div>
+                  <div class="text-center my-2 position-relative">
+                    <span class="d-inline-block" style="width:100px; height:100px; border: 1px dotted gray">
+                      <img class="mt-2" id="profile-thumbnail" style="width:80px">
+                    </span>
                   </div>
                 </div>
-              </div>
-              <div class="col">
                 <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                  <label for="example-text-input" class="form-control-label">Hình ảnh</label>
+                  <div class="text-center my-3 d-flex justify-content-around">
+                    <input type="hidden" name="images" id="images" >
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                  </div>
+                  <div class="text-center my-3 d-flex justify-content-around">
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img class="images mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                  </div>
+                  <div class="py-3 text-center">
+                    <div class="position-relative">
+                      <div class="position-absolute" style="
+                                 top: 50%;
+                                 left: 50%;
+                                 transform: translate(-50%,-50%);
+                                 width: 100px;
+                                 cursor: pointer;
+                                 height: 100%;
+                             ">
+                        <form class="form-upload h-100 d-block" action="/admin/upload?path=admin" method="POST"
+                          enctype="multipart/form-data">
+                          <div class="h-100">
+                            <input id="i-images" type="file" name="file" style="
+                                       display: block;
+                                       height: 100%;
+                                       width: 100%;
+                                       opacity: 0;
+                                       cursor: pointer;
+                                   ">
+                          </div>
+                        </form>
+                      </div>
+                      <div>
+                        <i class="fas fa-file-upload ni-3x" style="font-size: 30px;"></i>
+                        <div>
+                          <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
+                        </div>
+                      </div>
                     </div>
-                    <input name="endDate" class="form-control" placeholder="End date" type="text" value="06/22/2020">
+                    <h4 class="heading mt-3">Tải lên hình ảnh</h4>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
-          <input type="hidden" name="q" value="<%= q.replace(/%/g,'') %>">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-          <button type="submit" class="btn btn-primary">Lọc</button>
+          <button onclick="onLoadingModal(event)" type="submit" class="btn btn-primary">Lưu</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- THÊM -->
+<% categories.forEach(item=> { %>
+  <!-- ROOM MODAL -->
+  <div class="modal fade" id="roomModal-<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="roomModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog mw-100 modal-dialog-centered" role="document" style="width: 55%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="roomModalLabel">
+            <%= item.code %>
+          </h5>
+          <span class="ml-2">
+            <div class="d-flex justify-content-between">
+              <% if (item.status==1) { %>
+                <span class="badge badge-pill badge-default" style="border-radius: 0; padding-top: 7px;">
+                  đang thuê
+                </span>
+                <% } %>
+                  <% if (item.status==2) { %>
+                    <span class="badge badge-pill btn-success" style="border-radius: 0; padding-top: 7px;">
+                      phòng trống
+                    </span>
+                    <% } %>
+                      <% if (item.status==3) { %>
+                        <span class="badge badge-pill btn-secondary" style="border-radius: 0; padding-top: 7px;">
+                          bảo trì
+                        </span>
+                        <% } %>
 
-<!-- IMPORT EXCEL  -->
-<button style="opacity: 0;" type="button" class="btn btn-block btn-warning mb-3" data-toggle="modal"
-  data-target="#modal-notification">Notification</button>
-<div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification"
-  aria-hidden="true">
-  <div class="modal-dialog  modal-dialog-centered modal-" role="document">
-    <div class="modal-content ">
 
-      <div class="modal-header">
-        <h6 class="modal-title" id="modal-title-notification">Import excel danh sách loại phòng</h6>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
+                          <span class="text-nowrap text-prikmary" style="font-size: 14px; margin-left: 10px;"><i
+                              class="fas fa-clock"></i>
+                            <%= moment(item.timeOrderActive).locale('vi').fromNow() %>
+                          </span>
 
-      <div class="modal-body">
+            </div>
 
-        <div class="py-3 text-center">
-          <div class="position-relative">
-            <div class="position-absolute" style="
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%,-50%);
-                        width: 100px;
-                        /* opacity: 0; */
-                        cursor: pointer;
-                        height: 100%;
-                    ">
-              <form class="form-upload h-100 d-block" action="/admin/upload?path=admin" method="POST"
-                enctype="multipart/form-data">
-                <div class="h-100">
-                  <input type="file" name="file" style="
-                              display: block;
-                              height: 100%;
-                              width: 100%;
-                              cursor: pointer;
-                              opacity: 0;
-                          ">
+          </span>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <h3 class="mb-4">Thông tin phòng</h3>
+              <form action="" method="POST">
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Tiêu đề</label>
+                  <input name="title" class="form-control" type="text" value="<%= item.title %> "
+                    id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Loại phòng</label>
+                  <select name="categoryId" class="form-control">
+                    <% roomCategories.forEach(element=> { %>
+                      <% if (element.id==item.categoryId ) { %>
+                        <option value="<%= element.id %>" selected>
+                          <%= element.name %>
+                        </option>
+                        <% } %>
+                          <% if (element.id !=item.categoryId) { %>
+                            <option value="<%= element.id %> ">
+                              <%= element.name %>
+                            </option>
+                            <% } %>
+                              <% }) %>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Giá phòng</label>
+                  <input name="price" class="form-control" type="text" value="<%= item.price %> "
+                    id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Diện tích (m2)</label>
+                  <input name="acr" class="form-control" type="text" value="<%= item.acr %> " id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Tiền cọc (vnđ)</label>
+                  <input name="desposit" class="form-control" type="text" value="<%= item.desposit %> "
+                    id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Sức chứa</label>
+                  <input name="capacity" class="form-control" type="text" value="<%= item.capacity %> "
+                    id="example-text-input">
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Địa chỉ</label>
+                  <input name="address" class="form-control" type="text" value="<%= item.address %> "
+                    id="example-text-input">
+                </div>
+                <div name="utilities" class="form-group">
+                  <label for="example-text-input" class="form-control-label">Tiện ích</label>
+                  <span class="autocomplete-select" data-select-id="<%= item.id %>"
+                    data-options="<%= item.utilities %> " id="autocomplete-select-<%= item.id %>"></span>
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Thông tin thêm</label>
+                  <textarea class="editor" name="description">
+                    <%= item.description %> 
+                  </textarea>
+                </div>
+                <div class="form-group">
+                  <div class="form-upload d-flex flex-start position-relative">
+                    <input type="hidden" asp-for="Thumbnail" value="">
+                    <input type="file" class="position-absolute">
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm"
+                      style="width:120px; cursor: pointer; ">Ảnh đại diện</button><br>
+                  </div>
+                  <div class="text-center my-2 position-relative">
+                    <span class="d-inline-block" style="width:100px; height:100px; border: 1px dotted gray">
+                      <img src="<%= item.thumbnail %> " class="mt-2" style="width:80px">
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="example-text-input" class="form-control-label">Hình ảnh</label>
+                  <div class="text-center my-3 d-flex justify-content-around">
+
+                    <% const images=item.images.split(","); %>
+                      <span class="d-inline-block"
+                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                        <img src="<%= images[0] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      </span>
+                      <span class="d-inline-block"
+                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                        <img src="<%= images[1] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      </span>
+                      <span class="d-inline-block"
+                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                        <img src="<%= images[2] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      </span>
+                      <span class="d-inline-block"
+                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                        <img src="<%= images[3] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      </span>
+                  </div>
+                  <div class="text-center my-3 d-flex justify-content-around">
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img src="<%= images[4] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img src="<%= images[5] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img src="<%= images[6] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                    <span class="d-inline-block"
+                      style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                      <img src="<%= images[7] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                    </span>
+                  </div>
+                  <div class="py-3 text-center">
+                    <div class="position-relative">
+                      <div class="position-absolute" style="
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%,-50%);
+                                    width: 100px;
+                                    cursor: pointer;
+                                    height: 100%;
+                                ">
+                        <form class="h-100 d-block" action="/admin/upload?path=admin" method="POST"
+                          enctype="multipart/form-data">
+                          <div class="h-100">
+                            <input type="file" name="file" style="
+                                          display: block;
+                                          height: 100%;
+                                          width: 100%;
+                                          opacity: 0;
+                                          cursor: pointer;
+                                      ">
+                          </div>
+                        </form>
+                      </div>
+                      <div>
+                        <i class="fas fa-file-upload ni-3x" style="font-size: 30px;"></i>
+                        <div>
+                          <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h4 class="heading mt-3">Tải lên hình ảnh</h4>
+                  </div>
                 </div>
               </form>
             </div>
-            <div>
-              <i class="fas fa-file-upload ni-3x"></i>
-              <div>
-                <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
-              </div>
+            <div class="col">
+              <h3 class="mb-4">Lịch sử đặt phòng</h3>
+              <% item.orders.forEach((order,index)=> { %>
+                <% let status=order.orderStatus; let classOrderStatus="success" ; let titleOrderStatus="thành công" ;
+                  if(status==3){ classOrderStatus="warning" ; titleOrderStatus="chưa xử lý" } else if(status==2){
+                  classOrderStatus="danger" ; titleOrderStatus="hủy" } %>
+                  <div id="accordion" style="margin-bottom:1px">
+                    <div>
+                      <div class="alert alert-<%= classOrderStatus %>  py-2 mb-0" style="border-radius: 0;"
+                        role="alert">
+                        <div style="cursor: pointer;" data-toggle="collapse" data-target="#collapseOne-<%= order.id %>"
+                          aria-expanded="true" aria-controls="collapseOne-<%= order.id %>">
+                          <%= order.orderCode %> - <%= moment(order.orderCreateTime).format("DD/MM/YYYY") %>
+                        </div>
+                      </div>
+                      <div id="collapseOne-<%= order.id %>"
+                        class="position-relative collapse <%= index == 0 ? 'show' : '' %> " aria-labelledby="headingOne"
+                        data-parent="#accordion">
+                        <div class="py-1 px-1">
+                          <span class="badge badge-pill badge-<%= classOrderStatus %>  mb-1"
+                            style="border-radius: 0; padding-top: 7px;">
+                            <%= titleOrderStatus %>
+                          </span>
+                          <div class="d-flex align-items-center">
+                            <i class="fas fa-user" style="width: 25px"></i>
+                            <p class="mb-0" style="font-size:14px; color: #8898aa">
+                              <%= order.customerName %>
+                            </p>
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt" style="width: 25px"></i>
+                            <p class="mb-0" style="font-size:14px; color: #8898aa">
+                              <%= order.customerAddress %>
+                            </p>
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <i class="fas fa-dollar-sign" style="width: 25px"></i>
+                            <P class="mb-0" style="font-size:14px; color: #8898aa">
+                              <%= order.orderAmount.toLocaleString('vi-VN', { style: 'currency' , currency: 'VND' }) %>
+                            </p>
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <i class="fas fa-phone-square-alt" style="width: 25px"></i>
+                            <p class="mb-0" style="font-size:14px; color: #8898aa">
+                              <%= order.customerPhone %>
+                            </p>
+                          </div>
+                          <div class="position-absolute" style="bottom:0px; right: 0; font-size: 13px;">
+                            <a class="text-primary" href="/admin/order?id=<%= order.id %> ">>> chi tiết</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <% }) %>
+                    <h3 class="mt-4 mb-4">Thông tin chủ phòng</h3>
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-user" style="width: 25px"></i>
+                      <p class="mb-0" style="font-size:14px; color: #8898aa">
+                        <%= item.roomUserFullname %>
+                      </p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-map-marker-alt" style="width: 25px"></i>
+                      <p class="mb-0" style="font-size:14px; color: #8898aa">
+                        <%= item.roomUserAddress %>
+                      </p>
+                    </div>
+                    <div class="d-flex align-items-center mt-1">
+                      <i class="fas fa-phone-square-alt" style="width: 25px"></i>
+                      <p class="mb-0" style="font-size:14px; color: #8898aa">
+                        <%= item.roomUserPhone %>
+                      </p>
+                    </div>
+                    <h3 class="mt-4 mb-4">Khách hàng đang thuê</h3>
+                    <% if (item.orderStatus==2 || item.orderStatus==3 ) { %>
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-user" style="width: 25px"></i>
+                        <p class="mb-0" style="font-size:14px; color: #8898aa">
+                          <%= item.orders[0].customerName %>
+                        </p>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-map-marker-alt" style="width: 25px"></i>
+                        <p class="mb-0" style="font-size:14px; color: #8898aa">
+                          <%= item.orders[0].customerAddress %>
+                        </p>
+                      </div>
+                      <div class="d-flex align-items-center mt-1">
+                        <i class="fas fa-phone-square-alt" style="width: 25px"></i>
+                        <p class="mb-0" style="font-size:14px; color: #8898aa">
+                          <%= item.orders[0].customerPhone %>
+                        </p>
+                      </div>
+                      <% } %>
+
             </div>
           </div>
-          <h4 class="heading mt-4">Tải lên file Excel</h4>
-          <p>Tải xuống file mẫu <a class="text-success" href="/static/assets/uploads/admin/danh-muc.xlsx">click
-              vào đây</a></p>
         </div>
-
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary">Lưu</button>
+        </div>
       </div>
-
-      <div class="modal-footer">
-        <form action="/admin/room/category/excel/import" method="POST">
-          <input type="hidden" name="path-excel-import">
-          <button type="submit" class="btn btn-white">Lưu</button>
-        </form>
-        <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Đóng</button>
-      </div>
-
     </div>
   </div>
 
+  <% }) %>
 
-  <!-- FILTER  -->
+    <!-- LỌC -->
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Lọc loại phòng</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="/admin/room/search" method="GET">
+            <div class="modal-body">
+              <div>
+                <label for="exampleFormControlInput1">Trạng thái</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline1" name="filterStatus" class="custom-control-input" value="1"
+                  checked>
+                <label class="custom-control-label" for="customRadioInline1">Hoạt động</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline2" name="filterStatus" class="custom-control-input" value="2">
+                <label class="custom-control-label" for="customRadioInline2">Không hoạt động</label>
+              </div>
+              <div class="form-group mt-3">
+                <div>
+                  <label for="exampleFormControlInput1">Thời gian</label>
+                </div>
+                <div class="input-daterange datepicker row align-items-center">
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                        </div>
+                        <input name="startDate" class="form-control" placeholder="Start date" type="text"
+                          value="06/18/2020">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                        </div>
+                        <input name="endDate" class="form-control" placeholder="End date" type="text"
+                          value="06/22/2020">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" name="q" value="<%= q.replace(/%/g,'') %>">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+              <button type="submit" class="btn btn-primary">Lọc</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
 
-  <!-- CODE JS  -->
+      // loading
+      const loadingData = document.querySelector('.box-loading.load-data');
+      const loadingModal = document.querySelector('.box-loading.load-modal');
+      const formPost = document.querySelector('form[method=POST].create-item');
 
-
-  <script>
-
-    // ckeditor
-    ClassicEditor
-      .create(document.querySelector('#editor'), {
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-        heading: {
-          options: [
-            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
-          ]
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    // select option 
-
-    var autocomplete = new SelectPure(".autocomplete-select", {
-      options: [
-        {
-          label: "Điều hòa",
-          value: "sp",
-        },
-        {
-          label: "Quạt cháy",
-          value: "qc",
-        },
-        {
-          label: "Máy bơm",
-          value: "mb",
-        },
-
-      ],
-      value: ["sp"],
-      multiple: true,
-      autocomplete: true,
-      icon: "fa fa-times",
-      onChange: value => { console.log(value); },
-      classNames: {
-        select: "select-pure__select",
-        dropdownShown: "select-pure__select--opened",
-        multiselect: "select-pure__select--multiple",
-        label: "select-pure__label",
-        placeholder: "select-pure__placeholder",
-        dropdown: "select-pure__options",
-        option: "select-pure__option",
-        autocompleteInput: "select-pure__autocomplete",
-        selectedLabel: "select-pure__selected-label",
-        selectedOption: "select-pure__option--selected",
-        placeholderHidden: "select-pure__placeholder--hidden",
-        optionHidden: "select-pure__option--hidden",
-      }
-    });
-    var resetAutocomplete = function () {
-      autocomplete.reset();
-    };
-
-
-    // DATE PICKER 
-
-    const startDate = document.querySelector('input[name="startDate"]');
-    const endDate = document.querySelector('input[name="endDate"]');
-    const now = moment().format("DD/MM/yyyy");
-    const fromDate = moment().subtract(7, 'days').format("DD/MM/yyyy");
-    startDate.value = fromDate;
-    endDate.value = now;
-
-
-    // upload file 
-
-    // let thumbnail = document.querySelector('#post-thumbnail');
-    // let inputThumbnail = document.querySelector("input[name='Thumbnail']");
-    function uploadFile(file) {
-
-      const inputSelectFile = document.querySelector('.form-upload input[type="file"]');
-      const inputPath = document.querySelector('input[name="path-excel-import"]');
-      const excelName = document.querySelector('#excel-name');
-
-      inputSelectFile.addEventListener('change', function () {
-        var url = "/admin/upload?path=admin";
-        var formData = new FormData();
-        formData.append("file", inputSelectFile.files[0]);
-        fetch(url, {
-          method: 'POST',
-          body: formData
-        })
-          .then(response => response.json())
-          .then(data => {
-            inputPath.value = data.path;
-            excelName.innerHTML = data.path.substring(data.path.lastIndexOf("/") + 1);
-            // thumbnail.setAttribute("src", data.dbPath);
-            // inputThumbnail.value = data.dbPath;
-          })
-          .catch(err => {
-            console.log(err);
-          })
-      })
-    }
-
-    uploadFile();
-
-    // notifycation
-    toastr.options = {
-      "closeButton": false,
-      "debug": false,
-      "newestOnTop": true,
-      "progressBar": false,
-      "positionClass": "toast-top-right",
-      "preventDuplicates": false,
-      "onclick": null,
-      "showDuration": "300",
-      "hideDuration": "1000",
-      "timeOut": "5000",
-      "extendedTimeOut": "1000",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut"
-    }
-
-    // loading
-    const loadingData = document.querySelector('.box-loading.load-data');
-    const loadingModal = document.querySelector('.box-loading.load-modal');
-    const formPost = document.querySelector('form[method=POST].create-item');
-            
-              <% if (!errorValidate && !successAlert) { %>
-      window.addEventListener('load', onLoading);
-            <%}%>
-
-      function onLoading(event) {
-        loadingData.style.display = 'flex';
+      function onLoadingModal(event) {
+        event.preventDefault();
+        loadingModal.style.display = 'flex';
         setTimeout(() => {
-          loadingData.style.display = 'none';
+          loadingModal.style.display = 'none';
+          formPost.submit();
         }, 500);
       }
 
-    function onLoadingModal(event) {
-      event.preventDefault();
-      loadingModal.style.display = 'flex';
-      setTimeout(() => {
-        loadingModal.style.display = 'none';
-        formPost.submit();
-      }, 500);
-    }
-
-    function reload() {
-      window.location.href = "/admin/room/category"
-    }
-
-    // EDIT
-    let editId = 0;
-    let prevDataEdit = null;
-    const loadingModalEdit = document.querySelector('#exampleModalEdit .box-loading.load-modal');
-    const formEdit = document.querySelector('#exampleModalEdit');
-    const inputNameEdit = document.querySelector('#exampleModalEdit input[name=name]');
-    const inputStatusEdit = document.querySelector('#exampleModalEdit select[name=status]');
-    const optionEdits = document.querySelectorAll('#exampleModalEdit select[name=status] option');
-    const optionEditValues = [];
-
-    optionEdits.forEach(item => optionEditValues.push(item.value));
-
-    function editItem(item) {
-      if (prevDataEdit?.name != item.name) {
-        inputNameEdit.value = item.name;
+      function reload() {
+        window.location.href = "/admin/room"
       }
+      // upload thumbnail 
+      function uploadThumbnail() {
+        let inputEditThumbnail = document.querySelector('.form-upload input[type="file"]');
+        let thumbnailUrl = document.querySelector('input[name="thumbnail"]');
+        inputEditThumbnail.addEventListener('change', function () {
+          let Thumbnail = document.querySelector('#profile-thumbnail');
 
-      indexOptionSelected = optionEditValues.findIndex(o => o == item.status);
-      optionEdits[indexOptionSelected].setAttribute('selected', 'selected');
-
-      prevDataEdit = item;
-      editId = item.id;
-
-    }
-
-    function updateItem(event) {
-      event.preventDefault();
-      // get data
-      var dataEdit = {
-        name: inputNameEdit.value,
-        status: inputStatusEdit.value
-      };
-
-      // start loading
-      loadingModalEdit.style.display = 'flex';
-      // call api
-      fetch(`/admin/room/category/update/${editId}`, {
-        method: 'PUT', // or 'PUT'
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataEdit),
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            setTimeout(() => {
-              // end loading
-
-              loadingModalEdit.style.display = 'none';
-
-              // notify
-
-              toastr["success"](data.message);
-
-              // close modal
-
-              $('#exampleModalEdit').modal('hide');
-
-              //  edit content html
-
-              var eleName = document.querySelector(`#item-${editId} td.budget`);
-              var eleStatus = document.querySelector(`#item-${editId} span.status .badge`);
-              eleName.textContent = data.name;
-
-              if (data.status == 1) {
-                eleStatus.className = 'badge badge-success';
-                eleStatus.textContent = 'HOẠT ĐỘNG';
-              }
-              else {
-                eleStatus.className = 'badge badge-danger';
-                eleStatus.textContent = 'KHÔNG HOẠT ĐỘNG';
-              }
-
-            }, 500);
-
+          var url = "/admin/upload?path=admin";
+          var formData = new FormData();
+          formData.append("file", inputEditThumbnail.files[0]);
+          fetch(url, {
+            method: 'POST',
+            body: formData
+          })
+            .then(response => response.json())
+            .then(data => {
+              data.path = data.path.replace('/resources', '');
+              Thumbnail.setAttribute("src", data.path);
+              thumbnailUrl.value = data.path;
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        })
+      }
+      uploadThumbnail();
+      // upload multiple images
+      function uploadImages() {
+        let inputUploadImages = document.querySelector('#i-images');
+        let dataImages = [];
+        let imageUrls = document.querySelector('input[name="CarImages"]');
+        let images = document.querySelectorAll('.images');
+        let indexImages = 0;
+        const inputImages = document.querySelector('#images');
+        inputUploadImages.addEventListener('change', function () {
+          if (indexImages > 7) {
+            return;
           }
           else {
-            console.log('error:', data)
+            let Thumbnail = document.querySelector('#profile-thumbnail');
+
+            var url = "/admin/upload?path=admin";
+            var formData = new FormData();
+            formData.append("file", inputUploadImages.files[0]);
+            fetch(url, {
+              method: 'POST',
+              body: formData
+            })
+              .then(response => response.json())
+              .then(data => {
+
+                //dataImages.push({url: data.thumbnail, size: data.fileSize});
+                //imageUrls.value = JSON.stringify(dataImages);
+                data.path = data.path.replace('/resources', '');
+                
+                inputImages.value += "," + data.path;
+                inputImages.value = inputImages.value.substring(1);
+
+                images[indexImages].setAttribute("src", data.path);
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.value = data.path;
+                input.name = "images[" + indexImages + "].url";
+                images[indexImages].after(input);
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.value = data.fileSize;
+                input.name = "images[" + indexImages + "].size";
+                images[indexImages].after(input);
+                indexImages++;
+              })
+              .catch(err => {
+                console.log(err);
+              })
           }
         })
-        .catch((error) => {
-          console.error('Error:', error);
-        })
-        .finally(() => {
-        })
-        ;
-      // notify
+      }
+      uploadImages();
+      const editors = document.querySelectorAll('.editor');
+      editors.forEach(item => {
+        ClassicEditor
+          .create(item, {
+            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+            heading: {
+              options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+              ]
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      })
+     
+      // select option create
+     
+      // utilities 
 
-      // end loading
+      const utilities = document.querySelector('#utilities');
 
-    }
+      let autocomplete = new SelectPure(`#autocomplete-select-add`, {
+        options: [
+          {
+            label: "Điều hòa",
+            value: "dh",
+          },
+          {
+            label: "Quạt cháy",
+            value: "qc",
+          },
+          {
+            label: "Máy bơm",
+            value: "mb",
+          },
 
-            
+        ],
+        value: ['dh'],
+        multiple: true,
+        autocomplete: true,
+        icon: "fa fa-times",
+        onChange: value => { 
+          utilities.value = value;
+         },
+        classNames: {
+          select: "select-pure__select",
+          dropdownShown: "select-pure__select--opened",
+          multiselect: "select-pure__select--multiple",
+          label: "select-pure__label",
+          placeholder: "select-pure__placeholder",
+          dropdown: "select-pure__options",
+          option: "select-pure__option",
+          autocompleteInput: "select-pure__autocomplete",
+          selectedLabel: "select-pure__selected-label",
+          selectedOption: "select-pure__option--selected",
+          placeholderHidden: "select-pure__placeholder--hidden",
+          optionHidden: "select-pure__option--hidden",
+        }
+      });
+      let resetAutocomplete = function () {
+        autocomplete.reset();
+      };
 
-              
-           
-              <% if (errorValidate) { %>
+      // select option detail
+
+
+  
+
+      // DATE PICKER 
+
+      const startDate = document.querySelector('input[name="startDate"]');
+      const endDate = document.querySelector('input[name="endDate"]');
+      const now = moment().format("DD/MM/yyyy");
+      const fromDate = moment().subtract(7, 'days').format("DD/MM/yyyy");
+      startDate.value = fromDate;
+      endDate.value = now;
+
+      // notifycation
+      toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      };
+      <% if (!errorValidate && !successAlert) { %>
+        window.addEventListener('load', onLoading);
+         <%}%>
+
+        function onLoading(event) {
+          loadingData.style.display = 'flex';
+          setTimeout(() => {
+            loadingData.style.display = 'none';
+          }, 500);
+        }
+
+        <% if (errorValidate) { %>
               const err = '<%= errorValidate %>';
-      toastr["error"]("<%= errorValidate %>")
+          toastr["error"]("<%= errorValidate %>")
 
-        <%}%>
+            <%}%>
                   <% if (successAlert) { %>
-      toastr["success"]("<%= successAlert %>")
-      <%}%>
-  </script>
+        toastr["success"]("<%= successAlert %>")
+        <%}%>
+
+
+        let autocompleteSelects = document.querySelectorAll('.autocomplete-select');
+      autocompleteSelects.forEach(item => {
+        const itemId = item.dataset.selectId;
+
+        let optionSelected = item.dataset.options?.trim()?.split(",");
+        let autocomplete = new SelectPure(`#autocomplete-select-${itemId}`, {
+          options: [
+            {
+              label: "Điều hòa",
+              value: "dh",
+            },
+            {
+              label: "Quạt cháy",
+              value: "qc",
+            },
+            {
+              label: "Máy bơm",
+              value: "mb",
+            },
+
+          ],
+          value: optionSelected,
+          multiple: true,
+          autocomplete: true,
+          icon: "fa fa-times",
+          onChange: value => { console.log(value); },
+          classNames: {
+            select: "select-pure__select",
+            dropdownShown: "select-pure__select--opened",
+            multiselect: "select-pure__select--multiple",
+            label: "select-pure__label",
+            placeholder: "select-pure__placeholder",
+            dropdown: "select-pure__options",
+            option: "select-pure__option",
+            autocompleteInput: "select-pure__autocomplete",
+            selectedLabel: "select-pure__selected-label",
+            selectedOption: "select-pure__option--selected",
+            placeholderHidden: "select-pure__placeholder--hidden",
+            optionHidden: "select-pure__option--hidden",
+          }
+        });
+        let resetAutocomplete = function () {
+          autocomplete.reset();
+        };
+      })
+    </script>

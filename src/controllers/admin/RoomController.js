@@ -1,5 +1,6 @@
 const excel = require('exceljs');
 const moment = require('moment');
+const { isURL } = require('read-excel-file/commonjs/types/URL');
 const readXlsxFile = require('read-excel-file/node');
 const controller = {};
 
@@ -11,10 +12,114 @@ controller.index = (req, res) => {
     delete req.session.Success;
 
     const page = req.query.page ?? 1;
-    const pageSize = req.query.pageSize ?? 5;
+    const pageSize = req.query.pageSize ?? 12;
+    const rooms = [];
+
     req.getConnection((err, conn) => {
-        const sql = 'SELECT * FROM roomCategories ORDER BY id DESC limit ? offset ?  ; SELECT COUNT(*) as Total FROM roomCategories';
+
+        const sql = ` select r.id , r.code , r.title , r.status , r.price , r.desposit , r.acr , r.capacity , r.utilities , r.thumbnail , r.images , r.address, r.createdTime , r.updatedTime , r.description , r.content, r.categoryId ,
+                      r.countCheckout , r.timeOrderActive,
+                      r2.name categoryName, 
+                      u.username roomUsername, u.id roomUserId, u.fullname roomUserFullname,  u.phone roomUserPhone, u.address roomUserAddress , u.address roomUserAddress,
+                      o.id orderId, o.checked, o.timeCheckout, o.code orderCode, o.amount orderAmount, o.createTime orderCreateTime, o.updateTime orderUpdateTime, o.status orderStatus, o.note orderNote,
+                      u2.username customerName, u2.id customerId, u2.fullname customerFullname, u2.phone customerPhone, u2.address customerAddress,
+                      o2.id detailId, o2.utility , o2.createTime detailCreateTime , o2.updateTime detailUpdateTime, o2.amount detailAmount
+                      from rooms r 
+                      join roomcategories r2 
+                      on r2.id = r.categoryId 
+                      join users u 
+                      on r.userid  = u.id
+                      left join orders o 
+                      on o.roomId  = r.id
+                      left join users u2 
+                      on u2.id = o.customerId 
+                      left join orderdetails o2 
+                      on o.id  = o2.orderId 
+                      ORDER BY r.status, id DESC,
+                               o.checked ASC,
+                               o.status DESC limit ? offset ?; 
+                     SELECT COUNT(*) as Total FROM rooms;
+                     select * from roomcategories r 
+                     `;;
+
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
+            data[0].forEach((r, index) => {
+                let foundRoom = rooms.findIndex(item => item.id == r.id);
+                if (foundRoom == -1) {
+                    rooms.push({
+                        id: r.id,
+                        code: r.code,
+                        title: r.title,
+                        timeOrderActive: r.timeOrderActive,
+                        status: r.status,
+                        price: r.price,
+                        desposit: r.desposit,
+                        acr: r.acr,
+                        capacity: r.capacity,
+                        utilities: r.utilities,
+                        thumbnail: r.thumbnail,
+                        images: r.images,
+                        createdTime: r.createdTime,
+                        updatedTime: r.updatedTime,
+                        description: r.description,
+                        content: r.content,
+                        categoryId: r.categoryId,
+                        countCheckout: r.countCheckout,
+                        categoryName: r.categoryName,
+                        roomUsername: r.roomUsername,
+                        roomUserId: r.roomUserId,
+                        roomUserAddress: r.roomUserAddress,
+                        roomUserPhone: r.roomUserPhone,
+                        roomUserFullname: r.roomUserFullname,
+                        orderStatus: r.orderStatus,
+                        timeCheckout: r.timeCheckout,
+                        address: r.address,
+                        checked: r.checked,
+                        orders: []
+                    });
+                    foundRoom = rooms.length - 1;
+                }
+                // import orders
+
+                if (r.orderId != null) {
+                    let foundOrder = rooms[foundRoom].orders.findIndex(item => item.id == r.orderId);
+                    if (foundOrder == -1) {
+                        rooms[foundRoom].orders.push({
+                            id: r.orderId,
+                            orderCode: r.orderCode,
+                            orderAmount: r.orderAmount,
+                            orderCreateTime: r.orderCreateTime,
+                            orderUpdateTime: r.orderUpdateTime,
+                            orderStatus: r.orderStatus,
+                            orderNote: r.orderNote,
+                            timeCheckout: r.timeCheckout,
+                            customerName: r.customerName,
+                            customerId: r.customerId,
+                            customerFullname: r.customerFullname,
+                            customerPhone: r.customerPhone,
+                            customerAddress: r.customerAddress,
+                            checked: r.checked,
+                            details: []
+                        });
+                        foundOrder = rooms[foundRoom].orders.length - 1;
+                    }
+
+
+                    // import details
+                    if (r.detailId != null) {
+
+                        rooms[foundRoom].orders[foundOrder].details.push({
+                            id: r.detailId,
+                            utility: r.utility,
+                            createTime: r.detailCreateTime,
+                            updateTime: r.detailUpdateTime,
+                            amount: r.detailAmount
+                        });
+
+                    }
+                }
+            });
+
             if (err) {
                 res.json(err);
             }
@@ -24,11 +129,14 @@ controller.index = (req, res) => {
                         layout: './layout/_layoutAdmin',
                         extractScripts: true,
                         extractStyles: true,
+                        hideActionImportExcel: true,
+                        hideActionExportExcel: true,
                         errorValidate: errorValidate,
                         successAlert: successAlert,
-                        categories: data[0],
+                        categories: rooms,
                         curentPage: page,
                         total: data[1][0].Total % pageSize === 0 ? data[1][0].Total / pageSize : Math.floor(data[1][0].Total / pageSize) + 1,
+                        roomCategories: data[2],
                         title: 'Thiết lập phòng',
                         breadcrumbs: [
                             {
@@ -36,9 +144,10 @@ controller.index = (req, res) => {
                                 link: '/admin/room'
                             }
                         ],
-                        actionSearch: '/admin/category/search',
+                        actionSearch: '/admin/room/search',
                         q: '',
-                        filter: ''
+                        filter: '',
+                        moment: moment
                     }
                 );
             }
@@ -48,23 +157,77 @@ controller.index = (req, res) => {
 
 };
 controller.create = (req, res) => {
-    const name = req.body.name;
-    const status = parseInt(req.body.status);
+    const images = req.body.images;
+    const thumbnail = req.body.thumbnail;
+    const utilities = req.body.utilities;
+    const title = req.body.title;
+    const categoryId = req.body.categoryId;
+    const price = req.body.price;
+    const acr = req.body.acr;
+    const desposit = req.body.desposit;
+    const capacity = req.body.capacity;
+    const address = req.body.address;
+    const description = req.body.description;
+    const userId = 1;
+    const status = 1;
+
     const errors = [];
     // validate basic
-    if (name.length <= 3) {
+    if (title.length <= 3) {
         errors.push("Tên danh mục phải lớn hơn 3 kí tự !")
     }
     if (errors.length > 0) {
         req.session.Error = errors[0];
-        res.redirect("/admin/category");
+        res.redirect("/admin/room");
     }
     else {
         req.getConnection((err, connection) => {
-            connection.query('INSERT INTO roomCategories set name = ?, status = ?', [name, status], (err, data) => {
-                req.session.Success = "Thêm mới danh mục thành công";
-                res.redirect("/admin/category");
+            const sqlGetLastId = `select r.id 
+                                    from rooms r 
+                                    order by id desc 
+                                    limit 1`;
+            connection.query(sqlGetLastId, (err, data) => {
+                const code = "PH-0" + data[0].id + 1;
+                connection.query(`INSERT INTO ROOMS
+                                 set
+                                    images = ?,
+                                    thumbnail = ?,
+                                    utilities = ?,
+                                    title = ?,
+                                    categoryId = ?,
+                                    price = ?,
+                                    acr = ?,
+                                    desposit = ?,
+                                    capacity = ?,
+                                    address = ?,
+                                    description = ?,
+                                    userId = ?,
+                                    code = ?,
+                                    status = ?,
+                                 `, [
+                                    images,
+                                    thumbnail,
+                                    utilities,
+                                    title,
+                                    categoryId,
+                                    price,
+                                    acr,
+                                    desposit,
+                                    capacity,
+                                    address,
+                                    description,
+                                    userId,
+                                    code,
+                                    status
+                                ],
+
+                    (err, data) => {
+                        req.session.Success = "Thêm mới danh mục thành công";
+                        res.redirect("/admin/room");
+                    })
             })
+
+
         });
     }
 }
@@ -79,7 +242,7 @@ controller.update = (req, res) => {
         errors.push("Tên danh mục phải lớn hơn 3 kí tự !")
     }
     if (errors.length > 0) {
-        res.redirect("/admin/category");
+        res.redirect("/admin/room");
     }
     else {
         req.getConnection((err, connection) => {
@@ -101,7 +264,7 @@ controller.delete = (req, res) => {
     req.getConnection((err, connection) => {
         connection.query('DELETE FROM roomCategories WHERE id = ?', [id], (err, rows) => {
             req.session.Success = "Xóa danh mục thành công";
-            res.redirect('/admin/category');
+            res.redirect('/admin/room');
         });
     });
 }
@@ -142,7 +305,7 @@ controller.search = (req, res) => {
         sqlCount += ` AND createTime >= '${startDate}'`;
         sql += ` AND createTime <= '${endDate}' `;
         sqlCount += ` AND createTime <= '${endDate}'`;
-        
+
 
         sql = sql + ' ORDER BY id DESC limit ? offset ? ; ' + sqlCount;
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
@@ -169,10 +332,10 @@ controller.search = (req, res) => {
                             },
                             {
                                 title: 'Danh mục phòng',
-                                link: '/admin/category'
+                                link: '/admin/room'
                             }
                         ],
-                        actionSearch: '/admin/category/search',
+                        actionSearch: '/admin/room/search',
                         q: q,
                         filter: filterStatus
                     }
@@ -184,81 +347,6 @@ controller.search = (req, res) => {
 
 };
 
-controller.exportExcel = (req, res) => {
-
-    const now = Date.now();
-
-    let workbook = new excel.Workbook();
-    let worksheet = workbook.addWorksheet("danh-muc");
-    worksheet.columns = [
-        { header: "#", key: "id", width: 5 },
-        { header: "Tên danh mục", key: "name", width: 25 },
-        { header: "Trạng thái", key: "status", width: 25 },
-    ];
-    worksheet.getRow(1).font = { bold: true };
-
-    req.getConnection((err, conn) => {
-        const sql = `SELECT * FROM roomCategories ORDER BY id DESC`
-        conn.query(sql, (err, data) => {
-            const categories = data.map((item, index) => {
-                return {
-                    id: index,
-                    name: item.name,
-                    status: item.status == 1 ? 'Hoạt động' : 'Không hoạt động'
-                }
-            });
-
-            if (err) {
-                res.json(err);
-            }
-            else {
-                worksheet.addRows(categories);
-
-                res.setHeader(
-                    "Content-Type",
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                );
-                res.setHeader(
-                    "Content-Disposition",
-                    "attachment; filename=" + "danh-muc-" + now + ".xlsx"
-                );
-
-                return workbook.xlsx.write(res).then(function () {
-                    res.status(200).end();
-                });
-            }
-        });
-
-    });
-
-}
-
-controller.importExcel = async (req, res) => {
-
-    let filename = global.__basedir + req.body['path-excel-import'];
-    readXlsxFile(filename).then((rows) => {
-
-        const activeStatus = 1;
-        const unactiveStatus = 2;
-        rows = rows.map(item => {
-            if (item[2].toLowerCase().trim() == 'không hoạt động') {
-                item[2] = activeStatus;
-            }
-            else if (item[2].toLowerCase().trim() == 'hoạt động') {
-                item[2] = unactiveStatus;
-            }
-
-            return [item[1], item[2]]
-        });
-        req.getConnection((err, connection) => {
-            const sql = "INSERT INTO roomCategories (name,status) VALUES ?";
-            connection.query(sql, [rows], (err, data) => {
-                req.session.Success = "Import dữ liệu thành công";
-                res.redirect("/admin/category");
-            })
-        });
-    });
-}
 
 
 module.exports = controller;

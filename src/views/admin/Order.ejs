@@ -237,7 +237,7 @@
           <div class="row">
             <div class="col">
               <h3 class="mb-4">Thông tin đơn hàng</h3>
-              
+
             </div>
             <div class="col">
               <h3 class="mb-4">Thông tin khách hàng</h3>
@@ -491,7 +491,10 @@
             function reload() {
               window.location.href = "/admin/order/"
             }
-
+            
+            function exportExcel() {
+              window.location.href = "/admin/order/excel/export"
+            }
             // EDIT
             let editId = 0;
             let prevDataEdit = null;

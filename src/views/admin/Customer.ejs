@@ -263,7 +263,7 @@
               </div>
               <div class="form-group">
                 <label for="exampleFormControlInput1">Mật khẩu</label>
-                <input type="password" class="form-control" name="password" >
+                <input type="password" class="form-control" name="password">
               </div>
               <div class="form-group">
                 <label for="exampleFormControlInput1">Họ tên</label>
@@ -675,9 +675,12 @@
             }
 
             function reload() {
-              window.location.href = "/admin/room/category"
+              window.location.href = "/admin/customer"
             }
 
+            function exportExcel() {
+              window.location.href = "/admin/customer/excel/export"
+            }
             // EDIT
             let editId = 0;
             let prevDataEdit = null;

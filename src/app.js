@@ -48,7 +48,7 @@ app.use(myConnection(mysql, {
     user: 'root',
     password: '',
     port: 3306,
-    database: 'node_test',
+    database: 'node_test_2',
     multipleStatements: true
 }, 'single'));  // conenct db
 // routes

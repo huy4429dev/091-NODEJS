@@ -1,20 +1,29 @@
 const excel = require('exceljs');
 const moment = require('moment');
-const readXlsxFile = require('read-excel-file/node');
 const controller = {};
 
 controller.index = (req, res) => {
-
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
 
-    const page = req.query.page ?? 1;
-    const pageSize = req.query.pageSize ?? 5;
+    const now = moment().format("yyyy/MM/DD");
+    const fromDate = moment().subtract(6, 'days').format("yyyy/MM/DD");
+
     req.getConnection((err, conn) => {
-        const sql = 'SELECT * FROM roomCategories ORDER BY id DESC limit ? offset ?  ; SELECT COUNT(*) as Total FROM roomCategories';
-        conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
+        const sql = `select date_format(createTime, "%d-%m-%Y") as day, sum(amount) total,
+                    count(*) totalOrder,
+                    sum(case when o.status = 1 then 1 else 0 end) totalOrderSuccess,
+                    sum(case when o.status = 3 then 1 else 0 end) totalOrderDispose,
+                    sum(case when o.status = 2 then 1 else 0 end) totalOrderPending
+                    from orders o  
+                    where createTime >= '${fromDate}' and createTime <= '${now}'
+                    group by date_format(createTime, "%d-%m-%Y")
+                   `;
+
+        conn.query(sql, (err, data) => {
+            console.log(data);
             if (err) {
                 res.json(err);
             }
@@ -26,14 +35,16 @@ controller.index = (req, res) => {
                         extractStyles: true,
                         errorValidate: errorValidate,
                         successAlert: successAlert,
-                        categories: data[0],
-                        curentPage: page,
-                        total: data[1][0].Total % pageSize === 0 ? data[1][0].Total / pageSize : Math.floor(data[1][0].Total / pageSize) + 1,
+                        hideActionAdd: true,
+                        hideActionSearch: true,
+                        hideActionImportExcel: true,
+                        categories: data,
+                        total: 1,
                         title: 'Báo cáo',
                         breadcrumbs: [
                             {
                                 title: 'Báo cáo',
-                                link: '/admin/report'
+                                link: '#'
                             },
                             {
                                 title: 'Báo cáo doanh thu',
@@ -54,103 +65,64 @@ controller.index = (req, res) => {
 
 controller.search = (req, res) => {
 
-    const errorValidate = req.session.Error;
-    const successAlert = req.session.Success;
-    delete req.session.Error;
-    delete req.session.Success;
-    const page = req.query.page ?? 1;
-    const pageSize = req.query.pageSize ?? 5;
-    const q = req.query.q != undefined ? `%${req.query.q}%` : '';
-    const filterStatus = req.query.filterStatus;
-
-    let startDate = moment(req.query.startDate, 'DD-MM-YYYY');
-    startDate = startDate.format('yyyy/MM/DD')
-    let endDate = moment(req.query.endDate, 'DD-MM-YYYY');
-    endDate = endDate.format('yyyy/MM/DD')
-
     req.getConnection((err, conn) => {
+        const sql = `select date_format(createTime, "%d-%m-%Y") as day, sum(amount) total,
+                    count(*) totalOrder,
+                    sum(case when o.status = 1 then 1 else 0 end) totalOrderSuccess,
+                    sum(case when o.status = 3 then 1 else 0 end) totalOrderDispose,
+                    sum(case when o.status = 2 then 1 else 0 end) totalOrderPending
+                    from orders o  
+                    where createTime >= '${req.query.startDate}' and createTime <= '${req.query.endDate}'
+                    group by date_format(createTime, "%d-%m-%Y")
+                   `;
 
-        let sql = 'SELECT * FROM roomCategories WHERE true ';
-        let sqlCount = ' SELECT COUNT(*) as Total FROM roomCategories WHERE true ';
-        let param = '';
-        if (q != '') {
-            sql += `AND LOWER(name) LIKE  '${q}'`;
-            sqlCount += `AND LOWER(name) LIKE  '${q}'`;
-            param = q;
-        }
-
-        if (filterStatus != undefined && filterStatus != '') {
-            sql += `AND status = ${filterStatus}`;
-            sqlCount += `AND status = ${filterStatus}`;
-        }
-
-        sql += ` AND createTime >= '${startDate}'`;
-        sqlCount += ` AND createTime >= '${startDate}'`;
-        sql += ` AND createTime <= '${endDate}' `;
-        sqlCount += ` AND createTime <= '${endDate}'`;
-        
-
-        sql = sql + ' ORDER BY id DESC limit ? offset ? ; ' + sqlCount;
-        conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
-
+        conn.query(sql, (err, data) => {
+            res.json(data);
             if (err) {
                 res.json(err);
             }
-            else {
-                res.render('admin/revenue',
-                    {
-                        layout: './layout/_layoutAdmin',
-                        extractScripts: true,
-                        extractStyles: true,
-                        errorValidate: errorValidate,
-                        successAlert: successAlert,
-                        categories: data[0],
-                        curentPage: page,
-                        total: data[1][0].Total % pageSize === 0 ? data[1][0].Total / pageSize : Math.floor(data[1][0].Total / pageSize) + 1,
-                        title: 'Báo cáo',
-                        breadcrumbs: [
-                            {
-                                title: 'Phòng',
-                                link: '#'
-                            },
-                            {
-                                title: 'Danh mục phòng',
-                                link: '/admin/report/revenue'
-                            }
-                        ],
-                        actionSearch: '/admin/report/revenue/search',
-                        q: q,
-                        filter: filterStatus
-                    }
-                );
-            }
         });
-
     });
 
 };
 
 controller.exportExcel = (req, res) => {
-
+    const startDate = req.query.startDate ?? moment().subtract(6, 'days').format("yyyy/MM/DD") ;
+    const endDate = req.query.endDate ?? moment().format("yyyy/MM/DD");
     const now = Date.now();
-
     let workbook = new excel.Workbook();
-    let worksheet = workbook.addWorksheet("danh-muc");
+    let worksheet = workbook.addWorksheet("bao-cao-doanh-thu");
     worksheet.columns = [
         { header: "#", key: "id", width: 5 },
-        { header: "Tên danh mục", key: "name", width: 25 },
-        { header: "Trạng thái", key: "status", width: 25 },
+        { header: "Thời gian", key: "day", width: 20 },
+        { header: "Tổng hóa đơn", key: "totalOrder", width: 20 },
+        { header: "Đã thanh toán", key: "totalOrderSuccess", width: 20 },
+        { header: "Đơn hủy", key: "totalOrderDispose", width: 20 },
+        { header: "Đơn chưa xử lý", key: "totalOrderPending", width: 20 },
+        { header: "Doanh thu", key: "total", width: 25 },
     ];
     worksheet.getRow(1).font = { bold: true };
 
     req.getConnection((err, conn) => {
-        const sql = `SELECT * FROM roomCategories ORDER BY id DESC`
+        const sql = `select date_format(createTime, "%d-%m-%Y") as day, sum(amount) total,
+        count(*) totalOrder,
+        sum(case when o.status = 1 then 1 else 0 end) totalOrderSuccess,
+        sum(case when o.status = 3 then 1 else 0 end) totalOrderDispose,
+        sum(case when o.status = 2 then 1 else 0 end) totalOrderPending
+        from orders o  
+        where createTime >= '${startDate}' and createTime <= '${endDate}'
+        group by date_format(createTime, "%d-%m-%Y")
+       `;
         conn.query(sql, (err, data) => {
             const categories = data.map((item, index) => {
                 return {
-                    id: index,
-                    name: item.name,
-                    status: item.status == 1 ? 'Hoạt động' : 'Không hoạt động'
+                    id: index + 1,
+                    day: item.day,
+                    totalOrder: item.totalOrder + "",
+                    totalOrderSuccess: item.totalOrderSuccess + "",
+                    totalOrderDispose: item.totalOrderDispose + "",
+                    totalOrderPending: item.totalOrderPending + "",
+                    total: item.total.toLocaleString('vi-VN', { style: 'currency' , currency: 'VND' })
                 }
             });
 
@@ -166,7 +138,7 @@ controller.exportExcel = (req, res) => {
                 );
                 res.setHeader(
                     "Content-Disposition",
-                    "attachment; filename=" + "danh-muc-" + now + ".xlsx"
+                    "attachment; filename=" + "bao-cao-doanh-thu-" + now + ".xlsx"
                 );
 
                 return workbook.xlsx.write(res).then(function () {

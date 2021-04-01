@@ -45,8 +45,6 @@ router.post('/room/create', RoomController.create);
 router.put('/room/update/:id', RoomController.update);
 router.get('/room/delete/:id', RoomController.delete);
 router.get('/room/search', RoomController.search);
-router.get('/room/excel/export', RoomController.exportExcel);
-router.post('/room/excel/import', RoomController.importExcel);
 
 
 
@@ -69,8 +67,19 @@ router.get('/report/revenue/search', ReportRevenueController.search);
 router.get('/report/revenue/excel/export', ReportRevenueController.exportExcel);
 
 
+const ReportCustomerController = require('../../controllers/admin/ReportCustomerController');
+router.get('/report/customer', ReportCustomerController.index);
+router.get('/report/customer/search', ReportCustomerController.search);
+router.get('/report/customer/excel/export', ReportCustomerController.exportExcel);
+
+
+// Contact
 const ContactController = require('../../controllers/admin/ContactController');
 router.get('/contact', ContactController.index);
+router.get('/contact/delete/:id', ContactController.delete);
+router.get('/contact/search', ContactController.search);
+router.get('/contact/excel/export', ContactController.exportExcel);
+router.post('/contact/excel/import', ContactController.importExcel);
 
 // Post
 

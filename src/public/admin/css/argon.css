@@ -8769,7 +8769,7 @@ a.close.disabled
 
 .bg-primary
 {
-    background-color: #8898aa !important;
+    background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important
 }
 
 a.bg-primary:hover,
