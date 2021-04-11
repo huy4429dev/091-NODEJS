@@ -1,5 +1,3 @@
-
-
 /* ============= Start Header ============= */
 .header{
     width: 100%;
@@ -89,7 +87,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 4.6rem;
+    margin-top: 140px;
 }
 
 .banner .container{
@@ -137,7 +135,6 @@
 }
 
 .aside-left{
-    position: relative;
     display: flex;
     flex-direction: column;
     max-width: 58vw;
@@ -145,6 +142,9 @@
     background: #e7e6e1;
     margin-right: 5rem;
     color: black;
+    padding: 20px;
+    padding-bottom: 80px;
+
 }
 
 .section-heading{
@@ -193,12 +193,12 @@
 .card-item{
     display: flex;
     flex-direction: row;
-    width: 100%;
     
 }
 
 .room-img img{
     border-radius: 20px;
+    object-fit: contain;
 }
 
 .room-desc {
@@ -249,6 +249,7 @@
     max-width: 25vw;
     width: 100%;   
     background: #e7e6e1;
+    padding: 20px;
 }
 
 .card-item-right{
@@ -651,6 +652,7 @@ textarea{
 }
 ul.breadcrumb {
     width: 100%;
+    margin-bottom: 40px;
 }
   
 ul.breadcrumb li {
@@ -696,11 +698,6 @@ ul.breadcrumb li a:hover {
     transform: scale(1.1);
 }
 
-
-.content-details{
-    margin-left: 9rem;
-}
-
 .content-details h2{
     font-size: 2.8rem;
     line-height: 42px;
@@ -732,6 +729,10 @@ ul.breadcrumb li a:hover {
     color: white;
     background: var(--orange1);
     border-radius: 99px;
+    align-items: center;
+    display: flex;
+    width: 215px;
+    padding-bottom: 1px;
 }
 
 .detail_Title i{
@@ -910,6 +911,9 @@ tr, td, th, p {
 
 /* ============= End Bộ lọc ============= */
 
+
+
+
 /* ============= Start Footer ============= */
 .footer{
     display: -webkit-flex;
@@ -940,7 +944,7 @@ tr, td, th, p {
 
 .footer-left img{
     width: 180px;
-    
+    object-fit: contain;
 }
 
 .footer-right{
@@ -1007,4 +1011,13 @@ tr, td, th, p {
     .footer-right{
         flex: 2 0px;
     }
+}
+
+@media screen and (max-width:786px)
+{
+    
+}
+
+.detail_Title span {
+    margin-left: 5px;
 }

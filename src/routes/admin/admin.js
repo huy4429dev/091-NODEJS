@@ -55,6 +55,8 @@ router.get('/order', OrderController.index);
 router.post('/order/create', OrderController.create);
 router.put('/order/update/:id', OrderController.update);
 router.get('/order/delete/:id', OrderController.delete);
+router.get('/order/:id', OrderController.detail);
+router.put('/order/:id', OrderController.edit);
 router.get('/order/search', OrderController.search);
 router.get('/order/excel/export', OrderController.exportExcel);
 router.post('/order/excel/import', OrderController.importExcel);

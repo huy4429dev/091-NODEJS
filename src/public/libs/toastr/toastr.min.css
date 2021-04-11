@@ -20,7 +20,7 @@
     -webkit-box-shadow: -2px 2px 4px 3px #4946465e;
     box-shadow: -2px 2px 4px 3px #4946465e;
     color: #FFF;
-    opacity: .8;
+    opacity: 1;
     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
     filter: alpha(opacity=80);
 }

@@ -13,7 +13,8 @@ controller.index = (req, res) => {
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
     req.getConnection((err, conn) => {
-        const sql = 'SELECT * FROM contacts ORDER BY id DESC limit ? offset ?  ; SELECT COUNT(*) as Total FROM contacts';
+        const sql = `SELECT * FROM contacts ORDER BY id DESC limit ? offset ?  ;
+                     SELECT COUNT(*) as Total FROM contacts`;
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
             if (err) {
                 res.json(err);

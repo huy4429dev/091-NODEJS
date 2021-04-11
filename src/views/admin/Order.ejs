@@ -1,3 +1,124 @@
+<style>
+  .select2-container--default .select2-selection--single {
+    height: 46px;
+  }
+
+  .select-pure__select {
+    align-items: center;
+    background: #f9f9f8;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+    color: #363b3e;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: 400;
+    justify-content: left;
+    min-height: 44px;
+    padding: 5px 10px;
+    position: relative;
+    transition: 0.2s;
+    width: 100%;
+  }
+
+  .select-pure__options {
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+    color: #363b3e;
+    display: none;
+    left: 0;
+    max-height: 221px;
+    overflow-y: scroll;
+    position: absolute;
+    top: 50px;
+    width: 100%;
+    z-index: 5;
+  }
+
+  .select-pure__select--opened .select-pure__options {
+    display: block;
+  }
+
+  .select-pure__option {
+    background: #fff;
+    border-bottom: 1px solid #e4e4e4;
+    box-sizing: border-box;
+    height: 44px;
+    line-height: 25px;
+    padding: 10px;
+  }
+
+  .select-pure__option--disabled {
+    color: #e4e4e4;
+  }
+
+  .select-pure__option--selected {
+    color: #e4e4e4;
+    cursor: initial;
+    pointer-events: none;
+  }
+
+  .select-pure__option--hidden {
+    display: none;
+  }
+
+  .select-pure__selected-label {
+    font-size: 12px;
+    align-items: 'center';
+    background: teal;
+    border-radius: 4px;
+    color: #fff;
+    cursor: initial;
+    display: inline-flex;
+    justify-content: 'center';
+    margin: 5px 10px 5px 0;
+    padding: 3px 7px;
+  }
+
+  .select-pure__selected-label:last-of-type {
+    margin-right: 0;
+  }
+
+  .select-pure__selected-label i {
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 7px;
+  }
+
+  .select-pure__selected-label img {
+    cursor: pointer;
+    display: inline-block;
+    height: 18px;
+    margin-left: 7px;
+    width: 14px;
+  }
+
+  .select-pure__selected-label i:hover {
+    color: #e4e4e4;
+  }
+
+  .select-pure__autocomplete {
+    background: #f9f9f8;
+    border-bottom: 1px solid #e4e4e4;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .select-pure__placeholder--hidden {
+    display: none;
+  }
+</style>
+
 <div class="col">
   <div class="card">
     <!-- Card header -->
@@ -61,11 +182,11 @@
                         <span class="btn btn-success btn-sm" style="font-size: 10px; box-shadow: none;">thành
                           công</span>
                         <% } %>
-                          <% if(item.status==2) { %>
+                          <% if(item.status==3) { %>
                             <span class="btn btn-warning btn-sm" style="font-size: 10px; box-shadow: none;">chưa xử
                               lý</span>
                             <% } %>
-                              <% if (item.status==3) { %>
+                              <% if (item.status==2) { %>
                                 <span class="btn btn-danger btn-sm"
                                   style="font-size: 10px; box-shadow: none;">hủy</span>
                                 <% } %>
@@ -73,10 +194,10 @@
                   </span>
                 </td>
                 <td class="budget">
-                  <%= item.uFullname %>;
+                  <%= item.uFullname %>
                 </td>
                 <td class="budget">
-                  <%= moment(item.createTime).format('DD-MM-YYYY hh:mm') %>;
+                  <%= moment(item.createTime).format('DD-MM-YYYY hh:mm') %>
                 </td>
                 <td class="text-right">
                   <div class="dropdown">
@@ -237,10 +358,59 @@
           <div class="row">
             <div class="col">
               <h3 class="mb-4">Thông tin đơn hàng</h3>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Mã Phòng</label>
+                <input type="hidden" class="form-control" name="roomId">
+                <input disabled type="text" class="form-control" name="code">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Giá phòng</label>
+                <input type="text" class="form-control" name="price">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Trả phòng</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                  </div>
+                  <input class="form-control datepicker" type="text" value="06/20/2021" name="timeCheckout">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Ghi chú</label>
+                <textarea name="note" id="editor"></textarea>
+              </div>
 
             </div>
             <div class="col">
               <h3 class="mb-4">Thông tin khách hàng</h3>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Tìm kiếm khách hàng</label>
+                <select id="customer" class="form-control js-example-tags">
+                  <option selected="selected" value="0">Nhập điện thoại</option>
+                  <% customers.forEach(element=> { %>
+                    <option value="<%= element.id %> ">
+                      <%= element.phone %>
+                    </option>
+                    <% }) %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Tài khoản</label>
+                <input type="text" class="form-control" name="username">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Họ tên</label>
+                <input type="text" class="form-control" name="fullname">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Email</label>
+                <input type="text" class="form-control" name="email">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Điện thoại</label>
+                <input type="text" class="form-control" name="phone">
+              </div>
             </div>
           </div>
         </div>
@@ -263,30 +433,90 @@
       </div>
     </div>
   </div>
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered mw-100 form-update" style="width: 55%" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">CẬP NHẬT HÓA ĐƠN</h5>
+        <h5 class="modal-title" id="exampleModalLabel">CẬP NHẬT HÓA ĐƠN # </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label for="exampleFormControlInput1">Tên</label>
-          <input type="text" class="form-control" name="name">
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlSelect1">Trạng thái</label>
-          <select class="form-control" id="exampleFormControlSelect1" name="status">
-            <option value="1">hoạt động</option>
-            <option value="2">không hoạt động</option>
-          </select>
+        <div class="row">
+          <div class="col">
+            <h3 class="mb-4">Thông tin đơn hàng</h3>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Trạng thái</label>
+              <select name="status" class="form-control">
+                <option value="3">chưa xử lý</option>
+                <option value="1">thành công</option>
+                <option value="2">hủy</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Mã Phòng</label>
+              <input type="hidden" class="form-control" name="roomId">
+              <input disabled type="text" class="form-control" name="code">
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Trả phòng</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                </div>
+                <input class="form-control datepicker" type="text" value="06/20/2021" name="timeCheckout">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Ghi chú</label>
+              <textarea name="note" id="editorUpdate"></textarea>
+            </div>
+            <h3 class="mb-4">Thông tin khách hàng</h3>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Tài khoản</label>
+              <input type="text" class="form-control" name="username" disabled>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Họ tên</label>
+              <input type="text" class="form-control" name="fullname" disabled>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Email</label>
+              <input type="text" class="form-control" name="email" disabled>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Điện thoại</label>
+              <input type="text" class="form-control" name="phone" disabled>
+            </div>
+          </div>
+          <div class="col">
+            <h3 class="mb-4">Thêm dịch vụ</h3>
+            <div name="utilities" class="form-group">
+              <label for="example-text-input" class="form-control-label">Tiện ích</label>
+              <span class="autocomplete-select" id="autocomplete-select-add"></span>
+              <input type="hidden" name="utilities" id="utilities">
+            </div>
+            <h3 class="mb-4">Chi tiết thanh toán</h3>
+            <div class="form-group order-details">
+              <div class="d-flex">
+                <label style="width: 200px;">Tiền phòng :</label>
+                <label id="roomPrice">2000 đ</label>
+              </div>
+              <div id="order-details"></div>
+
+              <div class="my-3" style="width: 100%; height: 1px; background-color: gray;"></div>
+              <div class="d-flex">
+                <label style="width: 200px; font-weight: 600;">Thành tiền :</label>
+                <label id="orderTotal" style="font-weight: 600;">2000 đ</label>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button onclick="updateItem(event)" type="submit" class="btn btn-primary">Lưu</button>
+        <button onclick="updateOrderDetail(event)" type="submit" class="btn btn-primary">Lưu</button>
       </div>
     </div>
   </div>
@@ -398,7 +628,300 @@
 
           <!-- CODE JS  -->
 
+          <script>
 
+
+            const username = document.querySelector('input[name=username]');
+            const fullname = document.querySelector('input[name=fullname]');
+            const email = document.querySelector('input[name=email]');
+            const phone = document.querySelector('input[name=phone]');
+            const roomId = document.querySelector('input[name=roomId]');
+            const price = document.querySelector('input[name=price]');
+            const code = document.querySelector('input[name=code]');
+
+
+            $("#customer").select2({
+              tags: true
+            });
+
+            var $eventLog = $("#customer");
+            var $eventSelect = $("#customer");
+
+            $eventSelect.select2();
+
+            $eventSelect.on("select2:open", function (e) { console.log("select2:open", e); });
+            $eventSelect.on("select2:close", function (e) { console.log("select2:close", e); });
+            $eventSelect.on("select2:select", function (e) { console.log("select2:select", e); });
+            $eventSelect.on("select2:unselect", function (e) { console.log("select2:unselect", e); });
+
+
+            $eventSelect.on("select2:change", function (e) { console.log("change"); });
+            const dataCustomers = <%- JSON.stringify(customers) %>;
+            $('#customer').on('select2:select', function (e) {
+              const customerId = e.target.value;
+              customer = dataCustomers.find(item => item.id == customerId);
+              if (customer != null) {
+                console.log(customer, 'customer');
+                username.value = customer.username;
+                fullname.value = customer.fullname;
+                email.value = customer.email;
+                phone.value = customer.phone;
+              }
+
+            });
+
+            // Update note
+
+
+
+            ClassicEditor
+              .create(document.querySelector('#editor'), {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                heading: {
+                  options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+                  ]
+                }
+              })
+              .then(editor => {
+                window.editor = editor;
+              })
+              .catch(error => {
+                console.log(error);
+              });
+
+            function getParameterByName(name, url = window.location.href) {
+              name = name.replace(/[\[\]]/g, '\\$&');
+              const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+              if (!results) return null;
+              if (!results[2]) return '';
+              return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            // utilities 
+
+            const utilities = document.querySelector('#utilities');
+
+            const action = getParameterByName('action');
+            switch (action) {
+              case "create":
+                roomId.value = getParameterByName('roomId');
+                price.value = getParameterByName('price');
+                code.value = getParameterByName('code');
+                $('#exampleModal').modal();
+                break;
+              case "update":
+                console.log("UPDATE ORDER");
+                const orderId = getParameterByName('orderId');
+                $('#exampleModalEdit').modal();
+                getOrderDetail(orderId);
+                break;
+              default:
+                break;
+            }
+
+            // update order
+            let orderDetail = (title, amount) => `<div class="d-flex">
+                <label style="width: 200px;">${title} :</label>
+                <label>${amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</label>
+              </div>`
+            let option = [];
+
+            let editorUpdate;
+            function getOrderDetail(id) {
+
+              const title = document.querySelector('.form-update .modal-title');
+              const status = document.querySelector('.form-update select[name=status]');
+              const statusOptions = document.querySelectorAll('.form-update select[name=status] option');
+              const code = document.querySelector('.form-update input[name=code]');
+              const timeCheckout = document.querySelector('.form-update input[name=timeCheckout]');
+              const note = document.querySelector('.form-update textarea[name=note]');
+              const username = document.querySelector('.form-update input[name=username]');
+              const fullname = document.querySelector('.form-update input[name=fullname]');
+              const email = document.querySelector('.form-update input[name=email]');
+              const phone = document.querySelector('.form-update input[name=phone]');
+              const roomPrice = document.querySelector('#roomPrice');
+              const orderTotal = document.querySelector('#orderTotal');
+              const orderDetails = document.querySelector('#order-details');
+              
+              fetch(`/admin/order/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                  const order = data.order;
+                  title.innerHTML = `CẬP NHẬT HÓA ĐƠN #${order.code}`;
+                  statusOptions.forEach(item => {
+                    if (item.value == order.status) {
+                      item.setAttribute('selected', 'selected');
+                    }
+                  });
+                  code.value = order.rCode;
+                  ClassicEditor
+                    .create(document.querySelector('#editorUpdate'), {
+                      toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                      heading: {
+                        options: [
+                          { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                          { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                          { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+                        ]
+                      }
+                    })
+                    .then(editor => {
+                      window.editor = editor;
+                      order.note = order.note ?? "";
+                      editor.data.set(order.note);
+                      editorUpdate = editor;
+                    })
+                    .catch(error => {
+                      console.log(error);
+                    });
+
+                  timeCheckout.value = moment(order.timeCheckout).format("DD/MM/YYYY");
+                  username.value = order.cUsername;
+                  fullname.value = order.cFullname;
+                  email.value = order.cEmail;
+                  phone.value = order.cPhone;
+                  roomPrice.innerHTML = order.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                  orderTotal.innerHTML = order.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                  // order details 
+                  let details = "";
+                  order.orderDetails.forEach(item => {
+                    option.push(item.utility);
+                    switch (item.utility) {
+                      case "dh":
+                        details += orderDetail("Điều hòa", item.amount);
+                        break
+                      case "bl":
+                        details += orderDetail("Bàn là", item.amount);
+                        break;
+                      case "qc":
+                        details += orderDetail("Quạt cháy", item.amount);
+                        break;
+                      case "mb":
+                        details += orderDetail("Máy bơm", item.amount);
+                        break;
+                      default:
+                        break;
+                    }
+                  });
+                  orderDetails.innerHTML = details;
+                  let autocomplete = new SelectPure(`#autocomplete-select-add`, {
+                    options: [
+                      {
+                        label: "Điều hòa",
+                        value: "dh",
+                      },
+                      {
+                        label: "Bàn là",
+                        value: "bl",
+                      },
+                      {
+                        label: "Quạt cháy",
+                        value: "qc",
+                      },
+                      {
+                        label: "Máy bơm",
+                        value: "mb",
+                      },
+
+                    ],
+                    value: option,
+                    multiple: true,
+                    autocomplete: true,
+                    icon: "fa fa-times",
+                    onChange: value => {
+                      utilities.value = value;
+                      details = "";
+                      option = utilities.value.split(",");
+                      utilities.value.split(",").forEach(item => {
+                        switch (item) {
+                          case "dh":
+                            details += orderDetail("Điều hòa", 200);
+                            break;
+                          case "bl":
+                            details += orderDetail("Bàn là", 200);
+                            break;
+                          case "qc":
+                            details += orderDetail("Quạt cháy", 200);
+                            break;
+                          case "mb":
+                            details += orderDetail("Máy bơm", 200);
+                            break;
+
+                          default:
+                            break;
+                        }
+                      });
+
+                      orderDetails.innerHTML = details;
+
+                    },
+                    classNames: {
+                      select: "select-pure__select",
+                      dropdownShown: "select-pure__select--opened",
+                      multiselect: "select-pure__select--multiple",
+                      label: "select-pure__label",
+                      placeholder: "select-pure__placeholder",
+                      dropdown: "select-pure__options",
+                      option: "select-pure__option",
+                      autocompleteInput: "select-pure__autocomplete",
+                      selectedLabel: "select-pure__selected-label",
+                      selectedOption: "select-pure__option--selected",
+                      placeholderHidden: "select-pure__placeholder--hidden",
+                      optionHidden: "select-pure__option--hidden",
+                    }
+                  });
+                  let resetAutocomplete = function () {
+                    autocomplete.reset();
+                  };
+                });
+            }
+
+            function updateOrderDetail(id) {
+              const status = document.querySelector('.form-update select[name=status]');
+              const statusOptions = document.querySelectorAll('.form-update select[name=status] option');
+              const code = document.querySelector('.form-update input[name=code]');
+              const timeCheckout = document.querySelector('.form-update input[name=timeCheckout]');
+              const note = document.querySelector('.form-update textarea[name=note]');
+              console.log(note,'note');
+              const username = document.querySelector('.form-update input[name=username]');
+              const fullname = document.querySelector('.form-update input[name=fullname]');
+              const email = document.querySelector('.form-update input[name=email]');
+              const phone = document.querySelector('.form-update input[name=phone]');
+              const roomPrice = document.querySelector('#roomPrice');
+              const orderTotal = document.querySelector('#orderTotal');
+              const orderDetails = document.querySelector('#order-details');
+              const orderId = getParameterByName('orderId');
+
+              fetch(`http://localhost:3000/admin/order/${orderId}`, {
+              method: 'PUT', 
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  status: status.value,
+                  code: code.value,
+                  timeCheckout: timeCheckout.value,
+                  note: editorUpdate.getData(),
+                  utilities: option,
+                }),
+                  })
+                .then(response => response.json())
+                .then(data => {
+                   if(data.update){
+                    toastr["success"]("Cập nhật hóa đơn thành công");
+                   }
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                });
+            }
+
+
+          </script>
           <script>
 
             // DATE PICKER 
@@ -410,11 +933,8 @@
             startDate.value = fromDate;
             endDate.value = now;
 
-
             // upload file 
 
-            // let thumbnail = document.querySelector('#post-thumbnail');
-            // let inputThumbnail = document.querySelector("input[name='Thumbnail']");
             function uploadFile(file) {
 
               const inputSelectFile = document.querySelector('.form-upload input[type="file"]');
@@ -441,9 +961,7 @@
                   })
               })
             }
-
             uploadFile();
-
             // notifycation
             toastr.options = {
               "closeButton": false,
@@ -462,7 +980,6 @@
               "showMethod": "fadeIn",
               "hideMethod": "fadeOut"
             }
-
             // loading
             const loadingData = document.querySelector('.box-loading.load-data');
             const loadingModal = document.querySelector('.box-loading.load-modal');
@@ -491,7 +1008,7 @@
             function reload() {
               window.location.href = "/admin/order/"
             }
-            
+
             function exportExcel() {
               window.location.href = "/admin/order/excel/export"
             }
@@ -508,6 +1025,7 @@
             optionEdits.forEach(item => optionEditValues.push(item.value));
 
             function editItem(item) {
+              console.log(item, 'item');
               if (prevDataEdit?.name != item.name) {
                 inputNameEdit.value = item.name;
               }

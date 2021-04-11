@@ -105,7 +105,7 @@ controller.delete = (req, res) => {
     req.getConnection((err, connection) => {
         connection.query('DELETE FROM roomCategories WHERE id = ?', [id], (err, rows) => {
             req.session.Success = "Xóa danh mục thành công";
-            res.redirect('admin/room/category');
+            res.redirect('/admin/room/category');
         });
     });
 }
@@ -118,7 +118,7 @@ controller.search = (req, res) => {
     delete req.session.Success;
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
-    const q = req.query.q != undefined ? `%${req.query.q}%` : '';
+    const q = req.query.q != undefined ? `%${req.query.q.trim()}%` : '';
     const filterStatus = req.query.filterStatus;
 
     let startDate = moment(req.query.startDate, 'DD-MM-YYYY');
@@ -142,11 +142,13 @@ controller.search = (req, res) => {
             sqlCount += `AND status = ${filterStatus}`;
         }
 
-        sql += ` AND createTime >= '${startDate}'`;
-        sqlCount += ` AND createTime >= '${startDate}'`;
-        sql += ` AND createTime <= '${endDate}' `;
-        sqlCount += ` AND createTime <= '${endDate}'`;
-        
+        if (startDate != 'Invalid date') {
+            sql += ` AND createTime >= '${startDate}'`;
+            sqlCount += ` AND createTime >= '${startDate}'`;
+            sql += ` AND createTime <= '${endDate}' `;
+            sqlCount += ` AND createTime <= '${endDate}'`;
+        }
+
 
         sql = sql + ' ORDER BY id DESC limit ? offset ? ; ' + sqlCount;
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {

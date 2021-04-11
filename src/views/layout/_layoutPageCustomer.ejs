@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Đăng kí</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+        />
+        <link 
+            rel="stylesheet" 
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" 
+        />
+        <link rel="stylesheet" href="/page/stylesheets/_global.css" />
+        <link rel="stylesheet" href="/libs/toastr/toastr.min.css" type="text/css">
+        <link rel="stylesheet" href="/page/stylesheets/style_login.css">
+        <%- style %>
+    </head>
+    <body>
+        <!-- Start: Header -->
+        <nav>
+            <div class="logo">
+                <a href="/"><img src="/page/img/logoHeaderLogin.png" alt=""></a>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="">Hotline: 0869.672.231</a>
+                </li>
+                <li>
+                    <a href="/dang-nhap">Đăng nhập</a>
+                </li>
+                <li>
+                    <a href="/dang-ky">Đăng kí</a>
+                </li>
+            </ul>
+            <div class="burger">
+                <div class="line1">
+                </div>
+                <div class="line2">
+                </div>
+                <div class="line3">
+                </div>
+            </div>
+        </nav>
+        <!-- End: Header -->
+
+        <!-- Start: Content -->
+        <%- body %>
+        <!-- End: Content -->
+
+        <!-- Start: Footer -->
+        <footer class="footer">
+            <div class="container row">
+                <!-- [v]Logo -->
+                <div class="footer-left">
+                    <img src="/page/img/logo_bot.png"  alt="">
+                </div>
+
+                <ul class="footer-right">
+                    <!-- []Hotline, email, dia chi -->
+                    <li class="contacts">
+                        <ul class="box">
+                            <li> 
+                                <i class="fas fa-mobile-alt"></i>
+                                Hotline : 0869.672.231
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                Email : homeX@gmail.com  
+                            </li>
+                            <li>
+                                <i class="fas fa-globe"></i>
+                                Địa chỉ : VP Hà Nội : 22 Thành Công, HN
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- []3 icon -->
+                    <li class="socials">
+                        <ul class="box">
+                            <li><i class="fab fa-facebook-square fa-3x"></i></li>
+                            <li><i class="fab fa-twitter-square fa-3x"></i></li>
+                            <li><i class="fab fa-instagram fa-3x"></i></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- []ban quyen -->
+                <div class="footer-bottom">
+                    <p>2019 Home X. Bản quyền thuộc về công ty TNHH Home X Việt Nam. Mọi hành vi sao chép đều là phạm pháp nếu không có sự cho phép bằng văn bản của chúng tôi</p>
+                </div>
+            </div>
+        </footer>
+        <!-- End: Footer -->
+    </body>
+    <script src="/page/javascripts/app.js"></script>
+    <script src="/admin/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/libs/toastr/toastr.min.js"></script>
+    <%- script %>
+</html>

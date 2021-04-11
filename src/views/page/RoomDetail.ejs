@@ -1,0 +1,197 @@
+<!-- Đường dẫn -->
+<div class="container link">
+    <ul class="breadcrumb">
+        <li><a href="/phong">Phòng trọ</a></li>
+        <li>
+            <%= categories.title %>
+        </li>
+    </ul>
+</div>
+
+<!-- Ảnh -->
+<div class="container">
+    <div class="card-items img-room">
+        <div class="row">
+            <% const images=categories.images.split(",") %>
+                <% images.forEach(element=> { %>
+                    <a class="card-item" href="">
+                        <img src="<%= element %> " alt="">
+                    </a>
+                    <% }) %>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container content-details">
+        <h2 style="margin: 30px 0;">
+            <%= categories.title %>
+        </h2>
+        <div class="row">
+            <div class="col-6">
+                <!-- Thông tin phòng -->
+                <div class="room-detail">
+                    <div class="detail_Title">
+                        <i class="fas fa-home"></i>
+                        <span>
+                            Thông tin phòng
+                        </span>
+                    </div>
+
+                    <div class="detail_description">
+                        <table>
+                            <tr>
+                                <th>Giá phòng</th>
+                                <th>Diện tích</th>
+                                <th>Đặt cọc</th>
+                                <th>Sức chứa</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <%= categories.price.toLocaleString('vi-VN', { style: 'currency' , currency: 'VND'
+                                        }) %>
+                                </td>
+                                <td>
+                                    <%= categories.acr %> m2
+                                </td>
+                                <td>
+                                    <%= categories.desposit.toLocaleString('vi-VN', { style: 'currency' ,
+                                        currency: 'VND' }) %>
+                                </td>
+                                <td>
+                                    <%= categories.capacity %> người
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Điện</td>
+                                <td>Nước</td>
+                                <td>wifi</td>
+                                <td>Trạng thái</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <%= categories.electricityBill.toLocaleString('vi-VN', { style: 'currency' ,
+                                        currency: 'VND' }) %>
+                                </td>
+                                <td>
+                                    <%= categories.waterBill.toLocaleString('vi-VN', { style: 'currency' ,
+                                        currency: 'VND' }) %>
+                                </td>
+                                <td>
+                                    <%= categories.wifiBill.toLocaleString('vi-VN', { style: 'currency' ,
+                                        currency: 'VND' }) %>
+                                </td>
+                                <td id="status">
+                                    <% if (categories.status==1) { %>
+                                        đẵ cho thuê
+                                        <% } %>
+                                            <% if (categories.status==2) { %>
+                                                còn trống
+                                                <% } %>
+                                                    <% if (categories.status==3) { %>
+                                                        bảo trì
+                                                        <% } %>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table>
+                            <tr>
+                                <th id="address-title">Địa chỉ</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <%= categories.address %>
+                                        </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tiện ích -->
+                <div class="utility">
+                    <div class="detail_Title">
+                        <i class="fas fa-dice"></i>
+                        <span>
+                            Tiện ích
+                        </span>
+                    </div>
+                    <div class="detail_description" style="padding: 20px 0">
+                        <% const utilities= categories.utilities.split(",").map(item=> {
+                            switch (item) {
+                            case "dh":
+                            return "Điều hòa"
+                            case "qc":
+                            return "Quạt cháy"
+                            case "mb":
+                            return "Máy bơm"
+                            default:
+                            break;
+                            }
+                            }) %>
+                            <% utilities.forEach(element=> { %>
+                                <span><%= element %></span>
+                                <% }) %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 mla">
+                <!-- Thông tin chủ phòng -->
+                <div class="host-detail">
+                    <div class="detail_Title">
+                        <i class="fas fa-user"></i>
+                        <span>
+                            Thông tin chủ phòng
+                        </span>
+                    </div>
+                    <div class="detail_description row">
+                        <div class="host-info">
+                            <h3 id="host-name">
+                                <%= categories.roomUsername %>
+                            </h3>
+                            <h3 id="phone-number">
+                                SĐT :  <%= categories.roomUserPhone %>
+                            </h3>
+                        </div>
+                        <div class="upload-date">
+                            <h3>
+                                Ngày đăng
+                                <%= moment(categories.verifyTime).format("DD/MM/yyyy") %>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="more-desc">
+                    <div class="detail_Title">
+                        <i class="fas fa-exclamation"></i>
+                        <span>
+                            Mô tả thêm
+                        </span>
+                    </div>
+                    <div class="detail_description">
+                        <p> <%- categories.description %>  </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="fb-comments" data-href="http://localhost:3000/phong/<%= categories.id %>" data-width="100%" data-numposts="5"></div>
+    </div>
+    <div id="fb-root"></div>
+    <script>
+        let header = document.querySelector('.header')
+        let hamburgerMenu = document.querySelector('.hamburger-menu')
+        let dropdown = document.querySelector('.dropdown')
+        let drList = document.querySelector('.dropdown-list ul')
+        hamburgerMenu.addEventListener('click', function name() {
+            header.classList.toggle('menu-open')
+        })
+        dropdown.addEventListener('click', function name() {
+            drList.classList.toggle('active')
+        })
+    </script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v10.0&appId=543121906576699&autoLogAppEvents=1" nonce="5kCIYnte"></script>
+    

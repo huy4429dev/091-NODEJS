@@ -1,6 +1,7 @@
 const excel = require('exceljs');
 const moment = require('moment');
 const readXlsxFile = require('read-excel-file/node');
+const md5 = require('md5');
 const controller = {};
 
 controller.index = (req, res) => {
@@ -9,12 +10,12 @@ controller.index = (req, res) => {
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-    const currentUserId = 1;
+    const currentUserId = req.session.User?.id ?? 1;
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
     req.getConnection((err, conn) => {
         const sql = `select o.id, o.code , o.roomId , o.customerId , o.amount , o.status , o.createTime , o.updateTime, o.note ,
-                            r.code as rCode, r.code , r.price , r.desposit ,
+                            r.code as rCode , r.price , r.desposit ,
                             c.username , c.id as cid, c.username as cUsername, c.fullname as cFullname, 
                             u.username , u.id as uid, u.username as uUsername, u.fullname as uFullname
                     from orders o 
@@ -25,8 +26,11 @@ controller.index = (req, res) => {
                     join users u 
                     on u.id = o.userId 
                     where u.id  = ${currentUserId}
-                    ORDER BY id DESC limit ? offset ?  ; SELECT COUNT(*) as Total FROM postCategories`;
-
+                    ORDER BY id DESC limit ? offset ? ; 
+                    SELECT COUNT(*) as Total FROM orders ;
+                    SELECT * FROM users WHERE customerBy = ${currentUserId}
+                    `
+            ;
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
             let orderIds = data[0].map(item => item.id).join();
             if (orderIds.length > 0) {
@@ -61,6 +65,7 @@ controller.index = (req, res) => {
                             errorValidate: errorValidate,
                             successAlert: successAlert,
                             categories: data[0],
+                            customers: data[2],
                             curentPage: page,
                             total: data[1][0].Total % pageSize === 0 ? data[1][0].Total / pageSize : Math.floor(data[1][0].Total / pageSize) + 1,
                             title: 'Thiết lập hóa đơn',
@@ -84,27 +89,181 @@ controller.index = (req, res) => {
     });
 
 };
+
+controller.detail = (req, res) => {
+    const { id } = req.params;
+    req.getConnection((err, conn) => {
+
+        const sql = `select o.id, o.code , o.timeCheckout, o.roomId , o.customerId , o.amount , o.status , o.createTime , o.updateTime, o.note ,
+                            r.code as rCode , r.price , r.desposit ,
+                            c.username , c.id as cid, c.username as cUsername, c.phone as cPhone, c.email as cEmail,  c.fullname as cFullname, 
+                            u.username , u.id as uid, u.username as uUsername, u.fullname as uFullname
+                    from orders o 
+                    join rooms r 
+                    on r.id = o.roomId 
+                    join users c 
+                    on c.id = o.customerId
+                    join users u 
+                    on u.id = o.userId 
+                    where o.id  = ${id}
+                    limit 1
+                    `;
+        conn.query(sql, (err, data) => {
+            const sqlOrderDetail = `select *
+                                                from orderdetails o 
+                                                where o.orderId  = ${id}`;
+            conn.query(sqlOrderDetail, (errOrderDetail, dataOrderDetail) => {
+                data[0].orderDetails = [...dataOrderDetail];
+                res.json({
+                    order: data[0]
+                });
+            });
+        });
+    });
+};
+
+controller.edit = (req, res) => {
+    const { id } = req.params;
+    const status = req.body.status;
+    let timeCheckout = moment(req.body.timeCheckout, 'MM/DD/YYYY');
+    timeCheckout = timeCheckout.format('YYYY/MM/DD')
+    const note = req.body.note;
+    const utilities = req.body.utilities;
+    const details = [];
+    console.log(note);
+
+
+    req.getConnection((err, conn) => {
+        const sql = `select o.id, o.code , o.timeCheckout, o.roomId , o.customerId , o.amount , o.status , o.createTime , o.updateTime, o.note ,
+                            r.code as rCode , r.price , r.desposit ,
+                            c.username , c.id as cid, c.username as cUsername, c.phone as cPhone, c.email as cEmail,  c.fullname as cFullname, 
+                            u.username , u.id as uid, u.username as uUsername, u.fullname as uFullname
+                    from orders o 
+                    join rooms r 
+                    on r.id = o.roomId 
+                    join users c 
+                    on c.id = o.customerId
+                    join users u 
+                    on u.id = o.userId 
+                    where o.id  = ${id}
+                    limit 1
+                    `;
+        conn.query(sql, (err, data) => {
+            const sqlOrderDetail = `select *
+                                                from orderdetails o 
+                                                where o.orderId  = ${id}`;
+            conn.query(sqlOrderDetail, (errOrderDetail, dataOrderDetail) => {
+
+                data[0].orderDetails = [...dataOrderDetail];
+                sqlDeleteDetail = `DELETE FROM orderdetails WHERE orderId=${id}`;
+                conn.query(sqlDeleteDetail, (err, s) => {
+                    utilities?.forEach(element => {
+                        details.push([id, element, 200, moment().format("yyyy/MM/DD hh:mm")]);
+                    });
+                    data[0].amount += details.length * 200;
+                    conn.query('INSERT INTO orderdetails(orderId, utility, amount,createTime) VALUES ?', [details], (err, r) => {
+                        const sqlEdit = `UPDATE orders set
+                        amount=${data[0].amount},
+                        status=${status},
+                        note='${note}', 
+                        timeCheckout='${timeCheckout}'
+                        WHERE id=${id};
+                        `;
+                        conn.query(sqlEdit, (err, success) => {
+                            console.log(status);
+                            if (status == 1 || status == 2) {
+                                const sqlUpdateRoom = `UPDATE Rooms SET status = 2 where id = ${data[0].roomId}`;
+                                conn.query(sqlUpdateRoom, (err, d) => {
+                                    res.json({
+                                        update: true
+                                    });
+                                })
+                            }
+                            else {
+                                res.json({
+                                    update: true
+                                });
+                            }
+                        })
+                    });
+                })
+            });
+        });
+    });
+};
+
+
 controller.create = (req, res) => {
-    const name = req.body.name;
+
+    const currentUserId = req.session.User?.id ?? 1;
+    const username = req.body.username;
+    const fullname = req.body.fullname;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const roomId = req.body.roomId;
+    const price = req.body.price;
+    let timeCheckout = moment(req.body.timeCheckout, 'MM-DD-YYYY');
+    timeCheckout = timeCheckout.format('yyyy/MM/DD')
     const status = parseInt(req.body.status);
     const errors = [];
+
+
     // validate basic
-    if (name.length <= 3) {
-        errors.push("Tên danh mục phải lớn hơn 3 kí tự !")
+
+    if (phone.length <= 3) {
+        errors.push("Số điện thoại không đúng định dạng!")
     }
     if (errors.length > 0) {
         req.session.Error = errors[0];
         res.redirect("/admin/order/category");
     }
+
     else {
         req.getConnection((err, connection) => {
-            connection.query('INSERT INTO postCategories set name = ?, status = ?', [name, status], (err, data) => {
-                req.session.Success = "Thêm mới danh mục thành công";
-                res.redirect("/admin/order/category");
-            })
+            const foundCustomer = `select * from users u where u.phone = '${phone}';  select o.id from orders o order by o.id desc limit 1`;
+            connection.query(foundCustomer, (err, data) => {
+                const code = 'DH0' + (data[1][0].id + 1 ?? 1);
+                if (data[0].length == 0) {
+                    // create customer
+                    const user = [
+                        username, md5('123456'), email, fullname, 1, '/static/assets/uploads/admin/profile.png'
+                    ];
+
+                    connection.query('INSERT INTO users set  username = ? ,password = ? ,email = ?,fullname = ?,userStatus = ?,avatar = ?, phone = ?', [username, md5('123456'), email, fullname, 1, '/static/assets/uploads/admin/profile.png', phone], (err, u) => {
+                        let userRoles = [u.insertId, 3];
+                        connection.query('INSERT INTO userRoles (userId,roleId) values ?', [userRoles], (err, r) => {
+
+                            const sqlInsert = `INSERT INTO node_test_2.orders (id,code, userId, roomId, customerId, amount, status, createTime, note, checked, timeCheckout)
+                            VALUES(${data[1][0].id + 1},'${code}', ${currentUserId}, ${roomId}, ${u.insertId}, ${price}, 3, current_timestamp(), '', 0, '${timeCheckout}')); `;
+
+                            connection.query(sqlInsert, (err, u) => {
+                                const roomUpdate = `update rooms set status = 1 where id = ${roomId}`;
+                                connection.query(roomUpdate, (err, u) => {
+                                    req.session.Success = "Đặt phòng thành công";
+                                    res.redirect("/admin/order");
+                                });
+                            });
+                        })
+
+                    });
+
+                }
+                else {
+                    customer = data[0][0];
+                    const sqlInsert = `INSERT INTO node_test_2.orders (id,code, userId, roomId, customerId, amount, status, createTime, note, checked, timeCheckout)
+                                       VALUES(${data[1][0].id + 1},'${code}', ${currentUserId}, ${roomId}, ${customer.id}, ${price}, 3, current_timestamp(), '', 0, '${timeCheckout}'); `;
+                    connection.query(sqlInsert, (err, u) => {
+                        const roomUpdate = `update rooms set status = 1 where id = ${roomId}`;
+                        connection.query(roomUpdate, (err, u) => {
+                            req.session.Success = "Đặt phòng thành công";
+                            res.redirect("/admin/order");
+                        });
+                    });
+                }
+            });
         });
     }
-}
+};
 
 controller.update = (req, res) => {
 
@@ -131,7 +290,7 @@ controller.update = (req, res) => {
             })
         });
     }
-}
+};
 
 controller.delete = (req, res) => {
     const { id } = req.params;
@@ -141,7 +300,7 @@ controller.delete = (req, res) => {
             res.redirect('/admin/order/category');
         });
     });
-}
+};
 
 controller.search = (req, res) => {
 
@@ -268,7 +427,7 @@ controller.exportExcel = (req, res) => {
 
     });
 
-}
+};
 
 controller.importExcel = async (req, res) => {
 
@@ -295,7 +454,7 @@ controller.importExcel = async (req, res) => {
             })
         });
     });
-}
+};
 
 
 module.exports = controller;

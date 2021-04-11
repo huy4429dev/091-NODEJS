@@ -37,8 +37,8 @@ app.use(function (req, res, next) {
 });
 
 // importing routes
-const customerRoutes = require('./routes/customer');
 const adminRoutes = require('./routes/admin/admin');
+const pageRoutes = require('./routes/page/page');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -52,7 +52,7 @@ app.use(myConnection(mysql, {
     multipleStatements: true
 }, 'single'));  // conenct db
 // routes
-app.use('/', customerRoutes);
+app.use('/', pageRoutes);
 app.use('/admin/', adminRoutes);
 
 // static files
