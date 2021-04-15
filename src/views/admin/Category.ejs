@@ -568,7 +568,7 @@
               toastr["error"]("<%= errorValidate %>")
 
                 <%}%>
-                  <% if (!successAlert) { %>
+                  <% if (successAlert) { %>
               toastr["success"]("<%= successAlert %>")
               <%}%>
           </script>

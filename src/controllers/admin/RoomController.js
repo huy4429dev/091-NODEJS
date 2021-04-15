@@ -6,6 +6,8 @@ const controller = {};
 
 controller.index = (req, res) => {
 
+
+    const userId = req.session.User?.id ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;
@@ -35,10 +37,11 @@ controller.index = (req, res) => {
                       on u2.id = o.customerId 
                       left join orderdetails o2 
                       on o.id  = o2.orderId 
+                      WHERE r.userId = ${userId}
                       ORDER BY r.status, id DESC,
                                o.checked ASC,
                                o.status DESC limit ? offset ?; 
-                     SELECT COUNT(*) as Total FROM rooms;
+                     SELECT COUNT(*) as Total FROM rooms r where r.userId = ${userId};
                      select * from roomcategories r 
                      `;
 
@@ -168,7 +171,7 @@ controller.create = (req, res) => {
     const capacity = req.body.capacity;
     const address = req.body.address;
     const description = req.body.description;
-    const userId = 1;
+    const userId = req.session.User?.id ?? 1;
     const status = 1;
 
     const errors = [];
@@ -279,7 +282,7 @@ controller.search = (req, res) => {
     const pageSize = req.query.pageSize ?? 12;
     const q = req.query.q != undefined ? `%${req.query.q.trim()}%` : '';
     const filterStatus = req.query.filterStatus;
-
+    const userId = req.session.User?.id ?? 1;
     let startDate = moment(req.query.startDate, 'DD-MM-YYYY');
     startDate = startDate.format('yyyy/MM/DD')
     let endDate = moment(req.query.endDate, 'DD-MM-YYYY');
@@ -306,13 +309,13 @@ controller.search = (req, res) => {
                           on u2.id = o.customerId 
                           left join orderdetails o2 
                           on o.id  = o2.orderId 
-                          WHERE TRUE
+                          WHERE r.userId = ${userId} and TRUE 
                          `;
-        let sqlCount = ' SELECT COUNT(*) as Total FROM rooms r where true ';
+        let sqlCount = `SELECT COUNT(*) as Total FROM rooms r where r.userId = ${userId} and TRUE`;
         let param = '';
         if (q != '') {
-            sql += `AND LOWER(r.code) LIKE  '${q}'`;
-            sqlCount += `AND LOWER(r.code) LIKE  '${q}'`;
+            sql += ` AND LOWER(r.code) LIKE  '${q}'`;
+            sqlCount += ` AND LOWER(r.code) LIKE  '${q}'`;
             param = q;
         }
 

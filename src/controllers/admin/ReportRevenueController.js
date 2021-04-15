@@ -7,7 +7,7 @@ controller.index = (req, res) => {
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-
+    const currentUserId = req.session.User?.id ?? 1;
     const now = moment().format("yyyy/MM/DD");
     const fromDate = moment().subtract(6, 'days').format("yyyy/MM/DD");
 
@@ -18,7 +18,7 @@ controller.index = (req, res) => {
                     sum(case when o.status = 3 then 1 else 0 end) totalOrderDispose,
                     sum(case when o.status = 2 then 1 else 0 end) totalOrderPending
                     from orders o  
-                    where createTime >= '${fromDate}' and createTime <= '${now}'
+                    where createTime >= '${fromDate}' and createTime <= '${now}' and o.userId = ${currentUserId}
                     group by date_format(createTime, "%d-%m-%Y")
                    `;
 
@@ -64,7 +64,7 @@ controller.index = (req, res) => {
 };
 
 controller.search = (req, res) => {
-
+    const currentUserId = req.session.User?.id ?? 1;
     req.getConnection((err, conn) => {
         const sql = `select date_format(createTime, "%d-%m-%Y") as day, sum(amount) total,
                     count(*) totalOrder,
@@ -72,7 +72,7 @@ controller.search = (req, res) => {
                     sum(case when o.status = 3 then 1 else 0 end) totalOrderDispose,
                     sum(case when o.status = 2 then 1 else 0 end) totalOrderPending
                     from orders o  
-                    where createTime >= '${req.query.startDate}' and createTime <= '${req.query.endDate}'
+                    where createTime >= '${req.query.startDate}' and createTime <= '${req.query.endDate}' and o.userId = ${currentUserId}
                     group by date_format(createTime, "%d-%m-%Y")
                    `;
 
@@ -87,6 +87,7 @@ controller.search = (req, res) => {
 };
 
 controller.exportExcel = (req, res) => {
+    const currentUserId = req.session.User?.id ?? 1;
     const startDate = req.query.startDate ?? moment().subtract(6, 'days').format("yyyy/MM/DD") ;
     const endDate = req.query.endDate ?? moment().format("yyyy/MM/DD");
     const now = Date.now();
@@ -110,7 +111,7 @@ controller.exportExcel = (req, res) => {
         sum(case when o.status = 3 then 1 else 0 end) totalOrderDispose,
         sum(case when o.status = 2 then 1 else 0 end) totalOrderPending
         from orders o  
-        where createTime >= '${startDate}' and createTime <= '${endDate}'
+        where createTime >= '${startDate}' and createTime <= '${endDate}' and o.userId = ${currentUserId}
         group by date_format(createTime, "%d-%m-%Y")
        `;
         conn.query(sql, (err, data) => {

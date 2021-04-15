@@ -9,7 +9,6 @@ controller.index = (req, res) => {
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
     req.getConnection((err, conn) => {

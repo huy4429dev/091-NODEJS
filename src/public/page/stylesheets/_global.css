@@ -108,8 +108,6 @@ form input{
     background-color: var(--gray);
     border-radius: 50px;
     border: none;
-    height: 50px;
-    width: 95%;
     font-size: 1.8rem;
     padding-left: 2rem;
     margin: auto;

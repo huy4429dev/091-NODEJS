@@ -57,28 +57,6 @@
                 cho người đi thuê hàng đầu ở Việt Nam
             </h2>
         </div>
-        <!-- Search bar -->
-        <!-- <div class="search-tool">
-                    <div class="dropdown">
-                        <div class="default-option">
-                            <i class="fas fa-map-marker-alt"></i>
-                            HN 
-                        </div>
-                        <div class="dropdown-list">
-                            <ul>
-                                <li>HCM</li>
-                                <li>NA</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="search-input">
-                        <input type="text" 
-                            class="search-input" 
-                            placeholder="Tìm kiếm theo địa điểm, quận, tên đường,..."
-                            onfocus="this.placeholder = ''">
-                    </div>
-                    <button class="btn-search" type="submit"><i class="fa fa-search"></i></button>
-                </div> -->
     </div>
 </div>
 
@@ -160,11 +138,11 @@
                                     <li class="page-item active">
                                         <% if (q !='' || filter !='' ) { %>
                                             <a class="page-link"
-                                                href="/admin/order/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                                                href="?page=<%= i %>">
                                                 <%= i %>
                                             </a>
                                             <% } else { %>
-                                                <a class="page-link" href="/admin/order/?page=<%= i %>">
+                                                <a class="page-link" href="?page=<%= i %>">
                                                     <%= i %>
                                                 </a>
                                                 <% } %>
@@ -175,11 +153,11 @@
 
                                             <% if (q !='' || filter !='' ) { %>
                                                 <a class="page-link"
-                                                    href="/admin/order/search?q=<%= q.replace(/%/g,'') %>&filterStatus=<%=filter%>&page=<%= i %>">
+                                                    href="?page=<%= i %>">
                                                     <%= i %>
                                                 </a>
                                                 <% } else { %>
-                                                    <a class="page-link" href="/admin/order/?page=<%= i %>">
+                                                    <a class="page-link" href="?page=<%= i %>">
                                                         <%= i %>
                                                     </a>
                                                     <% } %>

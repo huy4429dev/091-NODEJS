@@ -893,6 +893,9 @@ tr, td, th, p {
 .block{
     font-size: 1.8rem;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
 }
 
 .block label{

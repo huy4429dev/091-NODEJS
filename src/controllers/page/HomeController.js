@@ -7,7 +7,6 @@ controller.index = (req, res) => {
     const pageSize = req.query.pageSize ?? 5;
 
     req.getConnection((err, conn) => {
-
         const sqlRoom = `select *
                             from rooms r 
                             join roomcategories r2 

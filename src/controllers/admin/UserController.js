@@ -1,5 +1,6 @@
 const controller = {};
 const md5 = require('md5');
+const moment = require('moment');
 controller.getLogin = (req, res) => {
     res.render('admin/Login', { layout: false });
 };
@@ -21,13 +22,19 @@ controller.postLogin = (req, res) => {
 
     req.getConnection((err, conn) => {
 
-        conn.query(`SELECT * FROM users u where username = ? and password = ?  and exists (
+        conn.query(` select *
+            from users u 
+            join userroles u2 
+            on u.id = u2.userId 
+            join roles r 
+            on r.id = u2.roleId  where username = ? and password = ?  and exists (
             select 1 
             from roles r 
             join userRoles u2 
             on r.id = u2.roleId 
             where u.id = u2.userId and (lower(r.name) = 'admin' or lower(r.name) = 'employee'))`
             , [username, password], (err, admin) => {
+                console.log(admin);
                 if (admin?.length > 0) {
                     req.session.User = {
                         ...admin[0]
@@ -46,6 +53,37 @@ controller.postLogin = (req, res) => {
 controller.getLogout = (req, res) => { 
     delete req.session.User;
     res.redirect("/admin/login");
+};
+
+controller.profile = (req, res) => {
+
+    const userId = req.session.User?.id ?? 1;
+    const errorValidate = req.session.Error;
+    const successAlert = req.session.Success;
+    delete req.session.Error;
+    delete req.session.Success;
+
+    const sqlProfile = `SELECT * FROM users where id = ${userId} limit 1`;
+
+    req.getConnection((err, conn) => {
+
+        conn.query(sqlProfile, (err, success) => {
+            console.log(success);
+            res.render('admin/profile',
+                {
+                    extractScripts: true,
+                    extractStyles: true,
+                    layout: './layout/_layoutAdminProfile',
+                    errorValidate: errorValidate,
+                    profile: success[0],
+                    moment: moment,
+                    errorValidate: errorValidate,
+                    successAlert: successAlert,
+                }
+            );
+        });
+
+    });
 };
 
 module.exports = controller;

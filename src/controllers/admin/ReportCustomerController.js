@@ -7,7 +7,7 @@ controller.index = (req, res) => {
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-
+    const currentUserId = req.session.User?.id ?? 1;
     const now = moment().format("yyyy/MM/DD");
     const fromDate = moment().subtract(6, 'days').format("yyyy/MM/DD");
 
@@ -20,7 +20,7 @@ controller.index = (req, res) => {
                 on u.id = u2.userId 
                 join orders o2 
                 on u.id = o2.customerId 
-                where u2.roleId = 3
+                where u2.roleId = 3 and o2.userId = ${currentUserId}
                 and o2.createTime >= '${fromDate}' and o2.createTime <= '${now}'
                 group by date_format(o2.createTime, "%d-%m-%Y")
                    `;
@@ -67,7 +67,7 @@ controller.index = (req, res) => {
 };
 
 controller.search = (req, res) => {
-
+    const currentUserId = req.session.User?.id ?? 1;
     req.getConnection((err, conn) => {
                         const sql = `select date_format(o2.createTime, "%d-%m-%Y") as day, count(distinct(o2.customerId)) total,
                         count(distinct (case when date_format(o2.createTime, "%d-%m-%Y") <= date_format(u.createTime, "%d-%m-%Y")   then o2.customerId end))  totalNewCustomer,
@@ -77,7 +77,7 @@ controller.search = (req, res) => {
                         on u.id = u2.userId 
                         join orders o2 
                         on u.id = o2.customerId 
-                        where u2.roleId = 3
+                        where u2.roleId = 3 and o2.userId = ${currentUserId}
                         and o2.createTime >= '${req.query.startDate}' and o2.createTime <= '${req.query.endDate}'
                         group by date_format(o2.createTime, "%d-%m-%Y")
                    `;
@@ -93,6 +93,7 @@ controller.search = (req, res) => {
 };
 
 controller.exportExcel = (req, res) => {
+    const currentUserId = req.session.User?.id ?? 1;
     const startDate = req.query.startDate ?? moment().subtract(6, 'days').format("yyyy/MM/DD") ;
     const endDate = req.query.endDate ?? moment().format("yyyy/MM/DD");
     const now = Date.now();
@@ -118,7 +119,7 @@ controller.exportExcel = (req, res) => {
         on u.id = u2.userId 
         join orders o2 
         on u.id = o2.customerId 
-        where u2.roleId = 3
+        where u2.roleId = 3 and o2.userId = ${currentUserId}
         and o2.createTime >= '${startDate}' and o2.createTime <= '${endDate}'
         group by date_format(o2.createTime, "%d-%m-%Y")`;
         conn.query(sql, (err, data) => {

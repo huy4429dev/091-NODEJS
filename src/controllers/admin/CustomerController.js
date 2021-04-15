@@ -5,6 +5,7 @@ const controller = {};
 
 controller.index = (req, res) => {
 
+    const userId = req.session.User?.id ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;
@@ -17,12 +18,14 @@ controller.index = (req, res) => {
                      from users u 
                      join userRoles ur 
                      on u.id = ur.userId 
-                     where ur.roleId  in (2,3) ORDER BY id DESC limit ? offset ? ;
+                     where ur.roleId  in (2,3) 
+                     and customerBy in (0,${userId})
+                     ORDER BY id DESC limit ? offset ? ;
                      select count(*)
                      from users u 
                      join userRoles ur 
                      on u.id = ur.userId 
-                     where ur.roleId  in (2,3)`;
+                     where ur.roleId  in (2,3) and customerBy in (0,${userId})`;
                      
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
             if (err) {
@@ -46,7 +49,7 @@ controller.index = (req, res) => {
                                 link: '/admin/customer'
                             }
                         ],
-                        actionSearch: 'admin/customer/search',
+                        actionSearch: '/admin/customer/search',
                         q: '',
                         filter: ''
                     }
@@ -58,6 +61,8 @@ controller.index = (req, res) => {
 
 };
 controller.create = (req, res) => {
+
+    const userId = req.session.User?.id ?? 1;
     const roleId = parseInt(req.body.roleId);
     const fullname = req.body.fullname;
     const userStatus = parseInt(req.body.userStatus);
@@ -93,7 +98,8 @@ controller.create = (req, res) => {
     else {
         req.getConnection((err, connection) => {
             connection.query(`INSERT INTO users set 
-                             fullname = ?, userStatus = ?, username = ?, password = ?, email = ?, phone = ?, address = ?, gender = ?, dateBirth = ?,note  = ?
+                             fullname = ?, userStatus = ?, username = ?, password = ?, email = ?, phone = ?, address = ?, gender = ?, dateBirth = ?,note  = ?,
+                             customerBy = ?
                              `,
                 [
                     fullname,
@@ -105,7 +111,8 @@ controller.create = (req, res) => {
                     address,
                     gender,
                     birthDate,
-                    note
+                    note,
+                    userId
                 ],
                 (err, data) => {
                     const userId = data.insertId;
@@ -153,23 +160,24 @@ controller.update = (req, res) => {
 
 controller.delete = (req, res) => {
     const { id } = req.params;
+    const userId = req.session.User?.id ?? 1;
     req.getConnection((err, connection) => {
-        connection.query('DELETE FROM roomCategories WHERE id = ?', [id], (err, rows) => {
+        connection.query(`DELETE FROM roomCategories WHERE id = ? and customerBy = ${userId}`, [id], (err, rows) => {
             req.session.Success = "Xóa khách hàng thành công";
-            res.redirect('admin/room/category');
+            res.redirect('/admin/room/category');
         });
     });
 }
 
 controller.search = (req, res) => {
-
+    const userId = req.session.User?.id ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
-    const q = req.query.q != undefined ? `%${req.query.q}%` : '';
+    const q = req.query.q != undefined ? `%${req.query.q.trim()}%` : '';
     const filterStatus = req.query.filterStatus;
 
     let startDate = moment(req.query.startDate, 'DD-MM-YYYY');
@@ -179,29 +187,34 @@ controller.search = (req, res) => {
 
     req.getConnection((err, conn) => {
 
-        let sql = 'SELECT * FROM roomCategories WHERE true ';
-        let sqlCount = ' SELECT COUNT(*) as Total FROM roomCategories WHERE true ';
+        let sql = `SELECT * FROM users WHERE  customerBy in (0,${userId})`;
+        let sqlCount = `SELECT COUNT(*) as Total FROM users WHERE  customerBy in (0,${userId}) `;
         let param = '';
         if (q != '') {
-            sql += `AND LOWER(name) LIKE  '${q}'`;
-            sqlCount += `AND LOWER(name) LIKE  '${q}'`;
+            sql += ` AND LOWER(fullname) LIKE  '${q}'`;
+            sqlCount += ` AND LOWER(fullname) LIKE  '${q}'`;
             param = q;
         }
 
         if (filterStatus != undefined && filterStatus != '') {
-            sql += `AND status = ${filterStatus}`;
-            sqlCount += `AND status = ${filterStatus}`;
+            sql += ` AND status = ${filterStatus}`;
+            sqlCount += ` AND status = ${filterStatus}`;
         }
 
-        sql += ` AND createTime >= '${startDate}'`;
-        sqlCount += ` AND createTime >= '${startDate}'`;
-        sql += ` AND createTime <= '${endDate}' `;
-        sqlCount += ` AND createTime <= '${endDate}'`;
+
+        if (startDate != 'Invalid date') {
+            sql += ` AND createTime >= '${startDate}'`;
+            sqlCount += ` AND createTime >= '${startDate}'`;
+            sql += ` AND createTime <= '${endDate}' `;
+            sqlCount += ` AND createTime <= '${endDate}'`;
+        }
+
 
 
         sql = sql + ' ORDER BY id DESC limit ? offset ? ; ' + sqlCount;
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
-
+            console.log(sql);
+            console.log(data);
             if (err) {
                 res.json(err);
             }
@@ -223,7 +236,7 @@ controller.search = (req, res) => {
                                 link: '/admin/customer'
                             }
                         ],
-                        actionSearch: 'admin/customer/search',
+                        actionSearch: '/admin/customer/search',
                         q: q,
                         filter: filterStatus
                     }

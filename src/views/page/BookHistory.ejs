@@ -1,0 +1,195 @@
+<style>
+    ul.pagination.justify-content-end.mb-0 {
+        display: flex;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    a.page-link {
+        padding: 8px 12px;
+        border: 1px solid gray;
+        margin: 0 5px;
+    }
+
+    li.page-item.active {
+        font-weight: bold;
+    }
+
+    li.page-item.active a {
+        border: 1px solid black;
+    }
+</style>
+<div class="container" style="margin-top: 150px;">
+    <!-- Start: Thanh chức năng -->
+    <div class="tool-bar">
+        <a href="/ho-so/dat-phong">
+            Lịch sử đặt phòng
+        </a>
+        <a href="/ho-so">
+            Cài đặt tài khoản
+        </a>
+    </div>
+    <!-- End: Thanh chức năng -->
+
+    <div class="form">
+        <!-- Start: Form content-->
+        <a class="users" href="">
+            <img src="/page/img/image-1.png" alt="Avatar" class="avatar">
+            <div class="info">
+                <h1 id="username">
+                    <%= profile.fullname %> <span>Thông tin tài khoản</span>
+                </h1>
+                <h2>Cá nhân hóa tài khoản bằng việc cập nhật thông tin của bạn</h2>
+            </div>
+        </a>
+
+        <div class="main-form row" style="height: 40vh; position: relative;">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col" class="sort" data-sort="name">#</th>
+                      <th scope="col" class="sort" data-sort="name">Mã đơn hàng</th>
+                      <th scope="col" class="sort" data-sort="budget">Khách hàng</th>
+                      <th scope="col" class="sort" data-sort="budget">Phòng</th>
+                      <th scope="col" class="sort" data-sort="budget">Thành tiền</th>
+                      <th scope="col" class="sort" data-sort="status">Trạng thái</th>
+                      <th scope="col" class="sort" data-sort="status">Người tạo</th>
+                      <th scope="col" class="sort" data-sort="status">Ngày tạo</th>
+                    </tr>
+                  </thead>
+                  <tbody class="list">
+          
+                    <% if (categories) { %>
+                      <% categories.forEach((item,index)=> { %>
+                        <tr id="item-<%= item.id %>">
+                          <th scope="row">
+                            <div class="media align-items-center">
+                              <div class="media-body">
+                                <span class="name mb-0 text-sm">
+                                  <%= item.id %>
+                                </span>
+                              </div>
+                            </div>
+                          </th>
+                          <td class="budget">
+                            <%= item.code %>
+                          </td>
+                          <td class="budget">
+                            <%= item.cFullname %>
+                          </td>
+                          <td class="budget">
+                            <%= item.rCode %>
+                          </td>
+                          <td class="budget">
+                            <%= item.amount.toLocaleString('vi-VN', { style: 'currency' , currency: 'VND' }) %>
+                          </td>
+                          <td>
+                            <span class="badge badge-dot mr-4">
+                              <span class="status">
+                                <% if (item.status==1) { %>
+                                  <span class="btn btn-success btn-sm" style="font-size: 10px; box-shadow: none;">thành
+                                    công</span>
+                                  <% } %>
+                                    <% if(item.status==3) { %>
+                                      <span class="btn btn-warning btn-sm" style="font-size: 10px; box-shadow: none;">chưa xử
+                                        lý</span>
+                                      <% } %>
+                                        <% if (item.status==2) { %>
+                                          <span class="btn btn-danger btn-sm"
+                                            style="font-size: 10px; box-shadow: none;">hủy</span>
+                                          <% } %>
+                              </span>
+                            </span>
+                          </td>
+                          <td class="budget">
+                            <%= item.uFullname %>
+                          </td>
+                          <td class="budget">
+                            <%= moment(item.createTime).format('DD-MM-YYYY hh:mm') %>
+                          </td>
+                        </tr>
+                        <% }) %>
+                          <% } %>
+                  </tbody>
+                </table>
+                <% if (categories?.length==0) { %>
+                  <div class="alert alert-warning text-center">
+                    Không tìm thấy kết quả nào
+                  </div>
+                  <% } %>
+
+                  <ul class="pagination justify-content-end mb-0">
+                    <% for (i=1; i <=total; i ++) { %>
+                        <% if(curentPage==i) { %>
+                            <li class="page-item active">
+                                <% if (q !='' || filter !='' ) { %>
+                                    <a class="page-link"
+                                        href="/ho-so/dat-phong?page=<%= i %>">
+                                        <%= i %>
+                                    </a>
+                                    <% } else { %>
+                                        <a class="page-link" href="/ho-so/dat-phong?page=<%= i %>">
+                                            <%= i %>
+                                        </a>
+                                        <% } %>
+
+                            </li>
+                            <%} else { %>
+                                <li class="page-item">
+
+                                    <% if (q !='' || filter !='' ) { %>
+                                        <a class="page-link"
+                                            href="/ho-so/dat-phong?page=<%= i %>">
+                                            <%= i %>
+                                        </a>
+                                        <% } else { %>
+                                            <a class="page-link" href="/ho-so/dat-phong?page=<%= i %>">
+                                                <%= i %>
+                                            </a>
+                                            <% } %>
+                                </li>
+                                <%} %>
+                                    <% } %>
+                </ul>
+              </div>
+                
+            </div>
+        <!-- End: Form content-->
+    </div>
+</div>
+
+
+<script>
+
+    // notifycation
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "11300",
+        "hideDuration": "111000",
+        "timeOut": "15000",
+        "extendedTimeOut": "11000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+        <% if (errorValidate) { %>
+                const err = '<%= errorValidate %>';
+            toastr["error"]("<%= errorValidate %>")
+
+                <%}%>
+                  <% if (successAlert) { %>
+                  toastr["success"]("Cập nhật thông tin thành công")
+        <%}%>
+
+</script>

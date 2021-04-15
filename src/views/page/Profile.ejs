@@ -1,0 +1,115 @@
+<div class="container" style="margin-top: 150px;">
+    <!-- Start: Thanh chức năng -->
+    <div class="tool-bar">
+        <a href="/ho-so/dat-phong">
+            Lịch sử đặt phòng
+        </a>
+        <a href="/ho-so">
+            Cài đặt tài khoản
+        </a>
+    </div>
+    <!-- End: Thanh chức năng -->
+
+    <div class="form">
+        <!-- Start: Form content-->
+        <a class="users" href="">
+            <img src="/page/img/image-1.png" alt="Avatar" class="avatar">
+            <div class="info">
+                <h1 id="username">
+                    <%= profile.fullname %> <span>Thông tin tài khoản</span>
+                </h1>
+                <h2>Cá nhân hóa tài khoản bằng việc cập nhật thông tin của bạn</h2>
+            </div>
+        </a>
+
+        <div class="main-form row">
+            <!-- Aside Left -->
+            <div class="left-form">
+                <ul>
+                    <li><a href="/ho-so">Thông tin tài khoản</a></li>
+                    <div class="line"></div>
+                    <li><a href="/ho-so/mat-khau">Thay đổi mật khẩu</a></li>
+                    <div class="line"></div>
+                </ul>
+            </div>
+            <!-- Aside Right -->
+            <div class="right-form">
+                <!-- Detail update -->
+                <form action="/ho-so" method="POST" class="detail-update">
+                    <div class="form-group">
+                        <label for="fname">Họ tên</label>
+                        <input value="<%= profile.fullname %>" type="text" id="fullname" name="fullname"
+                            placeholder="Nhập họ và tên đệm ..">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input value="<%= profile.email %>" type="email" id="email" name="email"
+                            placeholder="Nhập email ...">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại</label>
+                        <input value="<%= profile.phone %>" type="text" id="phone" name="phone"
+                            placeholder="Nhập số điện thoại ..">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label>
+                        <input value="<%= profile.address %>" type="text" id="address" name="address"
+                            placeholder="Nhập địa chỉ ..">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">Ngày sinh</label>
+                        <input value="<%= moment(profile.datebirth).format("YYYY-MM-DD") %>" type="date" id="birthday"
+                        name="birthday" placeholder="Nhập địa chỉ ..">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Giới tính</label>
+                        <% const checked=profile.gender %>
+                            <div class="radio">
+                                <label for="male"><input type="radio" id="male" name="gender" value="1" <%=checked==1
+                                        ? "checked" : '' %> />Nam</label>
+                                <label for="female"><input type="radio" id="female" name="gender" value="2"
+                                        <%=checked==2 ? "checked" : '' %>/>Nữ</label>
+                                <label for="other"><input type="radio" id="other" name="gender" value="3" <%=checked
+                                        !=1 && checked !=2 ? "checked" : '' %>/>Khác</label>
+                            </div>
+                    </div>
+                    <button type="submit" class="btn-update">Cập nhập</button>
+                </form>
+            </div>
+        </div>
+        <!-- End: Form content-->
+    </div>
+</div>
+
+
+<script>
+
+    // notifycation
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "11300",
+        "hideDuration": "111000",
+        "timeOut": "15000",
+        "extendedTimeOut": "11000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+        <% if (errorValidate) { %>
+                const err = '<%= errorValidate %>';
+            toastr["error"]("<%= errorValidate %>")
+
+                <%}%>
+                  <% if (successAlert) { %>
+                  toastr["success"]("Cập nhật thông tin thành công")
+        <%}%>
+
+</script>
