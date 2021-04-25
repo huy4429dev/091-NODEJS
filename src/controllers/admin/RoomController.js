@@ -7,7 +7,7 @@ const controller = {};
 controller.index = (req, res) => {
 
 
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;
@@ -20,16 +20,16 @@ controller.index = (req, res) => {
     req.getConnection((err, conn) => {
 
         const sql = ` select r.id , r.code , r.title , r.status , r.price , r.desposit , r.acr , r.capacity , r.utilities , r.thumbnail , r.images , r.address, r.createdTime , r.updatedTime , r.description , r.content, r.categoryId ,
-                      r.countCheckout , r.timeOrderActive,
+                      r.countCheckout , r.timeOrderActive, r.verify,
                       r2.name categoryName, 
                       u.username roomUsername, u.id roomUserId, u.fullname roomUserFullname,  u.phone roomUserPhone, u.address roomUserAddress , u.address roomUserAddress,
                       o.id orderId, o.checked, o.timeCheckout, o.code orderCode, o.amount orderAmount, o.createTime orderCreateTime, o.updateTime orderUpdateTime, o.status orderStatus, o.note orderNote,
                       u2.username customerName, u2.id customerId, u2.fullname customerFullname, u2.phone customerPhone, u2.address customerAddress,
                       o2.id detailId, o2.utility , o2.createTime detailCreateTime , o2.updateTime detailUpdateTime, o2.amount detailAmount
                       from rooms r 
-                      join roomcategories r2 
+                      left join roomcategories r2 
                       on r2.id = r.categoryId 
-                      join users u 
+                      left join users u 
                       on r.userid  = u.id
                       left join orders o 
                       on o.roomId  = r.id
@@ -40,7 +40,7 @@ controller.index = (req, res) => {
                       WHERE r.userId = ${userId}
                       ORDER BY r.status, id DESC,
                                o.checked ASC,
-                               o.status DESC limit ? offset ?; 
+                               o.status DESC ; 
                      SELECT COUNT(*) as Total FROM rooms r where r.userId = ${userId};
                      select * from roomcategories r 
                      `;
@@ -58,6 +58,7 @@ controller.index = (req, res) => {
                         price: r.price,
                         desposit: r.desposit,
                         acr: r.acr,
+                        verify: r.verify,
                         capacity: r.capacity,
                         utilities: r.utilities,
                         thumbnail: r.thumbnail,
@@ -121,7 +122,11 @@ controller.index = (req, res) => {
 
                     }
                 }
+
+      
             });
+
+            console.log(rooms);
 
             if (err) {
                 res.json(err);
@@ -171,7 +176,7 @@ controller.create = (req, res) => {
     const capacity = req.body.capacity;
     const address = req.body.address;
     const description = req.body.description;
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     const status = 1;
 
     const errors = [];
@@ -282,7 +287,7 @@ controller.search = (req, res) => {
     const pageSize = req.query.pageSize ?? 12;
     const q = req.query.q != undefined ? `%${req.query.q.trim()}%` : '';
     const filterStatus = req.query.filterStatus;
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     let startDate = moment(req.query.startDate, 'DD-MM-YYYY');
     startDate = startDate.format('yyyy/MM/DD')
     let endDate = moment(req.query.endDate, 'DD-MM-YYYY');

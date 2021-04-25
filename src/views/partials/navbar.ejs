@@ -35,6 +35,13 @@
                 </a>
               </div>
               <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+
+                <% if (user?.roleId == 1) { %>
+                  <a class="nav-link" style="padding-left: 27px;" href="/admin/room/verify">
+                    <i class="far fa-check-square"></i>
+                    <span class="nav-link-text">Duyệt phòng</span>
+                  </a>
+                <% } %>
                 <a class="nav-link" style="padding-left: 27px;" href="/admin/room">
                   <i class="fab fa-buromobelexperte"></i>
                   <span class="nav-link-text">Đặt phòng</span>

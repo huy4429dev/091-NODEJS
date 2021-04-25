@@ -135,7 +135,6 @@ controller.loginPost = (req, res) => {
     req.getConnection((err, conn) => {
 
         conn.query(sqlLogin, (err, success) => {
-
             if (err) {
                 res.json("LỖI KẾT NỐI MYSQL");
             }
@@ -158,6 +157,7 @@ controller.loginPost = (req, res) => {
             }
             else {
                 errors.push("Sai tên đăng nhập hoặc mật khẩu");
+                req.session.Error = errors[0];
                 res.redirect("/dang-nhap");
             }
         });
@@ -180,7 +180,7 @@ controller.profile = (req, res) => {
     //     res.redirect('/');
     // }
 
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
 
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
@@ -227,7 +227,7 @@ controller.profilePost = (req, res) => {
     const gender = req.body.gender ?? 1;
     const datebirth = req.body.datebirth ?? moment().format("YYYY/MM/DD");
     const errors = [];
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
 
     if (fullname.length <= 3) {
         errors.push("Tên khách hàng phải lớn hơn 3 kí tự !")
@@ -279,7 +279,7 @@ controller.changePassword = (req, res) => {
     //     res.redirect('/');
     // }
 
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
 
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
@@ -320,7 +320,8 @@ controller.changePasswordPost = (req, res) => {
     const password = req.body.password;
     const newPassword = req.body.newPassword;
     const errors = [];
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
+    console.log(userId,'userId');
 
     if (password.length < 6) {
         errors.push("Mật khẩu không đúng định dạng !")
@@ -343,14 +344,17 @@ controller.changePasswordPost = (req, res) => {
                     req.session.Error = "Mật khẩu không khớp";
                     return res.redirect("/ho-so/mat-khau");
                 }
+                console.log(success);
+                console.log(newPassword);
                 connection.query(`UPDATE users set 
                 password = ?
                 where id = ${userId}
                  `,
                     [
-                        md5(password),
+                        md5(newPassword),
                     ],
                     (err, data) => {
+                        console.log(data);
                         if (err) {
                             res.json(err);
                         }
@@ -380,8 +384,8 @@ controller.profileHistory = (req, res) => {
     delete req.session.Error;
     delete req.session.Success;
 
-    const userId = req.session.User?.id ?? 1;
-    const currentUserId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
+    const currentUserId = req.session.User?.userId ?? 1;
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
 
@@ -470,7 +474,7 @@ controller.bookRoom = (req, res) => {
 
     const { id } = req.params;
     const roomId = id;
-    const currentUserId = req.session.User?.id ?? 1;
+    const currentUserId = req.session.User?.userId ?? 1;
     const username = req.session.User.username;
     const fullname = req.session.User.fullname;
     const email = req.session.User.email;

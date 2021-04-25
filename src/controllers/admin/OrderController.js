@@ -10,7 +10,7 @@ controller.index = (req, res) => {
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-    const currentUserId = req.session.User?.id ?? 1;
+    const currentUserId = req.session.User?.userId ?? 1;
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
     req.getConnection((err, conn) => {
@@ -195,7 +195,7 @@ controller.edit = (req, res) => {
 
 controller.create = (req, res) => {
 
-    const currentUserId = req.session.User?.id ?? 1;
+    const currentUserId = req.session.User?.userId ?? 1;
     const username = req.body.username;
     const fullname = req.body.fullname;
     const email = req.body.email;

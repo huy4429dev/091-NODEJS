@@ -5,28 +5,44 @@ const controller = {};
 
 controller.index = (req, res) => {
 
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-
+    const roleId = req.session.User?.roleId ?? 1;
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 5;
     req.getConnection((err, conn) => {
-        const sql = `select *
-                     from users u 
-                     join userRoles ur 
-                     on u.id = ur.userId 
-                     where ur.roleId  in (2,3) 
-                     and customerBy in (0,${userId})
-                     ORDER BY id DESC limit ? offset ? ;
-                     select count(*)
-                     from users u 
-                     join userRoles ur 
-                     on u.id = ur.userId 
-                     where ur.roleId  in (2,3) and customerBy in (0,${userId})`;
-                     
+        let sql = "";
+        if (roleId == 1) {
+            sql = `select *
+                         from users u 
+                         join userRoles ur 
+                         on u.id = ur.userId 
+                         where ur.roleId  in (2,3) 
+                         ORDER BY id DESC limit ? offset ? ;
+                         select count(*)
+                         from users u 
+                         join userRoles ur 
+                         on u.id = ur.userId 
+                         where ur.roleId  in (2,3) `;
+        }
+        else {
+            sql = `select *
+            from users u 
+            join userRoles ur 
+            on u.id = ur.userId 
+            where ur.roleId  in (3) 
+            and customerBy in (0,${userId})
+            ORDER BY id DESC limit ? offset ? ;
+            select count(*)
+            from users u 
+            join userRoles ur 
+            on u.id = ur.userId 
+            where ur.roleId  in (2,3) and customerBy in (0,${userId})`;
+        }
+
         conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
             if (err) {
                 res.json(err);
@@ -62,7 +78,7 @@ controller.index = (req, res) => {
 };
 controller.create = (req, res) => {
 
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     const roleId = parseInt(req.body.roleId);
     const fullname = req.body.fullname;
     const userStatus = parseInt(req.body.userStatus);
@@ -160,7 +176,7 @@ controller.update = (req, res) => {
 
 controller.delete = (req, res) => {
     const { id } = req.params;
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     req.getConnection((err, connection) => {
         connection.query(`DELETE FROM roomCategories WHERE id = ? and customerBy = ${userId}`, [id], (err, rows) => {
             req.session.Success = "Xóa khách hàng thành công";
@@ -170,7 +186,7 @@ controller.delete = (req, res) => {
 }
 
 controller.search = (req, res) => {
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;

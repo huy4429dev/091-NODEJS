@@ -456,6 +456,13 @@
                 <span><i style="color: white;" class="fas fa-plus-square"></i></span>
               </a>
               <% } %>
+              <% if (item.verify==0) { %>
+                <a href="/admin/room/verify/<%= item.id %>"
+                  type="button" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top"
+                  title="Gửi yêu cầu phê duyệt">
+                  <span><i class="far fa-check-square"></i></span>
+                </a>
+                <% } %>
           </div>
           <div class="row">
             <div class="col">

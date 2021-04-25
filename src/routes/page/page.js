@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('passport')
 
 const HomeController = require('../../controllers/page/HomeController');
 router.get('/', HomeController.index);
@@ -25,6 +26,20 @@ router.get('/ho-so/dat-phong', CustomerController.profileHistory);
 router.post('/dat-phong/:id', CustomerController.bookRoom);
 
 
+// login facebook
+
+router.get('/auth/facebook', passport.authenticate('facebook',{scope:'email'}));
+
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect : '/', failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 
 module.exports = router;

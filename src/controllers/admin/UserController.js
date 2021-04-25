@@ -57,7 +57,7 @@ controller.getLogout = (req, res) => {
 
 controller.profile = (req, res) => {
 
-    const userId = req.session.User?.id ?? 1;
+    const userId = req.session.User?.userId ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;

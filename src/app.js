@@ -8,7 +8,9 @@ const myConnection = require('express-myconnection');
 const router = require('express').Router();
 const bodyParser = require('body-parser');
 const app = express();
-
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const cookieParser = require('cookie-parser');
 
 // build host
 app.set('port', process.env.PORT || 3000);
@@ -35,6 +37,35 @@ app.use(function (req, res, next) {
     res.locals.user = req.session.User;
     next();
 });
+
+// Passport session setup. 
+passport.serializeUser(function (user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function (obj, done) {
+    done(null, obj);
+});
+
+// Sử dụng FacebookStrategy cùng Passport.
+passport.use(new FacebookStrategy({
+    clientID: "543121906576699",
+    clientSecret: "e9cce4b3064cc420b1abc883d8bbcc7d",
+    callbackURL: "/auth/facebook/callback"
+},
+    function (accessToken, refreshToken, profile, done) {
+        process.nextTick(function () {
+            console.log(accessToken, refreshToken, profile, done);
+            return done(null, profile);
+        });
+    }
+));
+
+app.use(bodyParser.urlencoded({ extended: false })); //Parse body để get data
+app.use(session({ secret: 'keyboard cat', key: 'sid'}));  //Save user login
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // importing routes
 const adminRoutes = require('./routes/admin/admin');

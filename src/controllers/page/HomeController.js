@@ -20,7 +20,6 @@ controller.index = (req, res) => {
                                 on r2.id = r.categoryId where verify = 1 ORDER BY  r.id  DESC limit 5 offset 0`;
 
         conn.query(`${sqlRoom}; ${sqlCount}; ${sqlRoomVerify}`, (err, data) => {
-            console.log(data[0]);
             res.render('page/home',
             {
                 layout: './layout/_layoutPage',

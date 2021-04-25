@@ -7,7 +7,7 @@ controller.index = (req, res) => {
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-    const currentUserId = req.session.User?.id ?? 1;
+    const currentUserId = req.session.User?.userId ?? 1;
     const now = moment().format("yyyy/MM/DD");
     const fromDate = moment().subtract(6, 'days').format("yyyy/MM/DD");
 
@@ -64,7 +64,7 @@ controller.index = (req, res) => {
 };
 
 controller.search = (req, res) => {
-    const currentUserId = req.session.User?.id ?? 1;
+    const currentUserId = req.session.User?.userId ?? 1;
     req.getConnection((err, conn) => {
         const sql = `select date_format(createTime, "%d-%m-%Y") as day, sum(amount) total,
                     count(*) totalOrder,
@@ -87,7 +87,7 @@ controller.search = (req, res) => {
 };
 
 controller.exportExcel = (req, res) => {
-    const currentUserId = req.session.User?.id ?? 1;
+    const currentUserId = req.session.User?.userId ?? 1;
     const startDate = req.query.startDate ?? moment().subtract(6, 'days').format("yyyy/MM/DD") ;
     const endDate = req.query.endDate ?? moment().format("yyyy/MM/DD");
     const now = Date.now();
