@@ -42,6 +42,9 @@ router.post('/room/category/excel/import', RoomCategoryController.importExcel);
 
 const RoomController = require('../../controllers/admin/RoomController');
 router.get('/room', RoomController.index);
+router.get('/room/verify', RoomController.verify);
+router.get('/room/verify/:id', RoomController.sendVerify);
+router.get('/room/verify/update/:id', RoomController.updateVerify);
 router.post('/room/create', RoomController.create);
 router.put('/room/update/:id', RoomController.update);
 router.get('/room/delete/:id', RoomController.delete);

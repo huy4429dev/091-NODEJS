@@ -113,8 +113,7 @@
   .select-pure__placeholder--hidden {
     display: none;
   }
-</style>
-<style>
+
   .form-upload input[type="file"] {
     width: 120px;
     z-index: 999;
@@ -437,150 +436,146 @@
 
 
                           <span class="text-nowrap text-prikmary" style="font-size: 14px; margin-left: 10px;"><i
-                              class="fas fa-clock"></i>
-                            <%= moment(item.timeOrderActive).locale('vi').fromNow() %>
-                          </span>
-            </div>
-          </span>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                            class="fas fa-clock"></i>
+                          <%= moment(item.timeOrderActive).locale('vi').fromNow() %>
+                        </span>
         </div>
+        </span>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 
-        <div class="modal-body">
-          <div class="mb-2">
-            <% if (item.status==2) { %>
-              <a href="/admin/order?action=create&roomId=<%= item.id %>&price=<%= item.price %>&code=<%= item.code %> "
-                type="button" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top"
-                title="Đặt phòng">
-                <span><i style="color: white;" class="fas fa-plus-square"></i></span>
-              </a>
-              <% } %>
+      <div class="modal-body">
+        <div class="mb-2">
+          <% if (item.status==2) { %>
+            <a href="/admin/order?action=create&roomId=<%= item.id %>&price=<%= item.price %>&code=<%= item.code %> "
+              type="button" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Đặt phòng">
+              <span><i style="color: white;" class="fas fa-plus-square"></i></span>
+            </a>
+            <% } %>
               <% if (item.verify==0) { %>
-                <a href="/admin/room/verify/<%= item.id %>"
-                  type="button" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top"
-                  title="Gửi yêu cầu phê duyệt">
+                <a onclick="sendVerify(<%= JSON.stringify(item)%>)" type="button" class="btn btn-sm btn-info"
+                  data-toggle="tooltip" data-placement="top" title="Gửi yêu cầu phê duyệt">
                   <span><i class="far fa-check-square"></i></span>
                 </a>
                 <% } %>
-          </div>
-          <div class="row">
-            <div class="col">
-              <h3 class="mb-4">Thông tin phòng</h3>
-              <form action="" method="POST">
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Tiêu đề</label>
-                  <input name="title" class="form-control" type="text" value="<%= item.title %> "
-                    id="example-text-input">
-                </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Loại phòng</label>
-                  <select name="categoryId" class="form-control">
-                    <% roomCategories.forEach(element=> { %>
-                      <% if (element.id==item.categoryId ) { %>
-                        <option value="<%= element.id %>" selected>
-                          <%= element.name %>
-                        </option>
-                        <% } %>
-                          <% if (element.id !=item.categoryId) { %>
-                            <option value="<%= element.id %> ">
-                              <%= element.name %>
-                            </option>
-                            <% } %>
-                              <% }) %>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Giá phòng</label>
-                  <input name="price" class="form-control" type="text" value="<%= item.price %> "
-                    id="example-text-input">
-                </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Diện tích (m2)</label>
-                  <input name="acr" class="form-control" type="text" value="<%= item.acr %> " id="example-text-input">
-                </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Tiền cọc (vnđ)</label>
-                  <input name="desposit" class="form-control" type="text" value="<%= item.desposit %> "
-                    id="example-text-input">
-                </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Sức chứa</label>
-                  <input name="capacity" class="form-control" type="text" value="<%= item.capacity %> "
-                    id="example-text-input">
-                </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Địa chỉ</label>
-                  <input name="address" class="form-control" type="text" value="<%= item.address %> "
-                    id="example-text-input">
-                </div>
-                <div name="utilities" class="form-group">
-                  <label for="example-text-input" class="form-control-label">Tiện ích</label>
-                  <span class="autocomplete-select" data-select-id="<%= item.id %>"
-                    data-options="<%= item.utilities %> " id="autocomplete-select-<%= item.id %>"></span>
-                </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Thông tin thêm</label>
-                  <textarea class="editor" name="description">
+        </div>
+        <div class="row">
+          <div class="col">
+            <h3 class="mb-4">Thông tin phòng</h3>
+            <form action="" method="POST">
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Tiêu đề</label>
+                <input name="title" class="form-control" type="text" value="<%= item.title %> " id="example-text-input">
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Loại phòng</label>
+                <select name="categoryId" class="form-control">
+                  <% roomCategories.forEach(element=> { %>
+                    <% if (element.id==item.categoryId ) { %>
+                      <option value="<%= element.id %>" selected>
+                        <%= element.name %>
+                      </option>
+                      <% } %>
+                        <% if (element.id !=item.categoryId) { %>
+                          <option value="<%= element.id %> ">
+                            <%= element.name %>
+                          </option>
+                          <% } %>
+                            <% }) %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Giá phòng</label>
+                <input name="price" class="form-control" type="text" value="<%= item.price %> " id="example-text-input">
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Diện tích (m2)</label>
+                <input name="acr" class="form-control" type="text" value="<%= item.acr %> " id="example-text-input">
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Tiền cọc (vnđ)</label>
+                <input name="desposit" class="form-control" type="text" value="<%= item.desposit %> "
+                  id="example-text-input">
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Sức chứa</label>
+                <input name="capacity" class="form-control" type="text" value="<%= item.capacity %> "
+                  id="example-text-input">
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Địa chỉ</label>
+                <input name="address" class="form-control" type="text" value="<%= item.address %> "
+                  id="example-text-input">
+              </div>
+              <div name="utilities" class="form-group">
+                <label for="example-text-input" class="form-control-label">Tiện ích</label>
+                <span class="autocomplete-select" data-select-id="<%= item.id %>" data-options="<%= item.utilities %> "
+                  id="autocomplete-select-<%= item.id %>"></span>
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Thông tin thêm</label>
+                <textarea class="editor" name="description">
                     <%= item.description %> 
                   </textarea>
+              </div>
+              <div class="form-group">
+                <div class="form-upload d-flex flex-start position-relative">
+                  <input type="hidden" asp-for="Thumbnail" value="">
+                  <input type="file" class="position-absolute">
+                  <button type="button" class="btn btn-primary btn-rounded btn-sm"
+                    style="width:120px; cursor: pointer; ">Ảnh đại diện</button><br>
                 </div>
-                <div class="form-group">
-                  <div class="form-upload d-flex flex-start position-relative">
-                    <input type="hidden" asp-for="Thumbnail" value="">
-                    <input type="file" class="position-absolute">
-                    <button type="button" class="btn btn-primary btn-rounded btn-sm"
-                      style="width:120px; cursor: pointer; ">Ảnh đại diện</button><br>
-                  </div>
-                  <div class="text-center my-2 position-relative">
-                    <span class="d-inline-block" style="width:100px; height:100px; border: 1px dotted gray">
-                      <img src="<%= item.thumbnail %> " class="mt-2" style="width:80px">
-                    </span>
-                  </div>
+                <div class="text-center my-2 position-relative">
+                  <span class="d-inline-block" style="width:100px; height:100px; border: 1px dotted gray">
+                    <img src="<%= item.thumbnail %> " class="mt-2" style="width:80px">
+                  </span>
                 </div>
-                <div class="form-group">
-                  <label for="example-text-input" class="form-control-label">Hình ảnh</label>
-                  <div class="text-center my-3 d-flex justify-content-around">
+              </div>
+              <div class="form-group">
+                <label for="example-text-input" class="form-control-label">Hình ảnh</label>
+                <div class="text-center my-3 d-flex justify-content-around">
 
-                    <% const images=item.images.split(","); %>
-                      <span class="d-inline-block"
-                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                        <img src="<%= images[0] %> " class=" mt-2" style="margin:0 10px; width:80px">
-                      </span>
-                      <span class="d-inline-block"
-                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                        <img src="<%= images[1] %> " class=" mt-2" style="margin:0 10px; width:80px">
-                      </span>
-                      <span class="d-inline-block"
-                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                        <img src="<%= images[2] %> " class=" mt-2" style="margin:0 10px; width:80px">
-                      </span>
-                      <span class="d-inline-block"
-                        style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                        <img src="<%= images[3] %> " class=" mt-2" style="margin:0 10px; width:80px">
-                      </span>
-                  </div>
-                  <div class="text-center my-3 d-flex justify-content-around">
+                  <% const images=item.images.split(","); %>
                     <span class="d-inline-block"
                       style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                      <img src="<%= images[4] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      <img src="<%= images[0] %> " class=" mt-2" style="margin:0 10px; width:80px">
                     </span>
                     <span class="d-inline-block"
                       style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                      <img src="<%= images[5] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      <img src="<%= images[1] %> " class=" mt-2" style="margin:0 10px; width:80px">
                     </span>
                     <span class="d-inline-block"
                       style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                      <img src="<%= images[6] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      <img src="<%= images[2] %> " class=" mt-2" style="margin:0 10px; width:80px">
                     </span>
                     <span class="d-inline-block"
                       style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
-                      <img src="<%= images[7] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                      <img src="<%= images[3] %> " class=" mt-2" style="margin:0 10px; width:80px">
                     </span>
-                  </div>
-                  <div class="py-3 text-center">
-                    <div class="position-relative">
-                      <div class="position-absolute" style="
+                </div>
+                <div class="text-center my-3 d-flex justify-content-around">
+                  <span class="d-inline-block"
+                    style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                    <img src="<%= images[4] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                  </span>
+                  <span class="d-inline-block"
+                    style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                    <img src="<%= images[5] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                  </span>
+                  <span class="d-inline-block"
+                    style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                    <img src="<%= images[6] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                  </span>
+                  <span class="d-inline-block"
+                    style="margin:0 10px; width:100px; height:100px; border: 1px dotted gray">
+                    <img src="<%= images[7] %> " class=" mt-2" style="margin:0 10px; width:80px">
+                  </span>
+                </div>
+                <div class="py-3 text-center">
+                  <div class="position-relative">
+                    <div class="position-absolute" style="
                                     top: 50%;
                                     left: 50%;
                                     transform: translate(-50%,-50%);
@@ -588,139 +583,138 @@
                                     cursor: pointer;
                                     height: 100%;
                                 ">
-                        <form class="h-100 d-block" action="/admin/upload?path=admin" method="POST"
-                          enctype="multipart/form-data">
-                          <div class="h-100">
-                            <input type="file" name="file" style="
+                      <form class="h-100 d-block" action="/admin/upload?path=admin" method="POST"
+                        enctype="multipart/form-data">
+                        <div class="h-100">
+                          <input type="file" name="file" style="
                                           display: block;
                                           height: 100%;
                                           width: 100%;
                                           opacity: 0;
                                           cursor: pointer;
                                       ">
-                          </div>
-                        </form>
-                      </div>
-                      <div>
-                        <i class="fas fa-file-upload ni-3x" style="font-size: 30px;"></i>
-                        <div>
-                          <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
                         </div>
-                      </div>
+                      </form>
                     </div>
-                    <h4 class="heading mt-3">Tải lên hình ảnh</h4>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="col">
-              <h3 class="mb-4">Lịch sử đặt phòng</h3>
-              <% item.orders.forEach((order,index)=> { %>
-                <% let status=order.orderStatus; let classOrderStatus="success" ; let titleOrderStatus="thành công" ;
-                  if(status==3){ classOrderStatus="warning" ; titleOrderStatus="chưa xử lý" } else if(status==2){
-                  classOrderStatus="danger" ; titleOrderStatus="hủy" } %>
-                  <div id="accordion" style="margin-bottom:1px">
                     <div>
-                      <div class="alert alert-<%= classOrderStatus %>  py-2 mb-0" style="border-radius: 0;"
-                        role="alert">
-                        <div style="cursor: pointer;" data-toggle="collapse" data-target="#collapseOne-<%= order.id %>"
-                          aria-expanded="true" aria-controls="collapseOne-<%= order.id %>">
-                          <%= order.orderCode %> - <%= moment(order.orderCreateTime).format("DD/MM/YYYY") %>
-                        </div>
+                      <i class="fas fa-file-upload ni-3x" style="font-size: 30px;"></i>
+                      <div>
+                        <span id="excel-name" style="font-size: 12px" class="text-primary"></span>
                       </div>
-                      <div id="collapseOne-<%= order.id %>"
-                        class="position-relative collapse <%= index == 0 ? 'show' : '' %> " aria-labelledby="headingOne"
-                        data-parent="#accordion">
-                        <div class="py-1 px-1">
-                          <span class="badge badge-pill badge-<%= classOrderStatus %>  mb-1"
-                            style="border-radius: 0; padding-top: 7px;">
-                            <%= titleOrderStatus %>
-                          </span>
-                          <div class="d-flex align-items-center">
-                            <i class="fas fa-user" style="width: 25px"></i>
-                            <p class="mb-0" style="font-size:14px; color: #8898aa">
-                              <%= order.customerName %>
-                            </p>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <i class="fas fa-map-marker-alt" style="width: 25px"></i>
-                            <p class="mb-0" style="font-size:14px; color: #8898aa">
-                              <%= order.customerAddress %>
-                            </p>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <i class="fas fa-dollar-sign" style="width: 25px"></i>
-                            <P class="mb-0" style="font-size:14px; color: #8898aa">
-                              <%= order.orderAmount.toLocaleString('vi-VN', { style: 'currency' , currency: 'VND' }) %>
-                            </p>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <i class="fas fa-phone-square-alt" style="width: 25px"></i>
-                            <p class="mb-0" style="font-size:14px; color: #8898aa">
-                              <%= order.customerPhone %>
-                            </p>
-                          </div>
-                          <div class="position-absolute" style="bottom:0px; right: 0; font-size: 13px;">
-                            <a class="text-primary" href="/admin/order?action=update&orderId=<%= order.id %>">>> chi
-                              tiết</a>
-                          </div>
+                    </div>
+                  </div>
+                  <h4 class="heading mt-3">Tải lên hình ảnh</h4>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col">
+            <h3 class="mb-4">Lịch sử đặt phòng</h3>
+            <% item.orders.forEach((order,index)=> { %>
+              <% let status=order.orderStatus; let classOrderStatus="success" ; let titleOrderStatus="thành công" ;
+                if(status==3){ classOrderStatus="warning" ; titleOrderStatus="chưa xử lý" } else if(status==2){
+                classOrderStatus="danger" ; titleOrderStatus="hủy" } %>
+                <div id="accordion" style="margin-bottom:1px">
+                  <div>
+                    <div class="alert alert-<%= classOrderStatus %>  py-2 mb-0" style="border-radius: 0;" role="alert">
+                      <div style="cursor: pointer;" data-toggle="collapse" data-target="#collapseOne-<%= order.id %>"
+                        aria-expanded="true" aria-controls="collapseOne-<%= order.id %>">
+                        <%= order.orderCode %> - <%= moment(order.orderCreateTime).format("DD/MM/YYYY") %>
+                      </div>
+                    </div>
+                    <div id="collapseOne-<%= order.id %>"
+                      class="position-relative collapse <%= index == 0 ? 'show' : '' %> " aria-labelledby="headingOne"
+                      data-parent="#accordion">
+                      <div class="py-1 px-1">
+                        <span class="badge badge-pill badge-<%= classOrderStatus %>  mb-1"
+                          style="border-radius: 0; padding-top: 7px;">
+                          <%= titleOrderStatus %>
+                        </span>
+                        <div class="d-flex align-items-center">
+                          <i class="fas fa-user" style="width: 25px"></i>
+                          <p class="mb-0" style="font-size:14px; color: #8898aa">
+                            <%= order.customerName %>
+                          </p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <i class="fas fa-map-marker-alt" style="width: 25px"></i>
+                          <p class="mb-0" style="font-size:14px; color: #8898aa">
+                            <%= order.customerAddress %>
+                          </p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <i class="fas fa-dollar-sign" style="width: 25px"></i>
+                          <P class="mb-0" style="font-size:14px; color: #8898aa">
+                            <%= order.orderAmount.toLocaleString('vi-VN', { style: 'currency' , currency: 'VND' }) %>
+                          </p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <i class="fas fa-phone-square-alt" style="width: 25px"></i>
+                          <p class="mb-0" style="font-size:14px; color: #8898aa">
+                            <%= order.customerPhone %>
+                          </p>
+                        </div>
+                        <div class="position-absolute" style="bottom:0px; right: 0; font-size: 13px;">
+                          <a class="text-primary" href="/admin/order?action=update&orderId=<%= order.id %>">>> chi
+                            tiết</a>
                         </div>
                       </div>
                     </div>
-
                   </div>
 
-                  <% }) %>
-                    <h3 class="mt-4 mb-4">Thông tin chủ phòng</h3>
+                </div>
+
+                <% }) %>
+                  <h3 class="mt-4 mb-4">Thông tin chủ phòng</h3>
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-user" style="width: 25px"></i>
+                    <p class="mb-0" style="font-size:14px; color: #8898aa">
+                      <%= item.roomUserFullname %>
+                    </p>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-map-marker-alt" style="width: 25px"></i>
+                    <p class="mb-0" style="font-size:14px; color: #8898aa">
+                      <%= item.roomUserAddress %>
+                    </p>
+                  </div>
+                  <div class="d-flex align-items-center mt-1">
+                    <i class="fas fa-phone-square-alt" style="width: 25px"></i>
+                    <p class="mb-0" style="font-size:14px; color: #8898aa">
+                      <%= item.roomUserPhone %>
+                    </p>
+                  </div>
+                  <h3 class="mt-4 mb-4">Khách hàng đang thuê</h3>
+                  <% if (item.orderStatus==2 || item.orderStatus==3 ) { %>
                     <div class="d-flex align-items-center">
                       <i class="fas fa-user" style="width: 25px"></i>
                       <p class="mb-0" style="font-size:14px; color: #8898aa">
-                        <%= item.roomUserFullname %>
+                        <%= item.orders[0].customerName %>
                       </p>
                     </div>
                     <div class="d-flex align-items-center">
                       <i class="fas fa-map-marker-alt" style="width: 25px"></i>
                       <p class="mb-0" style="font-size:14px; color: #8898aa">
-                        <%= item.roomUserAddress %>
+                        <%= item.orders[0].customerAddress %>
                       </p>
                     </div>
                     <div class="d-flex align-items-center mt-1">
                       <i class="fas fa-phone-square-alt" style="width: 25px"></i>
                       <p class="mb-0" style="font-size:14px; color: #8898aa">
-                        <%= item.roomUserPhone %>
+                        <%= item.orders[0].customerPhone %>
                       </p>
                     </div>
-                    <h3 class="mt-4 mb-4">Khách hàng đang thuê</h3>
-                    <% if (item.orderStatus==2 || item.orderStatus==3 ) { %>
-                      <div class="d-flex align-items-center">
-                        <i class="fas fa-user" style="width: 25px"></i>
-                        <p class="mb-0" style="font-size:14px; color: #8898aa">
-                          <%= item.orders[0].customerName %>
-                        </p>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <i class="fas fa-map-marker-alt" style="width: 25px"></i>
-                        <p class="mb-0" style="font-size:14px; color: #8898aa">
-                          <%= item.orders[0].customerAddress %>
-                        </p>
-                      </div>
-                      <div class="d-flex align-items-center mt-1">
-                        <i class="fas fa-phone-square-alt" style="width: 25px"></i>
-                        <p class="mb-0" style="font-size:14px; color: #8898aa">
-                          <%= item.orders[0].customerPhone %>
-                        </p>
-                      </div>
-                      <% } %>
+                    <% } %>
 
-            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-          <button type="button" class="btn btn-primary">Lưu</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary">Lưu</button>
       </div>
     </div>
+  </div>
   </div>
 
   <% }) %>
@@ -1054,4 +1048,27 @@
           autocomplete.reset();
         };
       })
+    </script>
+    <script>
+      // verify 
+      function sendVerify(room) {
+        console.log(room,'room');
+        const creatorId = room.roomUserId;
+        const id = room.id;
+        fetch(`/admin/room/verify/${id}?creatorId=${creatorId}`)
+          .then(response => response.json())
+          .then(data => {
+            if(data.status == 0){
+              toastr["success"]("Gửi yêu cầu xác thực thành công");
+            }
+            else{
+              toastr["warning"]("Yêu cầu xác thực đang được xử lý");
+            }
+          })
+          .catch(err => {
+            toastr["error"](error.message)
+          })
+
+      }
+
     </script>

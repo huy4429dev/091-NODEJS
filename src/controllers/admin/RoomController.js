@@ -1,18 +1,13 @@
-const excel = require('exceljs');
 const moment = require('moment');
-const { isURL } = require('read-excel-file/commonjs/types/URL');
-const readXlsxFile = require('read-excel-file/node');
 const controller = {};
 
 controller.index = (req, res) => {
-
 
     const userId = req.session.User?.userId ?? 1;
     const errorValidate = req.session.Error;
     const successAlert = req.session.Success;
     delete req.session.Error;
     delete req.session.Success;
-
     const page = req.query.page ?? 1;
     const pageSize = req.query.pageSize ?? 12;
     const rooms = [];
@@ -123,7 +118,7 @@ controller.index = (req, res) => {
                     }
                 }
 
-      
+
             });
 
             console.log(rooms);
@@ -451,6 +446,131 @@ controller.search = (req, res) => {
     });
 
 };
+
+controller.verify = (req, res) => {
+    const errorValidate = req.session.Error;
+    const successAlert = req.session.Success;
+    delete req.session.Error;
+    delete req.session.Success;
+
+    const page = req.query.page ?? 1;
+    const pageSize = req.query.pageSize ?? 5;
+    req.getConnection((err, conn) => {
+        const sql = `select r.id vId, r.status vStatus, r.createdTime vCreatedTime , r.updatedTime vUpdatedTime,  r.roomId  vRoomId, u.fullname , u.phone 
+                    from roomverifies r
+                    join users u 
+                    on u.id = r.creatorId 
+                    ORDER BY r.id DESC limit ? offset ? ;
+                    select count(*)
+                    from roomverifies r
+                    join users u 
+                    on u.id = r.creatorId 
+                    `;
+        conn.query(sql, [parseInt(pageSize), (page - 1) * pageSize], (err, data) => {
+            if (err) {
+                res.json(err);
+            }
+            else {
+                res.render('admin/RoomVerify',
+                    {
+                        layout: './layout/_layoutAdmin',
+                        extractScripts: true,
+                        extractStyles: true,
+                        errorValidate: errorValidate,
+                        successAlert: successAlert,
+                        hideActionAdd: true,
+                        hideActionSearch: true,
+                        hideActionImportExcel: true,
+                        hideActionExportExcel: true,
+                        categories: data[0],
+                        curentPage: page,
+                        total: data[1][0].Total % pageSize === 0 ? data[1][0].Total / pageSize : Math.floor(data[1][0].Total / pageSize) + 1,
+                        title: 'Xác thực phòng',
+                        breadcrumbs: [
+                            {
+                                title: 'Phòng',
+                                link: '/admin/room'
+                            },
+                            {
+                                title: 'Xác thực phòng',
+                                link: '/admin/room/verify'
+                            }
+
+                        ],
+                        actionSearch: '/admin/room/verify/search',
+                        q: '',
+                        filter: '',
+                        moment: moment
+                    }
+                );
+            }
+        });
+
+    });
+}
+
+controller.sendVerify = (req, res) => {
+    const userVerifyId = req.session.User?.userId ?? 1;
+    const { id } = req.params;
+    const { creatorId } = req.query;
+
+    const sqlQueryVerify = `SELECT * FROM roomVerifies WHERE roomId = ${id}`;
+
+    req.getConnection((err, connection) => {
+        connection.query(sqlQueryVerify, (err, data) => {
+
+            if (data.length == 0) {
+                connection.query('INSERT INTO roomVerifies set creatorId = ?, userVerifyId = ? , roomId = ? , status =  ?, createdTime = NOW() , updatedTime = NOW()', 
+                    [creatorId, userVerifyId, id, 0], (err, data) => {
+                    res.json(
+                        {
+                            status: 0,
+                            message: 'Gửi yêu cầu xác thực thành công',
+                            success: true
+                        });
+                })
+            }
+            else {
+                res.json(
+                    {
+                        status: 1,
+                        message: 'Yêu cầu xác thực đang được xử lý',
+                        success: true
+                    });
+            }
+        })
+    });
+}
+
+controller.updateVerify = (req, res) => {
+    const userVerifyId = req.session.User?.userId ?? 1;
+    const { id } = req.params;
+    const {status} = req.query;
+    const sqlQueryVerify = `SELECT * FROM roomVerifies WHERE id = ${id} limit 1`;
+
+    req.getConnection((err, connection) => {
+        connection.query(sqlQueryVerify, (err, data) => {
+
+            if (data.length == 1) {
+                connection.query(`UPDATE roomVerifies set creatorId = ${userVerifyId}, status = ${status} , updatedTime = NOW()`, (err, data) => {
+                    console.log(err);
+                    res.json(
+                        {
+                            message: 'Cập nhật trạng thái thành công',
+                            success: true
+                        });
+                })
+            }
+            else {
+                res.json(
+                    {
+                        message: 'Lỗi không tồn tại đơn xác thực',
+                        success: false
+                    });
+            }
+        })
+    });
+}
 
 
 
