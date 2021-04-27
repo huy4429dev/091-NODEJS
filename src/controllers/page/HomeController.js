@@ -11,13 +11,16 @@ controller.index = (req, res) => {
                             from rooms r 
                             join roomcategories r2 
                             on r2.id = r.categoryId 
-                         ORDER BY r.id DESC limit ${pageSize} offset ${page}`;
+                            where r.verify = 1
+                            ORDER BY r.id DESC limit ${pageSize} offset ${(page - 1) * pageSize}`;
 
         const sqlCount = `select count(*) as Total from rooms`;
         const sqlRoomVerify = `select *
                                 from rooms r 
                                 join roomcategories r2 
-                                on r2.id = r.categoryId where verify = 1 ORDER BY  r.id  DESC limit 5 offset 0`;
+                                on r2.id = r.categoryId
+                                where r.qc = 1
+                                ORDER BY  r.id  DESC limit 5 offset 0`;
 
         conn.query(`${sqlRoom}; ${sqlCount}; ${sqlRoomVerify}`, (err, data) => {
             res.render('page/home',

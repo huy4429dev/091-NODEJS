@@ -91,14 +91,14 @@ controller.search = (req, res) => {
                 from rooms r 
                 join roomcategories r2 
                 on r2.id = r.categoryId
-                WHERE true`;
+                WHERE r.verify = 1 `;
 
     const sqlCategories = `select * from roomcategories`;
     let sqlCount = `SELECT COUNT(*) as Total
                 from rooms r 
                 join roomcategories r2 
                 on r2.id = r.categoryId
-                WHERE true`;
+                WHERE r.verify = 1`;
 
     const q = req.query.q != undefined ? `%${req.query.q.trim()}%` : '';
     const address = req.query.address != undefined ? `%${req.query.address.trim()}%` : '';

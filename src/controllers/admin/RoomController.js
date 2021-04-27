@@ -552,7 +552,11 @@ controller.updateVerify = (req, res) => {
         connection.query(sqlQueryVerify, (err, data) => {
 
             if (data.length == 1) {
-                connection.query(`UPDATE roomVerifies set creatorId = ${userVerifyId}, status = ${status} , updatedTime = NOW()`, (err, data) => {
+                connection.query(`UPDATE roomVerifies set userVerifyId = ${userVerifyId}, status = ${status} , updatedTime = NOW()
+                WHERE id = ${id}
+                ;
+                UPDATE rooms set verify = ${status}, verifyTime = NOW() WHERE id = ${data[0].roomId}
+                `, (err, data) => {
                     console.log(err);
                     res.json(
                         {

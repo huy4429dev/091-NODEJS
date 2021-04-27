@@ -78,7 +78,7 @@
                     <%= moment(item.vUpdatedTime).format('DD-MM-YYYY hh:mm') %>
                   </td>
                   <td class="budget">
-                      <a href="/">
+                      <a href="/admin/room?action=detail&roomId=<%= item.vRoomId %>">
                         Xem chi tiết
                      </a>
                   </td>
@@ -202,7 +202,7 @@
   
             <!-- CODE JS  -->
   
-  
+         
             <script>
   
               // DATE PICKER 
